@@ -5,7 +5,6 @@ function Update({ token, onLogout }) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [cpf, setCPF] = useState("")
 
     useEffect(() => {
         const getInformations = async () => {
@@ -17,7 +16,6 @@ function Update({ token, onLogout }) {
             data = data[0]
             setName(data.name)
             setEmail(data.email)
-            setCPF(data.cpf)
         }
 
         getInformations()
@@ -57,9 +55,6 @@ function Update({ token, onLogout }) {
                 </div>
                 <div>
                     <p htmlFor="email">Email: {email}</p>
-                </div>
-                <div>
-                    <p htmlFor="cpf">CPF {cpf}:</p>
                 </div>
                 <div>
                     <label htmlFor="password">Password:</label>

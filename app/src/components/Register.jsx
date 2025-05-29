@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { cpf as cpfValidator } from "cpf-cnpj-validator"
 import { validate } from "react-email-validator"
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -8,11 +7,10 @@ function Register() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [cpf, setCPF] = useState("")
     const [captchaToken, setCaptchaToken] = useState(null)
 
     const postUser = async () => {
-        if (name.trim() === "" || email.trim() === "" || password === "" || confirmPassword.trim() === "" || cpf === "") {
+        if (name.trim() === "" || email.trim() === "" || password === "" || confirmPassword.trim() === "") {
             alert("Empty field.")
             return
         }
@@ -24,15 +22,11 @@ function Register() {
             alert("Invalid email.")
             return
         }
-        if (!cpfValidator.isValid(cpf)) {
-            alert("Invalid CPF.")
-            return
-        }
         if (password !== confirmPassword) {
             alert("Password is not equal to Confirm Password.")
             return
         }
-        let data = {name: name, email: email, password: password, confirmPassword: confirmPassword, cpf: cpf, captchaToken: captchaToken}
+        let data = {name: name, email: email, password: password, confirmPassword: confirmPassword, captchaToken: captchaToken}
         const response = await fetch("http://localhost:3001/user/register", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -64,10 +58,6 @@ function Register() {
                 <div>
                     <label htmlFor="confirmPassword">Confirm Password:</label>
                     <input type="password" name="confirmPassword" id="confirmPasswordInput" placeholder="Confirme a sua senha..." onChange={e => setConfirmPassword(e.target.value)} required />
-                </div>
-                <div>
-                    <label htmlFor="cpf">CPF:</label>
-                    <input type="number" name="cpf" id="cpfInput" placeholder="12345678900" onChange={e => setCPF(e.target.value)} required />
                 </div>
                 <div>
                     <ReCAPTCHA sitekey="6LdYRkorAAAAADYL-JYYlkMGlbFETAs6wy0WHEad" onChange={setCaptchaToken}/>

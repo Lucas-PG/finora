@@ -39,12 +39,11 @@ export const verifyToken = (_, res) => {
 }
 
 export const postUser = async (req, res) => {
-    const { name, email, password, confirmPassword, cpf, captchaToken } = req.body
+    const { name, email, password, confirmPassword, captchaToken } = req.body
     if (captchaToken === null) {
         return res.status(400).send({"data": "Invalid Captcha."})
     }
-    if (name === null || name.trim() === "" || email === null || email.trim() === "" || password === null || password.trim() === "" 
-        || cpf === null || cpf.trim() === "") {
+    if (name === null || name.trim() === "" || email === null || email.trim() === "" || password === null || password.trim() === "") {
         return res.status(400).send({"data": "Invalid Parameters."})
     }
     if (password !== confirmPassword) {
@@ -60,10 +59,10 @@ export const postUser = async (req, res) => {
     const salt = 10
     const hashPassword = await bcrypt.hash(password, salt)
     const uuid = uuidv4()
-    const query = "INSERT INTO users (uuid, name, email, password, cpf) VALUES (?, ?, ?, ?, ?)"
-    db.query(query, [uuid, name, email, hashPassword, cpf], (err, results) => {
-        if (err) return res.status(500).send("Error while registering user. Email or CPF already been registered.")
-        return res.status(201).json({id: results.insertId, name, email, password, cpf})
+    const query = "INSERT INTO users (uuid, name, email, password) VALUES (?, ?, ?, ?, ?)"
+    db.query(query, [uuid, name, email, hashPassword], (err, results) => {
+        if (err) return res.status(500).send("Error while registering user. Email already been registered.")
+        return res.status(201).json({id: results.insertId, name, email, password})
     })
 }
 
