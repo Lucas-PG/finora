@@ -68,7 +68,7 @@ export const postUser = async (req, res) => {
 
 export const getUserInfo = (req, res) => {
     const userId = req.user.userId
-    const query = "SELECT name, email, cpf FROM users WHERE uuid=?"
+    const query = "SELECT name, email FROM users WHERE uuid=?"
     db.query(query, [userId], (err, results) => {
         if (err) return res.status(500).send(err)
         return res.status(200).json(results)
