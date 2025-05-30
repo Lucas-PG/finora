@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { FaUser } from "react-icons/fa";
 
 function Update({ token, onLogout }) {
     const [name, setName] = useState("")
@@ -7,6 +8,8 @@ function Update({ token, onLogout }) {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [photoUrl, setPhotoUrl] = useState(null)
     const [filename, setFilename] = useState(null)
+
+    const fileInputRef = useRef(null);
     
     useEffect(() => {
         const getInformations = async () => {
@@ -25,16 +28,22 @@ function Update({ token, onLogout }) {
     }, [token])
     
     useEffect(() => {
-        if (!filename) { return }
-        const fetchPhoto = async () => {
-            try {
-                const response = await fetch(`http://localhost:3001/user/photo/${filename}`, { headers: { Authorization: `Bearer ${token}` } })
-                if (!response.ok) throw new Error('Failed to fetch photo')
-                const blob = await response.blob()
-                const url = URL.createObjectURL(blob)
-                setPhotoUrl(url)
-            } catch { setPhotoUrl(null) }
+        if (!filename) { 
+            setPhotoUrl(null)
+            return
         }
+        const fetchPhoto = async () => {
+            const response = await fetch(`http://localhost:3001/user/photo/${filename}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok) {
+                setPhotoUrl(null);
+                return;
+            }
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            setPhotoUrl(url);
+        };
         fetchPhoto()
         return () => { if (photoUrl) URL.revokeObjectURL(photoUrl) }
     }, [filename, token])
@@ -82,17 +91,20 @@ function Update({ token, onLogout }) {
         }
     }
 
+    const handleImage = () => {
+        fileInputRef.current?.click();
+    };
+
     return (
         <div className="register-wrapper">
             <h1>Suas Informações</h1>
-            <div>
-                {photoUrl && (
-                    <div>
-                        <img src={photoUrl} alt="Foto de Perfil" width="150" />
-                    </div>
-                )}
+            <div> 
                 <div>
-                    <input type="file" accept="image/*" onChange={handlePhotoChange} />
+                    {photoUrl ? ( 
+                        <div> <img onClick={handleImage} src={photoUrl} alt="Foto de Perfil" width="150" style={{ borderRadius: "50%", objectFit: "cover", cursor: "pointer"}} /> </div> ) : (
+                        <div onClick={handleImage} style={{ width: 150, height: 150, fontSize: 100, color: "#888", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #ccc", borderRadius: "50%", cursor: "pointer" }}> <FaUser /> </div>
+                    )}
+                    <input type="file" accept="image/*" onChange={handlePhotoChange} ref={fileInputRef} style={{display: "none"}} />
                 </div>
                 <div>
                     <p htmlFor="name">Nome: {name}</p>
