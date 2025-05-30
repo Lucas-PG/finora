@@ -112,7 +112,7 @@ function ChatBot({ token, onLogout }) {
                 </div>
             )
         }
-        return <div className={`chat-message ${msg.role}`} key={idx}><div>{msg.content}</div></div>
+        return <div className={`chat-message ${msg.role}`} key={idx}>{msg.content}</div>
     }
 
     if (loading) return <div className="chat-loading">Carregando histórico...</div>
@@ -151,9 +151,11 @@ function ChatBot({ token, onLogout }) {
                             className="chat-textarea"
                         />
                     </div>
-                    <button onClick={getResponse} disabled={chatbotDisabled}>
-                        Enviar
-                    </button>
+                    <div className="chat-input-2">
+                        <button onClick={getResponse} disabled={chatbotDisabled}>
+                            Enviar
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

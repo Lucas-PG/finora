@@ -1,26 +1,26 @@
 * {
-  scrollbar-width: 0px;
-  padding: 0px;
-  margin: 0px;
+    scrollbar-width: 0px;
+    padding: 0px;
+    margin: 0px;
 }
 
 #root {
-  width: 100vw;
-  max-width: 100%;
-  min-height: 100vh;
+    width: 100vw;
+    max-width: 100%;
+    min-height: 100vh;
 }
 
 body {
-  min-height: 100vh;
-  background-color: #0c0d1f;
-  font-family: "Montserrat", sans-serif;
-  width: 100%;
-  max-width: 100%;
+    min-height: 100vh;
+    background-color: #0c0d1f;
+    font-family: "Montserrat", sans-serif;
+    width: 100%;
+    max-width: 100%;
 }
 
 .login-wrapper,
 .register-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

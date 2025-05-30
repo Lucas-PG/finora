@@ -30,7 +30,7 @@
 .chat-header {
     background-color: #15182c;
     color: white;
-    padding: 16px;
+    padding: 10px 30px;
     font-size: 18px;
     font-weight: 600;
     display: flex;
@@ -44,6 +44,7 @@
     border: none;
     color: white;
     cursor: pointer;
+    width: 15%;
 }
 
 .chat-box {
@@ -52,13 +53,12 @@
     overflow-y: auto;
     color: white;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.5px;
 }
 
 .chat-message {
     margin-bottom: 12px;
     padding: 10px 14px;
-    border-radius: 12px;
     max-width: 90%;
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -69,9 +69,16 @@
     color: #cdd9ff;
     align-self: flex-end;
     text-align: right;
+    border-radius: 12px 12px 0 12px;
+    padding: 10px 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .chat-message.assistant {
+    border-radius: 12px 12px 12px 0;
     background-color: #2d314f;
     color: #e0ffe0;
     align-self: flex-start;
@@ -88,33 +95,71 @@
     border-top: 1px solid #3a3e5a;
 }
 
+.chat-input-2 {
+    padding: 0 10px 15px 10px;
+    background-color: #2a2f4a;
+    border-top: 1px solid #3a3e5a;
+}
+
 .chat-textarea {
     flex-grow: 1;
     resize: none;
     padding: 10px 12px;
     font-size: 14px;
-    border-radius: 10px;
+    border-radius: 12px 12px 0 12px;
     border: 1px solid #444;
     outline: none;
     background-color: #fff;
+    opacity: 0.8;
     color: #111;
     height: 70px;
 }
 
-.chat-input button {
-    background-color: #4c5aff;
-    color: white;
-    border: none;
-    width: 25%;
-    height: 70px;
-    padding: 20px 0;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    text-align: center;
+.chat-textarea::placeholder {
+    color: black
 }
 
-.chat-input button:hover {
+.chat-input-2 button:hover {
     background-color: #3a48d4;
+}
+
+.chat-message.assistant p,
+.chat-message.assistant ul,
+.chat-message.assistant ol,
+.chat-message.assistant li {
+    margin: 0 0 8px 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1.5;
+}
+
+.chat-message.assistant ul,
+.chat-message.assistant ol {
+    padding-left: 20px;
+}
+
+.chat-message.assistant li {
+    list-style-type: disc;
+}
+
+
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: #1c1f3a;
+    border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: #4c5aff;
+    border-radius: 10px;
+    border: 2px solid #1c1f3a;
+}
+
+.chat-box {
+    scrollbar-width: thin;
+    scrollbar-color: #4c5aff #1c1f3a;
 }
