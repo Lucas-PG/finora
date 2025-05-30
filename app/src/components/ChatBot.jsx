@@ -115,7 +115,10 @@ function ChatBot({ token, onLogout }) {
                     <div className="chat-box"> {messages.map((msg, index) => (<div key={index}>{renderMessage(msg)}</div>))} </div>
                     <div className="chat-input">
                         <textarea placeholder="Digite sua pergunta..." value={prompt} onChange={(e) => setPrompt(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !chatbotDisabled) { e.preventDefault(); getResponse() } }}
+                            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !chatbotDisabled) { 
+                                e.preventDefault()
+                                getResponse() 
+                            }}}
                             rows={1} className="chat-textarea"
                         />
                         <button onClick={getResponse} disabled={chatbotDisabled}>Enviar</button>

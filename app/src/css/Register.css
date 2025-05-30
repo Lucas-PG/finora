@@ -1,0 +1,91 @@
+.register-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #0c0d1f;
+  padding: 2rem;
+  max-width: 350px;
+  width: 100%;
+  color: #ccc;
+}
+
+.register-wrapper h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.icon-input-wrapper-register {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.icon-input-wrapper-register input {
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 2px solid #2c2c44;
+  border-radius: 15px;
+  background-color: #0c0d1f;
+  color: #eee;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-icon-register {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+button[type="submit"],
+button[type="button"],
+button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 15px;
+  background-color: #4d66ff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s;
+}
+
+.register-wrapper p {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.login-link {
+  color: #4d66ff;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  color: #0097a7;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #aaa;
+  margin: 0 0.5rem;
+}

@@ -1,0 +1,207 @@
+.wallets-container {
+  padding: 40px 60px;
+  background-color: #0c0d1f;
+  color: white;
+}
+
+.wallets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.add-asset-btn {
+  background-color: #1d4ed8;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  width: 150px;
+}
+
+.wallets-charts {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+  width: 100%;
+  height: 100%; /* ou defina uma altura fixa se preferir */
+}
+
+.wallets-charts-left {
+  width: 38%;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.wallets-charts-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.card {
+  border-radius: 15px;
+}
+
+.card-body {
+  border: solid #495784 1px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding: 25px 0px;
+  width: calc(100% - 2px);
+}
+
+.card-header {
+  width: 100%;
+  padding: 20px 0px;
+  background-color: #495784;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.wallet-value {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header > span {
+  margin-left: 3vw;
+}
+
+.wallet-value-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallet-value-num {
+  margin-left: 3vw;
+}
+
+.wallet-value-percent {
+  margin-right: 3vw;
+  color: #22c55e;
+}
+
+.pizza-chart {
+  padding: 0px;
+}
+
+.pizza-chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 2px);
+  height: 300px;
+}
+
+.line-chart {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.line-chart-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line-chart-container {
+  width: 95%;
+  height: 95%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.legenda {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.azul {
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.amarelo {
+  width: 10px;
+  height: 10px;
+  background-color: yellow;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.verde {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.ativos-section {
+  margin-top: 40px;
+}
+
+.ativos-section h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.subinfo {
+  font-size: 14px;
+  font-weight: normal;
+  color: #94a3b8;
+  margin-left: 10px;
+}
+
+.tabela-ativos table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: transparent;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tabela-ativos th,
+.tabela-ativos td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #2e2e3e;
+  font-size: 14px;
+}
+
+.negativo {
+  color: #ef4444;
+}
+
+.positivo {
+  color: #22c55e;
+}

@@ -1,0 +1,110 @@
+.calculators-container {
+  width: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.calculators-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.calculators-content {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calculators-title-div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.calculators-subtitle {
+  text-align: center;
+  color: #fff;
+  opacity: 50%;
+  font-size: 16px;
+}
+
+.calculators-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.calculators-card {
+  background-color: #232e40;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.calculators-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.calculators-card > a {
+  color: #85a4ba;
+  text-decoration: none;
+}
+
+.suggestion-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.suggestion-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 60%;
+}
+
+.suggestion-section h4 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.suggestion-section span {
+  font-size: 14px;
+  color: #fff;
+  opacity: 50%;
+}
+
+.suggest-btn {
+  background-color: #495784;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 200px;
+}
+
+.sugerir-btn:hover {
+  background-color: #475569;
+}

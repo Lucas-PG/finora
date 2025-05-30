@@ -1,0 +1,119 @@
+.navbar-container {
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10vh;
+  padding: 0px;
+  margin: 0px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+
+.navbar-left img.navbar-logo {
+  height: 100px;
+}
+
+.navbar-center {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.8rem;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 400;
+  transition: color 0.3s;
+}
+
+.nav-item {
+  color: #fff;
+  opacity: 50%;
+  padding-bottom: 3px;
+}
+
+.active {
+  color: #fff;
+  opacity: 100%;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: #c7c7c7;
+}
+
+.navbar-search {
+  display: flex;
+  align-items: center;
+  background-color: #1c1f36;
+  border-radius: 20px;
+  padding: 0.3rem 1rem;
+  margin-left: 2rem;
+}
+
+.navbar-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 0.3rem 0px;
+  padding-left: 0.5rem;
+  font-size: 0.95rem;
+  width: 250px;
+}
+
+.search-icon {
+  color: white;
+  font-size: 1.1rem;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 0.3rem;
+  transition: transform 0.2s;
+}
+
+.icon-button:hover {
+  transform: scale(1.1);
+}
+
+.navbar-links .active {
+  opacity: 100%;
+  position: relative;
+}
+
+.navbar-links .nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 1px;
+  background-color: white;
+  border-radius: 1px;
+}
