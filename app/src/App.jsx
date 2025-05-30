@@ -88,6 +88,9 @@ function App() {
           </>
         )}
       </Routes>
+      {isAuthenticated ? (
+        <ChatBot token={token} onLogout={logout} ></ChatBot>
+      ) : <></>}
     </BrowserRouter>
   );
 }
