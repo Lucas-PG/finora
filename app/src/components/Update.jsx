@@ -90,6 +90,7 @@ function Update({ token, onLogout }) {
             const result = await response.json()
             setFilename(result.filename)
         }
+        window.location.reload()
     }
 
     const handleImage = () => {
