@@ -1,5 +1,5 @@
-import Navbar from "../components/NavBar.jsx"
-import "../css/About.css"
+import Navbar from "../components/NavBar.jsx";
+import "../css/About.css";
 
 function About() {
   return (
@@ -46,7 +46,6 @@ function About() {
             <strong>hoje</strong>.
           </h2>
           <p>
-            Adiar seus investimentos é uma das decisões mais custosas que você
             pode tomar, mesmo sem perceber. Isso porque o fator tempo é um dos
             mais poderosos aliados no crescimento patrimonial. Os juros
             compostos, que atuam como uma “bola de neve” positiva, funcionam
@@ -116,7 +115,7 @@ function About() {
         </section>
       </div>
     </>
-  )
+  );
 }
 
-export default About
+export default About;

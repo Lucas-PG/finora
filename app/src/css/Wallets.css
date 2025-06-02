@@ -1,7 +1,7 @@
 .wallets-container {
   padding: 40px 60px;
-  background-color: #0c0d1f;
-  color: white;
+  background-color: var(--background);
+  color: var(--custom-opposite);
 }
 
 .wallets-header {
@@ -53,7 +53,7 @@
 }
 
 .card-body {
-  border: solid #495784 1px;
+  border: solid var(--card-bg) 1px;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   padding: 25px 0px;
@@ -62,8 +62,8 @@
 
 .card-header {
   width: 100%;
-  padding: 20px 0px;
-  background-color: #495784;
+  padding: 15px 0px;
+  background-color: var(--card-bg);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
 }
@@ -90,7 +90,7 @@
 
 .wallet-value-percent {
   margin-right: 3vw;
-  color: #22c55e;
+  color: var(--custom-green);
 }
 
 .pizza-chart {
@@ -194,14 +194,14 @@
 .tabela-ativos td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #2e2e3e;
+  border-bottom: 1px solid var(--card-bg);
   font-size: 14px;
 }
 
 .negativo {
-  color: #ef4444;
+  color: var(--custom-red);
 }
 
 .positivo {
-  color: #22c55e;
+  color: var(--custom-green);
 }

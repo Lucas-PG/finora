@@ -1,6 +1,6 @@
 .calculators-container {
   width: 100%;
-  color: white;
+  color: var(--custom-opposite);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,6 +12,10 @@
   font-weight: 600;
   margin-bottom: 10px;
   text-align: center;
+}
+
+.calculators-container h3 {
+  color: var(--custom-opposite);
 }
 
 .calculators-content {
@@ -29,7 +33,7 @@
 
 .calculators-subtitle {
   text-align: center;
-  color: #fff;
+  color: var(--custom-opposite);
   opacity: 50%;
   font-size: 16px;
 }
@@ -41,7 +45,7 @@
 }
 
 .calculators-card {
-  background-color: #232e40;
+  background-color: var(--custom-search);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -49,17 +53,16 @@
   flex-direction: column;
   align-items: start;
   justify-content: space-between;
-  gap: 15px;
+  gap: 25px;
 }
 
 .calculators-card h3 {
   font-size: 18px;
   margin-bottom: 10px;
-  color: white;
 }
 
 .calculators-card > a {
-  color: #85a4ba;
+  color: var(--custom-bluish-purple);
   text-decoration: none;
 }
 
@@ -89,13 +92,13 @@
 
 .suggestion-section span {
   font-size: 14px;
-  color: #fff;
+  color: var(--custom-opposite);
   opacity: 50%;
 }
 
 .suggest-btn {
-  background-color: #495784;
-  color: white;
+  background-color: var(--card-bg);
+  color: var(--custom-opposite);
   border: none;
   padding: 15px 20px;
   border-radius: 20px;

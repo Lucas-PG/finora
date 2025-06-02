@@ -6,7 +6,7 @@
   padding: 2rem;
   max-width: 350px;
   width: 300px;
-  color: #ccc;
+  color: var(--custom-opposite);
 }
 
 .login-wrapper h1 {
@@ -25,17 +25,17 @@
 }
 
 .icon-input-wrapper-login input {
-  padding: 0.75rem 6.5rem 0.75rem 1rem;
+  padding: 0.75rem 8rem 0.75rem 1rem;
   border: 2px solid #2c2c44;
   border-radius: 15px;
-  background-color: #0c0d1f;
-  color: #eee;
+  color: var(--custom-opposite);
   font-size: 14px;
   outline: none;
+  background-color: var(--background);
 }
 
 .icon-input-wrapper-login input::placeholder {
-  color: #666;
+  color: var(--custom-highlight);
 }
 
 .input-icon-login {
@@ -43,17 +43,17 @@
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #888;
+  color: var(--custom-faded);
   pointer-events: none;
   font-size: 1.2rem;
 }
 
-button[type="submit"] {
+.login-btn {
   width: 100%;
   padding: 0.75rem;
   border: none;
   border-radius: 15px;
-  background-color: #4d66ff;
+  background-color: var(--custom-bluish-purple);
   color: white;
   font-size: 1rem;
   cursor: pointer;
@@ -61,8 +61,8 @@ button[type="submit"] {
   transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
-  background-color: #243bd1;
+.login-btn:hover {
+  background-color: var(--custom-purple);
 }
 
 .login-wrapper p {
@@ -71,13 +71,13 @@ button[type="submit"]:hover {
 }
 
 .register-link {
-  color: #4d66ff;
+  color: var(--custom-bluish-purple);
   text-decoration: underline;
   font-weight: 500;
 }
 
 .register-link:hover {
-  color: #0097a7;
+  color: var(--custom-hover);
 }
 
 .divider {
@@ -85,7 +85,7 @@ button[type="submit"]:hover {
   align-items: center;
   text-align: center;
   margin: 1.5rem 0;
-  color: #aaa;
+  color: var(--custom-faded);
   font-size: 0.9rem;
 }
 
@@ -93,6 +93,6 @@ button[type="submit"]:hover {
 .divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid var(--custom-faded);
   margin: 0 0.5rem;
 }

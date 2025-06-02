@@ -1,7 +1,7 @@
-import Navbar from "../components/NavBar"
-import "../css/Wallets.css"
-import { FaPlus } from "react-icons/fa"
-import { Pie, Line } from "react-chartjs-2"
+import Navbar from "../components/NavBar";
+import "../css/Wallets.css";
+import { FaPlus } from "react-icons/fa";
+import { Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -11,7 +11,7 @@ import {
   LinearScale,
   PointElement,
   LineElement,
-} from "chart.js"
+} from "chart.js";
 
 ChartJS.register(
   ArcElement,
@@ -21,7 +21,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-)
+);
 
 function Wallets() {
   const pieData = {
@@ -33,7 +33,7 @@ function Wallets() {
         borderWidth: 0,
       },
     ],
-  }
+  };
   const pieOptions = {
     plugins: {
       legend: {
@@ -46,16 +46,16 @@ function Wallets() {
       tooltip: {
         callbacks: {
           label: function (context) {
-            const label = context.label || ""
-            const value = context.raw
-            const total = context.dataset.data.reduce((a, b) => a + b, 0)
-            const percent = ((value / total) * 100).toFixed(0) + "%"
-            return `${label}: ${percent}`
+            const label = context.label || "";
+            const value = context.raw;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percent = ((value / total) * 100).toFixed(0) + "%";
+            return `${label}: ${percent}`;
           },
         },
       },
     },
-  }
+  };
 
   const lineData = {
     labels: [
@@ -83,7 +83,7 @@ function Wallets() {
         fill: true,
       },
     ],
-  }
+  };
 
   const lineOptions = {
     responsive: true,
@@ -99,8 +99,8 @@ function Wallets() {
             const value = context.raw.toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",
-            })
-            return ` ${value}`
+            });
+            return ` ${value}`;
           },
         },
       },
@@ -117,13 +117,13 @@ function Wallets() {
         ticks: {
           color: "#94a3b8",
           callback: function (value) {
-            return "R$ " + value.toLocaleString("pt-BR")
+            return "R$ " + value.toLocaleString("pt-BR");
           },
         },
         grid: { color: "#1e293b" },
       },
     },
-  }
+  };
 
   return (
     <>
@@ -155,17 +155,6 @@ function Wallets() {
               <div className="pizza-chart-container card-body">
                 <Pie data={pieData} options={pieOptions} />
               </div>
-              {/* <ul className="legenda"> */}
-              {/*   <li> */}
-              {/*     <span className="azul"></span> 50% AÇÕES */}
-              {/*   </li> */}
-              {/*   <li> */}
-              {/*     <span className="amarelo"></span> 25% RENDA FIXA */}
-              {/*   </li> */}
-              {/*   <li> */}
-              {/*     <span className="verde"></span> 25% ETFs */}
-              {/*   </li> */}
-              {/* </ul> */}
             </div>
           </div>
 
@@ -254,7 +243,7 @@ function Wallets() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Wallets
+export default Wallets;

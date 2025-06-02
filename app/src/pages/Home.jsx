@@ -1,5 +1,7 @@
-import Navbar from "../components/NavBar.jsx"
-import "../css/Home.css"
+import Navbar from "../components/NavBar.jsx";
+import { NavLink } from "react-router-dom";
+import "../css/Home.css";
+import { FaLayerGroup, FaChartBar, FaChartLine } from "react-icons/fa";
 
 function Home() {
   return (
@@ -8,25 +10,71 @@ function Home() {
       <div className="home-container">
         <section className="home-hero">
           <h1>
-            Invista no seu futuro de <br />
-            maneira simples
+            Construa Seu <span>Futuro Financeiro</span>
+            <br />
+            Com Inteligência
           </h1>
           <p>
             Todas as informações que os investidores <br />
             precisam em um só lugar
           </p>
           <div className="home-hero-buttons">
-            <button className="home-btn-primary">Comece já →</button>
-            <button className="home-btn-secondary">Aprenda mais</button>
+            <NavLink className="home-btn-primary" to="/login">
+              Comece já →
+            </NavLink>
+            <NavLink className="home-btn-secondary" to="/about">
+              Aprenda mais
+            </NavLink>
           </div>
         </section>
 
         <section className="home-section">
           <h2>Por quê a Finora?</h2>
           <div className="home-card-grid">
-            <div className="home-card">Motivo 1</div>
-            <div className="home-card">Motivo 2</div>
-            <div className="home-card">Motivo 3</div>
+            <div className="home-card">
+              <div className="home-card-icon">
+                <div className="home-card-icon-container">
+                  <FaLayerGroup size={24} className="home-icon" />
+                </div>
+              </div>
+              <div className="home-card-text">
+                <h2>Tudo o que você precisa</h2>
+                <span>
+                  Chega de abrir várias planilhas e sites diferentes. Reunimos,
+                  em uma única plataforma, tudo o que um investidor precisa
+                </span>
+              </div>
+            </div>
+            <div className="home-card">
+              <div className="home-card-icon">
+                <div className="home-card-icon-container">
+                  <FaChartBar size={24} className="home-icon" />
+                </div>
+              </div>
+              <div className="home-card-text">
+                <h2>Gráficos modernos e interativos</h2>
+                <span>
+                  Acompanhe seus investimentos com visualizações inteligentes,
+                  bonitas e fáceis de entender. Nossos gráficos foram
+                  desenvolvidos para destacar o que realmente importa
+                </span>
+              </div>
+            </div>
+            <div className="home-card">
+              <div className="home-card-icon">
+                <div className="home-card-icon-container">
+                  <FaChartLine size={24} className="home-icon" />
+                </div>
+              </div>
+              <div className="home-card-text">
+                <h2>Informaçöes claras e fáceis</h2>
+                <span>
+                  Nosso site foi criado para transformar dados complexos do
+                  mercado financeiro em informações simples, visuais e
+                  compreensíveis.
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -66,13 +114,16 @@ function Home() {
 
         <section className="home-cta">
           <h2>Pronto para começar a investir?</h2>
-          <button className="home-btn-primary create-account-btn">
+          <NavLink
+            className="home-btn-primary create-account-btn"
+            to="/register"
+          >
             Criar Conta Gratuita
-          </button>
+          </NavLink>
         </section>
       </div>
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;
