@@ -1,0 +1,25 @@
+.about-container {
+  padding: 60px 100px;
+  color: var(--custom-opposite);
+}
+
+.about-section {
+  margin-bottom: 60px;
+}
+
+.about-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.about-section p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--custom-highlight);
+  text-align: justify;
+}
+
+.about-section strong {
+  color: var(--custom-opposite);
+}
