@@ -53,6 +53,7 @@
     overflow-y: auto;
     color: white;
     font-size: 14px;
+    height: 450px;
     line-height: 1.5px;
 }
 
@@ -95,10 +96,18 @@
     border-top: 1px solid #3a3e5a;
 }
 
-.chat-input-2 {
-    padding: 0 10px 15px 10px;
-    background-color: #2a2f4a;
-    border-top: 1px solid #3a3e5a;
+.chat-input button {
+    height: 90px;
+    width: 80px;
+    background-color: var(--primary-blue);
+    border: none;
+    border-radius: 15px;
+    color: var(--foreground);
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 102, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .chat-textarea {
@@ -117,10 +126,6 @@
 
 .chat-textarea::placeholder {
     color: black
-}
-
-.chat-input-2 button:hover {
-    background-color: #3a48d4;
 }
 
 .chat-message.assistant p,

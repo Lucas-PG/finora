@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import "../css/Calculators.css";
 
@@ -23,7 +24,7 @@ function Calculators() {
                 compostos. Esse é o modelo mais comum em aplicações de renda
                 fixa.
               </p>
-              <a href="#">Simular ›</a>
+              <Link to="/CompoundInterest">Simular ›</Link>
             </div>
 
             <div className="calculators-card">
@@ -33,7 +34,7 @@ function Calculators() {
                 simples. Ideal para entender ganhos em aplicações mais diretas
                 ou de curto prazo.
               </p>
-              <a href="#">Simular ›</a>
+              <Link to="/SimpleInterest">Simular ›</Link>
             </div>
 
             <div className="calculators-card">
@@ -42,7 +43,7 @@ function Calculators() {
                 Veja quanto tempo e quanto investir por mês para alcançar o seu
                 primeiro milhão.
               </p>
-              <a href="#">Simular ›</a>
+              <Link to="/FirstMillion">Simular ›</Link>
             </div>
 
             <div className="calculators-card">
@@ -52,9 +53,10 @@ function Calculators() {
                 Calcule a distribuição ideal entre renda fixa, variável, fundos
                 e mais.
               </p>
-              <a href="#">Simular ›</a>
+              <Link to="/AssetPercentage">Simular ›</Link>
             </div>
           </div>
+
           <div className="suggestion-section">
             <div className="suggestion-content">
               <h4>Não encontrou o que precisava?</h4>

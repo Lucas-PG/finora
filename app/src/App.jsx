@@ -7,6 +7,10 @@ import Wallets from "./pages/Wallets";
 import Calculators from "./pages/Calculators";
 import Assets from "./pages/Assets";
 import Register from "./pages/Register";
+import CompoundInterest from "./pages/CompoundInterest";
+import SimpleInterest from "./pages/SimpleInterest";
+import FirstMillion from "./pages/FirstMillion";
+import AssetPercentage from "./pages/AssetPercentage";
 import ChatBot from "./components/ChatBot";
 import Grafico from "./components/Grafico";
 import HeatMap from "./components/HeatMap";
@@ -73,6 +77,11 @@ function App() {
             <Route path="/wallets" element={<Navigate to="/"/>} />
             <Route path="/profile" element={<Navigate to="/"/>} />
             <Route path="*" element={<Navigate to="/"/>} />
+            <Route path="/CompoundInterest" element={<CompoundInterest />} />
+            <Route path="/SimpleInterest" element={<SimpleInterest />} />
+            <Route path="/FirstMillion" element={<FirstMillion />} />
+            <Route path="/AssetPercentage" element={<AssetPercentage />} />
+
           </>
         ) : (
           <>
@@ -85,6 +94,11 @@ function App() {
             <Route path="/register" element={<Navigate to="/"/>} />
             <Route path="/login" element={<Navigate to="/profile"/>} />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/CompoundInterest" element={<CompoundInterest />} />
+            <Route path="/SimpleInterest" element={<SimpleInterest />} />
+            <Route path="/FirstMillion" element={<FirstMillion />} />
+            <Route path="/AssetPercentage" element={<AssetPercentage />} />
+
           </>
         )}
       </Routes>

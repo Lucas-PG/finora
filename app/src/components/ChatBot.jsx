@@ -150,8 +150,6 @@ function ChatBot({ token, onLogout }) {
                             rows={1}
                             className="chat-textarea"
                         />
-                    </div>
-                    <div className="chat-input-2">
                         <button onClick={getResponse} disabled={chatbotDisabled}>
                             Enviar
                         </button>
