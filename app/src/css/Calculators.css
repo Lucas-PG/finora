@@ -31,8 +31,9 @@
 }
 
 .calculators-card:hover {
-  box-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
   transform: translateY(-3px);
+  border: 1px solid var(--primary-blue);
 }
 
 .calculators-card > div {
