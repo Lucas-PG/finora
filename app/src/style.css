@@ -87,6 +87,7 @@ body {
   color: var(--foreground);
   border: none;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .primary-btn:hover {
@@ -102,6 +103,7 @@ body {
   border: 1px solid var(--card-border);
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .secondary-btn:hover {
