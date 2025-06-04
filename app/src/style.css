@@ -86,6 +86,7 @@ body {
   text-decoration: none;
   color: var(--foreground);
   border: none;
+  transition: all 0.2s ease;
 }
 
 .primary-btn:hover {
@@ -94,10 +95,7 @@ body {
 }
 
 .secondary-btn {
-  transition:
-    background-color 0.3s,
-    box-shadow 0.3s,
-    scale 0.3s;
+  transition: all 0.2s ease;
   border-radius: 15px;
   background-color: var(--secondary-btn);
   color: var(--foreground);
