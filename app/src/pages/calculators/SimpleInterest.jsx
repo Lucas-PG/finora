@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "../components/NavBar";
-import Arrow from "../components/Arrow";
+import Navbar from "../../components/NavBar";
+import Arrow from "../../components/Arrow";
 import {
   LineChart,
   Line,
@@ -14,9 +14,9 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import "../css/CompoundInterest.css";
+import "../../css/SimpleInterest.css";
 
-function CompoundInterest() {
+function SimpleInterest() {
   const [initialValue, setInitialValue] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [period, setPeriod] = useState("");
@@ -25,7 +25,7 @@ function CompoundInterest() {
   const [graphMode, setGraphMode] = useState("linha");
   const [chartData, setChartData] = useState([]);
 
-  const calculateCompoundInterest = () => {
+  const calculateSimpleInterest = () => {
     const P = parseFloat(initialValue);
     const r = parseFloat(interestRate) / 100;
     const t = parseInt(period);
@@ -40,7 +40,9 @@ function CompoundInterest() {
     const data = [];
 
     for (let i = 1; i <= t; i++) {
-      total = total * (1 + r) + PMT * (((Math.pow(1 + r, i) - 1) / r));
+      const interest = P * r * i;
+      const monthlyTotal = PMT * 12 * i;
+      total = P + interest + monthlyTotal;
       data.push({ ano: `${i}º`, montante: parseFloat(total.toFixed(2)) });
     }
 
@@ -51,20 +53,34 @@ function CompoundInterest() {
   const renderChart = () => {
     if (graphMode === "resumo") {
       return finalAmount !== null ? (
-        <div className="compound-resume">
-          <p className="compound-result-description">
-            Montante acumulado ao final de {period} anos: <strong>R$ {finalAmount}</strong>
+        <div className="simple-resume">
+          <p className="simple-result-description">
+            Montante acumulado ao final de {period} anos:{" "}
+            <strong>R$ {finalAmount}</strong>
           </p>
-          <ul className="compound-resume-list">
-            <li>Valor inicial: <strong>R$ {parseFloat(initialValue).toFixed(2)}</strong></li>
-            <li>Taxa de juros anual: <strong>{parseFloat(interestRate).toFixed(2)}%</strong></li>
-            <li>Duração: <strong>{period} anos</strong></li>
-            <li>Investimento mensal: <strong>R$ {parseFloat(monthlyInvestment).toFixed(2)}</strong></li>
-            <li>Juros compostos crescem de forma exponencial com o tempo. Quanto mais longo o período, maior o impacto dos juros.</li>
+          <ul className="simple-resume-list">
+            <li>
+              Valor inicial:{" "}
+              <strong>R$ {parseFloat(initialValue).toFixed(2)}</strong>
+            </li>
+            <li>
+              Taxa de juros anual:{" "}
+              <strong>{parseFloat(interestRate).toFixed(2)}%</strong>
+            </li>
+            <li>
+              Duração: <strong>{period} anos</strong>
+            </li>
+            <li>
+              Investimento mensal:{" "}
+              <strong>R$ {parseFloat(monthlyInvestment).toFixed(2)}</strong>
+            </li>
+            <li>
+              No juro simples, o crescimento é linear. Ideal para prazos curtos.
+            </li>
           </ul>
         </div>
       ) : (
-        <p className="compound-result-description">
+        <p className="simple-result-description">
           Preencha os campos e clique em Calcular.
         </p>
       );
@@ -81,7 +97,12 @@ function CompoundInterest() {
               <XAxis dataKey="ano" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="montante" stroke="#0066FF" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="montante"
+                stroke="#0066FF"
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         );
@@ -105,7 +126,12 @@ function CompoundInterest() {
               <XAxis dataKey="ano" />
               <YAxis />
               <Tooltip />
-              <Area type="monotone" dataKey="montante" stroke="#fff" fill="#0066FF" />
+              <Area
+                type="monotone"
+                dataKey="montante"
+                stroke="#fff"
+                fill="#0066FF"
+              />
             </AreaChart>
           </ResponsiveContainer>
         );
@@ -118,55 +144,58 @@ function CompoundInterest() {
     <>
       <Navbar />
 
-      <div className="compound-container">
-        <div className="compound-content">
-          <h1 className="compound-title">Juros Compostos</h1>
-          <p className="compound-description">
-            O modelo mais comum em aplicações de renda fixa. Veja sua "bola de neve” formando.
+      <div className="simple-container">
+        <div className="simple-content">
+          <h1 className="simple-title">Juros Simples</h1>
+          <p className="simple-description">
+            Uma forma de rendimento linear e previsível. Veja como ele evolui ao
+            longo do tempo.
           </p>
         </div>
       </div>
 
-      <div className="compound-bottom-section">
-        <div className="compound-box-calculator">
-          <h3 className="compound-calculator-title">Calculadora de Juros Compostos</h3>
+      <div className="simple-bottom-section">
+        <div className="simple-box-calculator">
+          <h3 className="simple-calculator-title">
+            Calculadora de Juros Simples
+          </h3>
           <input
-            className="compound-input-initial"
+            className="simple-input-initial"
             placeholder="Valor Inicial"
             value={initialValue}
             onChange={(e) => setInitialValue(e.target.value)}
             type="number"
           />
           <input
-            className="compound-input-rate"
+            className="simple-input-rate"
             placeholder="Taxa de Juros (%)"
             value={interestRate}
             onChange={(e) => setInterestRate(e.target.value)}
             type="number"
           />
           <input
-            className="compound-input-period"
+            className="simple-input-period"
             placeholder="Período (anos)"
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
             type="number"
           />
           <input
-            className="compound-input-monthly"
+            className="simple-input-monthly"
             placeholder="Investimento Mensal"
             value={monthlyInvestment}
             onChange={(e) => setMonthlyInvestment(e.target.value)}
             type="number"
           />
-          <button className="compound-button" onClick={calculateCompoundInterest}>
-            <span className="compound-button-content">Calcular</span>
+          <button className="simple-button" onClick={calculateSimpleInterest}>
+            <span className="simple-button-content">Calcular</span>
           </button>
         </div>
 
-         <Arrow />
+        <Arrow />
 
-        <div className="compound-box-graph">
-          <h3 className="compound-result-title">Resultados</h3>
+        <div className="simple-box-graph">
+          <h3 className="simple-result-title">Resultados</h3>
 
           <div className="graph-mode-toggle">
             <label className="graph-radio">
@@ -221,4 +250,4 @@ function CompoundInterest() {
   );
 }
 
-export default CompoundInterest;
+export default SimpleInterest;
