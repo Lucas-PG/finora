@@ -7,10 +7,10 @@ import Wallets from "./pages/Wallets";
 import Calculators from "./pages/Calculators";
 import Assets from "./pages/Assets";
 import Register from "./pages/Register";
-import CompoundInterest from "./pages/CompoundInterest";
-import SimpleInterest from "./pages/SimpleInterest";
-import FirstMillion from "./pages/FirstMillion";
-import AssetPercentage from "./pages/AssetPercentage";
+import CompoundInterest from "./pages/calculators/CompoundInterest";
+import SimpleInterest from "./pages/calculators/SimpleInterest";
+import FirstMillion from "./pages/calculators/FirstMillion";
+import AssetPercentage from "./pages/calculators/AssetPercentage";
 import ChatBot from "./components/ChatBot";
 import Grafico from "./components/Grafico";
 import HeatMap from "./components/HeatMap";
@@ -74,14 +74,13 @@ function App() {
             <Route path="/assets" element={<Assets />} />
             <Route path="/about" element={<About />} />
             <Route path="/" element={<Home />} />
-            <Route path="/wallets" element={<Navigate to="/"/>} />
-            <Route path="/profile" element={<Navigate to="/"/>} />
-            <Route path="*" element={<Navigate to="/"/>} />
-            <Route path="/CompoundInterest" element={<CompoundInterest />} />
-            <Route path="/SimpleInterest" element={<SimpleInterest />} />
-            <Route path="/FirstMillion" element={<FirstMillion />} />
-            <Route path="/AssetPercentage" element={<AssetPercentage />} />
-
+            <Route path="/wallets" element={<Navigate to="/" />} />
+            <Route path="/profile" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/compound-interest" element={<CompoundInterest />} />
+            <Route path="/simple-interest" element={<SimpleInterest />} />
+            <Route path="/first-million" element={<FirstMillion />} />
+            <Route path="/asset-percentage" element={<AssetPercentage />} />
           </>
         ) : (
           <>
@@ -90,23 +89,28 @@ function App() {
             <Route path="/calculators" element={<Calculators />} />
             <Route path="/assets" element={<Assets />} />
             <Route path="/about" element={<About />} />
-            <Route path="/profile" element={<Update token={token} onLogout={logout} />} />
-            <Route path="/register" element={<Navigate to="/"/>} />
-            <Route path="/login" element={<Navigate to="/profile"/>} />
+            <Route
+              path="/profile"
+              element={<Update token={token} onLogout={logout} />}
+            />
+            <Route path="/register" element={<Navigate to="/" />} />
+            <Route path="/login" element={<Navigate to="/profile" />} />
             <Route path="*" element={<Navigate to="/" />} />
-            <Route path="/CompoundInterest" element={<CompoundInterest />} />
-            <Route path="/SimpleInterest" element={<SimpleInterest />} />
-            <Route path="/FirstMillion" element={<FirstMillion />} />
-            <Route path="/AssetPercentage" element={<AssetPercentage />} />
-
+            <Route path="/compound-interest" element={<CompoundInterest />} />
+            <Route path="/simple-interest" element={<SimpleInterest />} />
+            <Route path="/first-million" element={<FirstMillion />} />
+            <Route path="/asset-percentage" element={<AssetPercentage />} />
           </>
         )}
       </Routes>
       {isAuthenticated ? (
-        <ChatBot token={token} onLogout={logout} ></ChatBot>
-      ) : <></>}
+        <ChatBot token={token} onLogout={logout}></ChatBot>
+      ) : (
+        <></>
+      )}
     </BrowserRouter>
   );
 }
 
 export default App;
+
