@@ -1,12 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { CiSearch, CiLight, CiDark } from "react-icons/ci";
-import { useTheme } from "./ThemeContext";
+import { useTheme } from "../context/ThemeContext";
 import { useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
 import "../css/NavBar.css";
 
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const location = useLocation();
@@ -60,14 +62,16 @@ function Navbar() {
                 >
                   MERCADO
                 </NavLink>
-                <NavLink
-                  to="/wallets"
-                  className={({ isActive }) =>
-                    isActive ? "nav-item nav-item-active" : "nav-item"
-                  }
-                >
-                  CARTEIRAS
-                </NavLink>
+                {isAuthenticated && (
+                  <NavLink
+                    to="/wallets"
+                    className={({ isActive }) =>
+                      isActive ? "nav-item nav-item-active" : "nav-item"
+                    }
+                  >
+                    CARTEIRAS
+                  </NavLink>
+                )}
                 <NavLink
                   to="/calculators"
                   className={({ isActive }) =>
@@ -108,7 +112,7 @@ function Navbar() {
           <button className="icon-button" onClick={toggleTheme}>
             {theme === "dark" ? <CiLight size={26} /> : <CiDark size={26} />}
           </button>
-          {!isAuthPage && (
+          {!isAuthPage && !isAuthenticated && (
             <NavLink to="/login">
               <button className="home-login-btn primary-btn">Entrar</button>
             </NavLink>
@@ -120,4 +124,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
