@@ -4,8 +4,34 @@ import "../css/Home.css";
 import { FaLayerGroup, FaChartBar, FaChartLine } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import { AnimatedSection } from "../components/ui/AnimatedSection.jsx";
+import { HiOutlineViewGrid } from "react-icons/hi";
+import { BsPieChart } from "react-icons/bs";
+import { TbArrowsShuffle } from "react-icons/tb";
+import { LuCalculator } from "react-icons/lu";
+import NewsCard from "../components/ui/NewsCard";
 
 function Home() {
+  // TODO: Pegar isso de uma API
+  // https://www.marketaux.com/
+  const news = [
+    {
+      title: "Ibovespa fecha em alta com impulso de commodities",
+      source: "infomoney.com.br",
+    },
+    {
+      title: "Selic deve cair novamente em decisão do Copom, dizem analistas",
+      source: "valorinveste.globo.com",
+    },
+    {
+      title: "Petrobras anuncia novo plano estratégico até 2028",
+      source: "exame.com",
+    },
+    {
+      title: "Dólar recua e fecha abaixo de R$ 5,00 após dados dos EUA",
+      source: "cnnbrasil.com.br",
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -35,7 +61,7 @@ function Home() {
         <div className="page-container">
           <div className="page-content">
             <section className="home-section">
-              <AnimatedSection>
+              <AnimatedSection className="home-animated-section">
                 <div className="home-section-title">
                   <h2>
                     Ferramentas Poderosas para
@@ -46,46 +72,44 @@ function Home() {
                   <div className="home-card">
                     <div className="home-card-icon">
                       <div className="home-card-icon-container">
-                        <FaLayerGroup size={24} className="home-icon" />
+                        <HiOutlineViewGrid size={24} className="home-icon" />
                       </div>
                     </div>
                     <div className="home-card-text">
-                      <h2>Tudo o que você precisa</h2>
+                      <h2>Plataforma completa</h2>
                       <span>
                         Chega de abrir várias planilhas e sites diferentes.
                         Reunimos, em uma única plataforma, tudo o que um
-                        investidor precisa
+                        investidor precisa.
                       </span>
                     </div>
                   </div>
                   <div className="home-card">
                     <div className="home-card-icon">
                       <div className="home-card-icon-container">
-                        <FaChartBar size={24} className="home-icon" />
+                        <BsPieChart size={24} className="home-icon" />
                       </div>
                     </div>
                     <div className="home-card-text">
-                      <h2>Gráficos modernos e interativos</h2>
+                      <h2>Sua carteira</h2>
                       <span>
-                        Acompanhe seus investimentos com visualizações
-                        inteligentes, bonitas e fáceis de entender. Nossos
-                        gráficos foram desenvolvidos para destacar o que
-                        realmente importa
+                        Veja sua carteira atualizada com gráficos intuitivos,
+                        distribuição de ativos e histórico de rentabilidade.
                       </span>
                     </div>
                   </div>
+
                   <div className="home-card">
                     <div className="home-card-icon">
                       <div className="home-card-icon-container">
-                        <FaChartLine size={24} className="home-icon" />
+                        <TbArrowsShuffle size={24} className="home-icon" />
                       </div>
                     </div>
                     <div className="home-card-text">
-                      <h2>Informações claras e fáceis</h2>
+                      <h2>Simule carteiras</h2>
                       <span>
-                        Nosso site foi criado para transformar dados complexos
-                        do mercado financeiro em informações simples, visuais e
-                        compreensíveis.
+                        Teste diferentes combinações de ativos e veja como cada
+                        carteira se comportaria ao longo do tempo.
                       </span>
                     </div>
                   </div>
@@ -93,53 +117,50 @@ function Home() {
               </AnimatedSection>
             </section>
 
-            <section className="">
-              <AnimatedSection></AnimatedSection>
+            <section className="home-section home-dashboard-section">
+              <AnimatedSection className="home-dashboard-animated-section">
+                <div className="home-dashboard-left">
+                  <div className="home-dashboard-text">
+                    <h2>
+                      Acompanhe Seus Ativos Favoritos
+                      <br /> de <span className="blue">Forma Fácil</span>
+                    </h2>
+                    <span className="faded home-dashboard-subtitle">
+                      Acompanhe seus ativos com dashboards interativos, gráficos
+                      bonitos e dados atualizados. Entenda sua carteira de um
+                      jeito simples, compare investimentos e tome decisões com
+                      confiança, tudo em um só lugar.
+                    </span>
+                  </div>
+
+                  <button className="home-dashboard-btn secondary-btn">
+                    Monte sua carteira
+                  </button>
+                </div>
+                <div className="home-dashboard-right">
+                  <img src="/img/home-dashboard-img.png" alt="Img" />
+                </div>
+              </AnimatedSection>
             </section>
 
-            <section className="home-section">
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <h2>Ativos em Destaque</h2>
-              <div className="home-card-grid">
-                <div className="home-card">ITUB4</div>
-                <div className="home-card">BOVA11</div>
-                <div className="home-card">HASH11</div>
-                <div className="home-card">PETR4</div>
-              </div>
-            </section>
-
-            <section className="home-section">
-              <h2>Últimas Notícias</h2>
-              <div className="home-news-grid">
-                <div className="home-news-card">
-                  <p className="home-news-title">
-                    Bitcoin bate recorde! Veja as previsões de especialistas.
-                  </p>
-                  <p className="home-news-source">www.menti.com</p>
+            <section className="home-section home-news-section">
+              <AnimatedSection className="home-news-animated-section">
+                <div className="home-section-title">
+                  <h2>
+                    Acompanhe as <span className="blue">Últimas Notícias</span>{" "}
+                    do Mercado
+                  </h2>
                 </div>
-                <div className="home-news-card">
-                  <p className="home-news-title">
-                    Banco do Brasil é rebaixado! Confira as implicações
-                  </p>
-                  <p className="home-news-source">www.fakenews.com</p>
+                <div className="home-news-grid">
+                  {news.map((noticia, index) => (
+                    <NewsCard
+                      key={index}
+                      title={noticia.title}
+                      source={noticia.source}
+                    />
+                  ))}
                 </div>
-                <div className="home-news-card">
-                  <p className="home-news-title">
-                    PETR4 irá pagar 5 BILHÕES. Verifique as datas.
-                  </p>
-                  <p className="home-news-source">www.vainessa.org</p>
-                </div>
-              </div>
+              </AnimatedSection>
             </section>
 
             <section className="home-cta">
