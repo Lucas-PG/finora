@@ -1,9 +1,9 @@
 import "../css/Calculators.css";
-
 import { FaCalculator } from "react-icons/fa";
 import HeroSection from "../components/HeroSection";
 import { Link } from "react-router-dom";
 import Navbar from "../components/NavBar";
+import { AnimatedSection } from "../components/ui/AnimatedSection";
 
 function Calculators() {
   const title = "Calculadoras de Investimentos";
@@ -17,80 +17,90 @@ function Calculators() {
       <div className="page-container">
         <div className="page-content">
           <div className="calculators-card-section">
-            <Link className="calculators-card" to="/compound-interest">
-              <div className="calculator-icon-section">
-                <div className="calculator-icon-around">
-                  <FaCalculator size={20} className="calculator-icon" />
+            <AnimatedSection className="calculators-animated-section">
+              <Link className="calculators-card" to="/compound-interest">
+                <div className="calculator-icon-section">
+                  <div className="calculator-icon-around">
+                    <FaCalculator size={20} className="calculator-icon" />
+                  </div>
                 </div>
-              </div>
-              <div className="calculator-text-section">
-                <h3>Juros Compostos</h3>
-                <span>
-                  O modelo mais comum em aplicações de renda fixa. Veja sua
-                  "bola de neve” formando.
-                </span>
-              </div>
-            </Link>
-
-            <Link className="calculators-card" to="/simple-interest">
-              <div className="calculator-icon-section">
-                <div className="calculator-icon-around">
-                  <FaCalculator size={20} className="calculator-icon" />
+                <div className="calculator-text-section">
+                  <h3>Juros Compostos</h3>
+                  <span>
+                    O modelo mais comum em aplicações de renda fixa. Veja sua
+                    "bola de neve” formando.
+                  </span>
                 </div>
-              </div>
-              <div className="calculator-text-section">
-                <h3>Juros Simples</h3>
-                <span>
-                  Calcule os rendimentos de seus investimentos usando juros
-                  simples.
-                </span>
-              </div>
-            </Link>
-            <Link className="calculators-card" to="/first-million">
-              <div className="calculator-icon-section">
-                <div className="calculator-icon-around">
-                  <FaCalculator size={20} className="calculator-icon" />
+              </Link>
+            </AnimatedSection>
+            <AnimatedSection className="calculators-animated-section">
+              <Link className="calculators-card" to="/simple-interest">
+                <div className="calculator-icon-section">
+                  <div className="calculator-icon-around">
+                    <FaCalculator size={20} className="calculator-icon" />
+                  </div>
                 </div>
-              </div>
-              <div className="calculator-text-section">
-                <h3>Primeiro Milhão</h3>
-                <span>
-                  Veja quanto tempo e quanto investir por mês para alcançar o
-                  seu primeiro milhão.
-                </span>
-              </div>
-            </Link>
-            <Link className="calculators-card" to="/asset-percentage">
-              <div className="calculator-icon-section">
-                <div className="calculator-icon-around">
-                  <FaCalculator size={20} className="calculator-icon" />
+                <div className="calculator-text-section">
+                  <h3>Juros Simples</h3>
+                  <span>
+                    Calcule os rendimentos de seus investimentos usando juros
+                    simples.
+                  </span>
                 </div>
-              </div>
-              <div className="calculator-text-section">
-                <h3>Alocação de Portfolio</h3>
-                <span>
-                  Monte sua carteira ideal organizando seus ativos por tipo e
-                  perfil de investimento.
-                </span>
-              </div>
-            </Link>
+              </Link>
+            </AnimatedSection>
+            <AnimatedSection className="calculators-animated-section">
+              <Link className="calculators-card" to="/first-million">
+                <div className="calculator-icon-section">
+                  <div className="calculator-icon-around">
+                    <FaCalculator size={20} className="calculator-icon" />
+                  </div>
+                </div>
+                <div className="calculator-text-section">
+                  <h3>Primeiro Milhão</h3>
+                  <span>
+                    Veja quanto tempo e quanto investir por mês para alcançar o
+                    seu primeiro milhão.
+                  </span>
+                </div>
+              </Link>
+            </AnimatedSection>
+            <AnimatedSection className="calculators-animated-section">
+              <Link className="calculators-card" to="/asset-percentage">
+                <div className="calculator-icon-section">
+                  <div className="calculator-icon-around">
+                    <FaCalculator size={20} className="calculator-icon" />
+                  </div>
+                </div>
+                <div className="calculator-text-section">
+                  <h3>Alocação de Portfolio</h3>
+                  <span>
+                    Monte sua carteira ideal organizando seus ativos por tipo e
+                    perfil de investimento.
+                  </span>
+                </div>
+              </Link>
+            </AnimatedSection>
           </div>
+
           <div className="suggest-tool-section">
-            <div className="suggest-tool-card">
-              <div className="suggest-title-section">
-                <h2>Não encontrou o que precisava?</h2>
-                <span>
-                  Estamos sempre trabalhando para ajudar nossos usuários a tomar
-                  as melhores decisões de investimentos. Que tal nos contar que
-                  tipo de ferramenta te ajudaria?
-                </span>
+            <AnimatedSection className="calculators-animated-section">
+              <div className="suggest-tool-card">
+                <div className="suggest-title-section">
+                  <h2>Não encontrou o que precisava?</h2>
+                  <span>
+                    Estamos sempre trabalhando para ajudar nossos usuários a
+                    tomar as melhores decisões de investimentos. Que tal nos
+                    contar que tipo de ferramenta te ajudaria?
+                  </span>
+                </div>
+                <div className="suggest-btn-section">
+                  <button type="button" className="primary-btn suggest-btn">
+                    Sugerir Ferramenta
+                  </button>
+                </div>
               </div>
-              <div className="suggest-btn-section">
-                <button type="button" className="primary-btn suggest-btn">
-                  Sugerir Ferramenta
-                </button>
-              </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </div>
