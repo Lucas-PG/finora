@@ -15,14 +15,16 @@ function Home() {
             Com Inteligência
           </h1>
           <p>
-            Todas as informações que os investidores <br />
-            precisam em um só lugar
+            Acompanhe o mercado. Organize seus investimentos. Construa seu
+            futuro.
+            <br />
+            Tudo em um só lugar.
           </p>
           <div className="home-hero-buttons">
-            <NavLink className="home-btn-primary" to="/login">
+            <NavLink className="home-btn-primary primary-btn" to="/login">
               Comece já →
             </NavLink>
-            <NavLink className="home-btn-secondary" to="/about">
+            <NavLink className="home-btn-secondary secondary-btn" to="/about">
               Aprenda mais
             </NavLink>
           </div>
@@ -127,3 +129,4 @@ function Home() {
 }
 
 export default Home;
+

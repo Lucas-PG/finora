@@ -3,6 +3,7 @@
   --background-blur: #030712b3;
   --foreground: #ffffff;
   --primary-blue: #0066ff;
+  --primary-blue-opacity: #0066ff33;
   --card-bg: #10141d;
   --card-border: #41434a;
   --faded: rgba(255, 255, 255, 0.7);
@@ -55,3 +56,61 @@ body {
   flex-direction: column;
   align-items: center;
 }
+
+.page-container {
+  width: 100%;
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  padding-bottom: 10vh;
+}
+
+.page-content {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+.primary-btn {
+  background-color: var(--primary-blue);
+  transition: opacity background-color 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 102, 255, 0.5);
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--foreground);
+  border: none;
+}
+
+.primary-btn:hover {
+  box-shadow: 0 10px 15px rgba(0, 102, 255, 0.5);
+  scale: 1.02;
+}
+
+.secondary-btn {
+  transition:
+    background-color 0.3s,
+    box-shadow 0.3s,
+    scale 0.3s;
+  border-radius: 15px;
+  background-color: var(--secondary-btn);
+  color: var(--foreground);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.secondary-btn:hover {
+  filter: brightness(125%);
+  scale: 1.02;
+  box-shadow:
+    0 0 10px var(--secondary-btn),
+    0 0 20px var(--secondary-btn);
+}
+

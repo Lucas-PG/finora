@@ -193,11 +193,6 @@
   transition: all 0.2s ease;
 }
 
-.home-login-btn:hover {
-  box-shadow: 0 15px 20px rgba(0, 102, 255, 0.5);
-  scale: 1.02;
-}
-
 .icon-button:hover {
   transform: scale(1.1);
 }

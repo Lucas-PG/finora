@@ -25,7 +25,7 @@
 
 .home-hero p {
   font-size: 1rem;
-  color: var(--custom-faded);
+  color: var(--faded);
   margin-bottom: 2rem;
 }
 
@@ -37,38 +37,16 @@
 }
 
 .home-btn-primary {
-  background-color: var(--primary-blue);
-  color: var(--custom-opposite);
-  border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity background-color 0.3s;
-  width: 200px;
-  text-decoration: none;
-}
-
-.home-btn-primary:hover {
-  opacity: 60%;
 }
 
 .home-btn-secondary {
-  background-color: var(--secondary-btn);
-  color: var(--custom-opposite);
   border: 1px solid var(--card-border);
   padding: 0.75rem 1.5rem;
   border-radius: 15px;
   font-weight: bold;
-  cursor: pointer;
   transition: background-color 0.3s;
-  width: 200px;
   text-decoration: none;
-}
-
-.home-btn-secondary:hover {
-  /* background-color: var(--card-bg); */
-  filter: brightness(75%);
 }
 
 .home-section {
