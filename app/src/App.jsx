@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -17,49 +18,8 @@ import HeatMap from "./components/HeatMap";
 import Update from "./components/Update";
 import "./style.css";
 
-function setToken(token) {
-  sessionStorage.setItem("token", token);
-}
-
-function getToken() {
-  return sessionStorage.getItem("token");
-}
-
-function removeToken() {
-  sessionStorage.removeItem("token");
-}
-
-function logout() {
-  removeToken();
-  window.location.reload();
-}
-
-async function verifyToken(token, setIsAuthenticated) {
-  if (!token || token === "null") {
-    setIsAuthenticated(false);
-    return;
-  }
-  try {
-    const response = await fetch("http://localhost:3001/user/verify", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) removeToken();
-    setIsAuthenticated(response.ok);
-  } catch (err) {
-    console.error("Error verifying token:", err);
-    removeToken();
-    setIsAuthenticated(false);
-  }
-}
-
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const token = getToken();
-
-  useEffect(() => {
-    verifyToken(token, setIsAuthenticated);
-  }, [token]);
+  const { isAuthenticated, setToken, token, logout } = useContext(AuthContext);
 
   if (isAuthenticated === null) return <div>Verificando login...</div>;
 
@@ -103,14 +63,9 @@ function App() {
           </>
         )}
       </Routes>
-      {isAuthenticated ? (
-        <ChatBot token={token} onLogout={logout}></ChatBot>
-      ) : (
-        <></>
-      )}
+      {isAuthenticated && <ChatBot token={token} onLogout={logout} />}
     </BrowserRouter>
   );
 }
 
 export default App;
-
