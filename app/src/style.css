@@ -114,3 +114,18 @@ body {
     0 0 20px var(--secondary-btn);
 }
 
+.animated-section {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animated-section-active {
+  opacity: 100%;
+  transform: translateY(0px);
+  filter: none;
+}
+
+.animated-section-inactive {
+  opacity: 0%;
+  transform: translateY(10px);
+  filter: blur(8px);
+}
