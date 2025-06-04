@@ -1,38 +1,19 @@
-import { useEffect, useRef, memo } from 'react'
+import "../css/HeroSection.css";
 
-function Grafico() {
-    const container = useRef()
+function HeroSection({ title, subtitle }) {
+  // Pintar ultima palavra apenas
+  const words = title.trim().split(" ");
+  const lastWord = words.pop();
+  const rest = words.join(" ");
 
-    useEffect(
-          () => {
-            const script = document.createElement("script")
-            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
-            script.type = "text/javascript"
-            script.async = true
-            script.innerHTML = `
-                {
-                    "width": "980",
-                    "height": "610",
-                    "symbol": "NASDAQ:AAPL",
-                    "interval": "D",
-                    "timezone": "Etc/UTC",
-                    "theme": "dark",
-                    "style": "1",
-                    "locale": "en",
-                    "allow_symbol_change": true,
-                    "support_host": "https://www.tradingview.com"
-                }`
-            container.current.appendChild(script)
-          },
-          []
-    )
-
-    return (
-        <div className="tradingview-widget-container" ref={container}>
-            <div className="tradingview-widget-container__widget"></div>
-            <div className="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span className="blue-text">Track all markets on TradingView</span></a></div>
-        </div>
-    )
+  return (
+    <section className="hero-section">
+      <h1>
+        {rest} <span className="hero-h1-highlight">{lastWord}</span>
+      </h1>
+      <span>{subtitle}</span>
+    </section>
+  );
 }
 
-export default memo(Grafico)
+export default HeroSection;
