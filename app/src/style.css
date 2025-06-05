@@ -50,7 +50,6 @@ body {
   width: 100%;
   max-width: 100%;
   color: var(--foreground);
-  padding-top: 10vh;
 }
 
 .login-wrapper,

@@ -13,7 +13,8 @@
 }
 
 .navbar-inactive {
-  background-color: var(--background);
+  /* background-color: var(--background); */
+  background-color: transparent;
 }
 
 .navbar-active {
@@ -91,16 +92,18 @@
 .navbar-search-container {
   display: flex;
   gap: 1.2rem;
+  height: 100%;
+  border-radius: 9999px;
 }
 
 .navbar-search {
   background: transparent;
   color: var(--custom-opposite);
-  font-size: 1.1rem;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
 }
 
@@ -157,9 +160,11 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(-foreground);
-  padding: 0.3rem;
-  color: var(--custom-opposite);
+  color: var(--foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
 }
 
 .home-login-btn {

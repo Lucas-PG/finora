@@ -1,7 +1,7 @@
 .home-hero-section {
   position: relative;
   width: 100%;
-  height: 55vh;
+  height: 65vh;
   color: var(--foreground);
   display: flex;
   flex-direction: column;

@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { CiSearch, CiLight, CiDark } from "react-icons/ci";
+import { LuMoon, LuSun, LuSearch } from "react-icons/lu";
 import { useTheme } from "../context/ThemeContext";
 import { useLocation } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
@@ -96,8 +97,8 @@ function Navbar() {
           {!isAuthPage && (
             <div className="navbar-search-container">
               <button type="button" className="navbar-search">
-                <CiSearch
-                  size={26}
+                <LuSearch
+                  size={20}
                   className={`navbar-search-icon ${isSearching ? "navbar-search-icon-active" : ""}`}
                   onClick={toggleSearch}
                 />
@@ -110,7 +111,7 @@ function Navbar() {
             </div>
           )}
           <button className="icon-button" onClick={toggleTheme}>
-            {theme === "dark" ? <CiLight size={26} /> : <CiDark size={26} />}
+            {theme === "dark" ? <LuSun size={20} /> : <LuMoon size={20} />}
           </button>
           {!isAuthPage && !isAuthenticated && (
             <NavLink to="/login">
