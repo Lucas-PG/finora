@@ -354,11 +354,28 @@
 
 .home-cta {
   margin-top: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 30vh;
+  width: 100%;
+  background-color: var(--primary-blue-opacity);
+  gap: 3vh;
+  border-radius: var(--custom-border-radius);
+  box-shadow:
+    0 20px 30px rgba(0, 0, 0, 0.25),
+    0 6px 10px rgba(0, 0, 0, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.home-cta h2 {
-  font-size: 1.4rem;
-  margin-bottom: 1.5rem;
+.home-cta-text {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
 }
 
 .create-account-btn {

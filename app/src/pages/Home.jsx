@@ -162,9 +162,18 @@ function Home() {
             </section>
 
             <section className="home-cta">
-              <h2>Pronto para começar a investir?</h2>
+              <div className="home-cta-text">
+                <h2>
+                  Pronto Para Transformar
+                  <span className="blue"> Seu Futuro?</span>
+                </h2>
+                <span>
+                  Começe gratuitamente e tome decisões informadas para seus
+                  investimentos
+                </span>
+              </div>
               <NavLink
-                className="home-btn-primary create-account-btn"
+                className="home-btn-primary create-account-btn primary-btn"
                 to="/register"
               >
                 Criar Conta Gratuita
