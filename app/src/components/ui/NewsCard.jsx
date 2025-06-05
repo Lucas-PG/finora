@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 function NewsCard({ title, source }) {
   return (
     <div className="home-news-card">

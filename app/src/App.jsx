@@ -6,15 +6,13 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Wallets from "./pages/Wallets";
 import Calculators from "./pages/Calculators";
-import Assets from "./pages/Assets";
+import Market from "./pages/Market";
 import Register from "./pages/Register";
 import CompoundInterest from "./pages/calculators/CompoundInterest";
 import SimpleInterest from "./pages/calculators/SimpleInterest";
 import FirstMillion from "./pages/calculators/FirstMillion";
 import AssetPercentage from "./pages/calculators/AssetPercentage";
 import ChatBot from "./components/ChatBot";
-import Grafico from "./components/Grafico";
-import HeatMap from "./components/HeatMap";
 import Update from "./components/Update";
 import "./style.css";
 
@@ -31,7 +29,7 @@ function App() {
             <Route path="/login" element={<Login setToken={setToken} />} />
             <Route path="/register" element={<Register />} />
             <Route path="/calculators" element={<Calculators />} />
-            <Route path="/assets" element={<Assets />} />
+            <Route path="/market" element={<Market />} />
             <Route path="/about" element={<About />} />
             <Route path="/" element={<Home />} />
             <Route path="/wallets" element={<Navigate to="/" />} />
@@ -47,7 +45,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/wallets" element={<Wallets />} />
             <Route path="/calculators" element={<Calculators />} />
-            <Route path="/assets" element={<Assets />} />
+            <Route path="/market" element={<Market />} />
             <Route path="/about" element={<About />} />
             <Route
               path="/profile"

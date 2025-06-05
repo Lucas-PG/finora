@@ -55,7 +55,7 @@ function Navbar() {
                   INÍCIO
                 </NavLink>
                 <NavLink
-                  to="/assets"
+                  to="/market"
                   className={({ isActive }) =>
                     isActive ? "nav-item nav-item-active" : "nav-item"
                   }

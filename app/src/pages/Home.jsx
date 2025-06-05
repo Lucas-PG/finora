@@ -1,13 +1,11 @@
 import Navbar from "../components/NavBar.jsx";
 import { NavLink } from "react-router-dom";
 import "../css/Home.css";
-import { FaLayerGroup, FaChartBar, FaChartLine } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import { AnimatedSection } from "../components/ui/AnimatedSection.jsx";
 import { HiOutlineViewGrid } from "react-icons/hi";
 import { BsPieChart } from "react-icons/bs";
 import { TbArrowsShuffle } from "react-icons/tb";
-import { LuCalculator } from "react-icons/lu";
 import NewsCard from "../components/ui/NewsCard";
 
 function Home() {
