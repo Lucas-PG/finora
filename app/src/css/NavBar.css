@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 8vh;
+  height: 10vh;
   padding: 0px;
   margin: 0px;
   transition: all 0.3s ease;
@@ -20,7 +20,7 @@
   background-color: var(--background-blur);
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  height: 7vh;
+  height: 8vh;
 }
 
 .navbar {
@@ -181,7 +181,7 @@
 }
 
 .home-login-btn {
-  padding: 1rem 2rem;
+  padding: 0.75rem 2rem;
   background-color: var(--primary-blue);
   border: none;
   border-radius: 15px;
