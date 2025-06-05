@@ -19,6 +19,7 @@
 
 [data-theme="light"] {
   --background: #f8fbfb;
+  --background-blur: #f8fbfbb3;
   --foreground: #060a16;
   --card-bg: #e0e7ff;
   --faded: rgba(0, 0, 0, 0.7);

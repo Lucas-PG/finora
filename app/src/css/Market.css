@@ -113,7 +113,7 @@
 }
 
 .market-assets-search-icon {
-  color: var(--foregroun--foregroundd);
+  color: var(--foreground);
   margin-right: 0.6rem;
   flex-shrink: 0;
 }
