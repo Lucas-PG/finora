@@ -161,7 +161,7 @@ function Home() {
               </AnimatedSection>
             </section>
 
-            <section className="home-cta">
+            <AnimatedSection className="home-cta">
               <div className="home-cta-text">
                 <h2>
                   Pronto Para Transformar
@@ -178,7 +178,7 @@ function Home() {
               >
                 Criar Conta Gratuita
               </NavLink>
-            </section>
+            </AnimatedSection>
           </div>
         </div>
       </div>
