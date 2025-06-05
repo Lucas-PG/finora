@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import Arrow from "../../components/Arrow";
+import HeroSection from "../../components/HeroSection";
 import {
   LineChart,
   Line,
@@ -140,20 +141,14 @@ function SimpleInterest() {
     }
   };
 
+  const title = "Juros Simples";
+  const subtitle =
+    "Uma forma de rendimento linear e previsível. Veja como ele evolui ao longo do tempo.";
+
   return (
     <>
       <Navbar />
-
-      <div className="simple-container">
-        <div className="simple-content">
-          <h1 className="simple-title">Juros Simples</h1>
-          <p className="simple-description">
-            Uma forma de rendimento linear e previsível. Veja como ele evolui ao
-            longo do tempo.
-          </p>
-        </div>
-      </div>
-
+      <HeroSection title={title} subtitle={subtitle} />
       <div className="simple-bottom-section">
         <div className="simple-box-calculator">
           <h3 className="simple-calculator-title">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import Arrow from "../../components/Arrow";
+import HeroSection from "../../components/HeroSection.jsx";
 import {
   LineChart,
   Line,
@@ -139,20 +140,14 @@ function CompoundInterest() {
     }
   };
 
+  const title = "Juros Compostos";
+  const subtitle =
+    'O modelo mais comum em aplicações de renda fixa. Veja sua "bola de neve" formando';
+
   return (
     <>
       <Navbar />
-
-      <div className="compound-container">
-        <div className="compound-content">
-          <h1 className="compound-title">Juros Compostos</h1>
-          <p className="compound-description">
-            O modelo mais comum em aplicações de renda fixa. Veja sua "bola de
-            neve” formando.
-          </p>
-        </div>
-      </div>
-
+      <HeroSection title={title} subtitle={subtitle} />
       <div className="compound-bottom-section">
         <div className="compound-box-calculator">
           <h3 className="compound-calculator-title">

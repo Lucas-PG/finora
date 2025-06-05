@@ -1,13 +1,14 @@
 import Navbar from "../../components/NavBar";
+import HeroSection from "../../components/HeroSection";
 
 function FirstMillion() {
+  const title = "Primeiro Milhão";
+  const subtitle = "Simule quanto tempo você levaria para atingir R$1.000.000";
+
   return (
     <>
       <Navbar />
-      <div style={{ padding: "2rem", color: "#ccc" }}>
-        <h1>Primeiro Milhão</h1>
-        <p>Simule quanto tempo você levaria para atingir R$1.000.000.</p>
-      </div>
+      <HeroSection title={title} subtitle={subtitle} />
     </>
   );
 }
