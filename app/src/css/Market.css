@@ -18,7 +18,7 @@
   flex: 1;
   background-color: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 15px;
+  border-radius: var(--custom-border-radius);
   padding: 0px 10px;
 }
 
@@ -149,14 +149,14 @@
   border: 1px solid var(--primary-blue);
   color: var(--foreground);
   font-weight: bold;
-  border-radius: 15px;
+  border-radius: var(--custom-border-radius);
 }
 
 .market-list-container {
   background-color: var(--card-bg);
   width: 100%;
   padding: 5vh 0px;
-  border-radius: 15px;
+  border-radius: var(--custom-border-radius);
   box-shadow: 0 0 15px var(--primary-blue-glow);
   display: flex;
   flex-direction: column;
@@ -197,6 +197,6 @@
 
 .market-list-asset-btn {
   padding: 1rem 2rem;
-  border-radius: 15px;
+  border-radius: var(--custom-border-radius);
   font-size: 1rem;
 }

@@ -92,7 +92,7 @@
   font-size: 1.2rem;
   font-weight: bold;
   text-align: left;
-  border-radius: 15px;
+  border-radius: var(--custom-border-radius);
 }
 
 .simple-input-initial,
@@ -212,7 +212,7 @@ input[type="number"] {
   line-height: 1.6;
   background-color: #181e2b;
   padding: 1.5rem;
-  border-radius: 15px;
+  border-radius: var(--custom-border-radius);
   border: 1px solid #41434a;
   margin-top: 1.5rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
