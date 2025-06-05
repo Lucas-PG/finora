@@ -160,6 +160,11 @@ function Market() {
                 </button>
               </div>
             </div>
+          </AnimatedSection>
+          <AnimatedSection
+            className="market-assets-animated-section market-list-animated-section"
+            rootMargin="600px"
+          >
             <div className="market-list-container">
               <div className="market-list-header">
                 <div>

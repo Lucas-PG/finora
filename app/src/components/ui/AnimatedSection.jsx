@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-export const AnimatedSection = ({ children, className = "", delay = 0 }) => {
+export const AnimatedSection = ({
+  children,
+  className = "",
+  delay = 0,
+  rootMargin = "0px",
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -14,7 +19,7 @@ export const AnimatedSection = ({ children, className = "", delay = 0 }) => {
       },
       {
         root: null,
-        rootMargin: "0px",
+        rootMargin,
         threshold: 0.1,
       },
     );
@@ -28,7 +33,7 @@ export const AnimatedSection = ({ children, className = "", delay = 0 }) => {
         observer.unobserve(sectionRef.current);
       }
     };
-  }, []);
+  }, [rootMargin]);
 
   return (
     <div
