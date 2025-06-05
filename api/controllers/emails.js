@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import dotenv from "dotenv"
-import { db } from "../db"
+import { db } from "../db.js"
 
 dotenv.config()
 const EMAIL_LOGIN = process.env.EMAIL_LOGIN

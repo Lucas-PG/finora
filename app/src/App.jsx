@@ -16,6 +16,7 @@ import Grafico from "./components/Grafico";
 import HeatMap from "./components/HeatMap";
 import Update from "./components/Update";
 import "./style.css";
+import Email from "./components/Email";
 
 function setToken(token) {
   sessionStorage.setItem("token", token);
@@ -98,13 +99,18 @@ function App() {
             <Route path="/SimpleInterest" element={<SimpleInterest />} />
             <Route path="/FirstMillion" element={<FirstMillion />} />
             <Route path="/AssetPercentage" element={<AssetPercentage />} />
-
           </>
         )}
       </Routes>
       {isAuthenticated ? (
-        <ChatBot token={token} onLogout={logout} ></ChatBot>
-      ) : <></>}
+        <div>
+          <ChatBot token={token} onLogout={logout} ></ChatBot>
+          <Email token={token}></Email>
+        </div>
+      ) : 
+        <div>
+          <Email token={token}></Email>
+        </div>}
     </BrowserRouter>
   );
 }
