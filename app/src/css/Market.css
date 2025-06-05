@@ -103,7 +103,7 @@
 .market-assets-input-container {
   display: flex;
   align-items: center;
-  border: 1px solid var(--primary-blue);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 0.6rem 1rem;
   /* box-shadow: 0 0 12px var(--primary-blue); */
@@ -133,9 +133,10 @@
 }
 
 .market-assets-input-container:focus-within {
+  border: 1px solid var(--primary-blue);
   box-shadow:
-    0 0 15px var(--primary-blue),
-    0 0 20px var(--primary-blue);
+    0 0 5px var(--primary-blue),
+    0 0 10px var(--primary-blue);
 }
 
 .market-filter {
