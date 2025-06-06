@@ -44,13 +44,13 @@ export const verifyToken = (_, res) => {
 export const postUser = async (req, res) => {
     const { name, email, password, confirmPassword, captchaToken } = req.body
     if (captchaToken === null) {
-        return res.status(400).send({"data": "Invalid Captcha."})
+        return res.status(400).json({"data": "Invalid Captcha."})
     }
     if (name === null || name.trim() === "" || email === null || email.trim() === "" || password === null || password.trim() === "") {
-        return res.status(400).send({"data": "Invalid Parameters."})
+        return res.status(400).json({"data": "Invalid Parameters."})
     }
     if (password !== confirmPassword) {
-        return res.status(400).send({"data": "Password is not equal to Confirm Password"})
+        return res.status(400).json({"data": "Password is not equal to Confirm Password"})
     }
     const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
         method: "POST",
@@ -59,14 +59,14 @@ export const postUser = async (req, res) => {
     })
     const data = await response.json()
     if (!data.success) {
-        return res.status(400).send("Captcha Validation Failed. Try again.")
+        return res.status(400).json({"data": "Captcha Validation Failed. Try again."})
     }
     const salt = 10
     const hashPassword = await bcrypt.hash(password, salt)
     const uuid = uuidv4()
     const query = "INSERT INTO users (uuid, name, email, password) VALUES (?, ?, ?, ?)"
     db.query(query, [uuid, name, email, hashPassword], (err, results) => {
-        if (err) return res.status(500).send("Error while registering user. Email already been registered.")
+        if (err) return res.status(500).json({"data": "Error while registering user. Email already been registered."})
         return res.status(201).json({ name, email })
     })
 }

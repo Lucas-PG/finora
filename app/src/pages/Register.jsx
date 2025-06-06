@@ -49,8 +49,8 @@ function Register() {
             body: JSON.stringify(data)
         })
         if (!response.ok) {
-            const responseMsg = await response.text()
-            alert(responseMsg)
+            const data = await response.json()
+            alert(data.data)
             window.location.reload()
             return
         }
