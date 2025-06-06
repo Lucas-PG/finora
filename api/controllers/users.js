@@ -52,20 +52,22 @@ export const postUser = async (req, res) => {
     if (password !== confirmPassword) {
         return res.status(400).send({"data": "Password is not equal to Confirm Password"})
     }
-    const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${CAPTCHA_SECRET}&response=${captchaToken}`
-    await fetch(verificationUrl, { method: "POST" }).then(async res => {
-        const data = await res.json()
-        if (!data.success) {
-            return res.status(400).send({"data": "Captcha Validation Failed. Try again."})
-        }
+    const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${CAPTCHA_SECRET}&response=${captchaToken}`
     })
+    const data = await response.json()
+    if (!data.success) {
+        return res.status(400).send("Captcha Validation Failed. Try again.")
+    }
     const salt = 10
     const hashPassword = await bcrypt.hash(password, salt)
     const uuid = uuidv4()
     const query = "INSERT INTO users (uuid, name, email, password) VALUES (?, ?, ?, ?)"
     db.query(query, [uuid, name, email, hashPassword], (err, results) => {
         if (err) return res.status(500).send("Error while registering user. Email already been registered.")
-        return res.status(201).json({name, email})
+        return res.status(201).json({ name, email })
     })
 }
 

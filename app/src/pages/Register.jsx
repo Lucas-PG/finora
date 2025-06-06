@@ -48,6 +48,7 @@ function Register() {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data)
         })
+        console.log(response)
         if (!response.ok) {
             const responseMsg = await response.text()
             alert(responseMsg)
