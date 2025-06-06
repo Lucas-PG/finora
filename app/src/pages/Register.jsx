@@ -1,120 +1,130 @@
-import { useState } from "react"
-import { validate } from "react-email-validator"
-import { Link, useNavigate } from "react-router-dom"
-import { MdOutlineEmail, MdLockOutline } from "react-icons/md"
-import { MdPersonOutline } from "react-icons/md"
-import ReCAPTCHA from "react-google-recaptcha"
-import "../css/NavBar.css"
-import "../css/Register.css"
-import Navbar from "../components/NavBar"
-
-function IconInput({ type, placeholder, value, onChange, icon: Icon }) {
-    return (
-        <div className="icon-input-wrapper-register">
-            <input type={type} placeholder={placeholder} value={value} onChange={onChange} />
-            <span className="input-icon-register"> <Icon /></span>
-        </div>
-    )
-}
+import { useState } from "react";
+import { validate } from "react-email-validator";
+import { Link, useNavigate } from "react-router-dom";
+import FloatingInput from "../components/ui/FloatingInput";
+import { FaLock, FaUnlock, FaEnvelope } from "react-icons/fa";
+import { MdPersonOutline } from "react-icons/md";
+import ReCAPTCHA from "react-google-recaptcha";
+import NavBar from "../components/NavBar";
+import "../css/Register.css"; // Usa o mesmo CSS base, mas com novas classes
 
 function Register() {
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [captchaToken, setCaptchaToken] = useState(null)
-    const navigate = useNavigate()
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const navigate = useNavigate();
 
-    const postUser = async () => {
-        if (name.trim() === "" || email.trim() === "" || password === "" || confirmPassword.trim() === "") {
-            alert("Empty field.")
-            return
-        }
-        if (!captchaToken) {
-            alert("Invalid Captcha.")
-            return
-        }
-        if (!validate(email)) {
-            alert("Invalid email.")
-            return
-        }
-        if (password !== confirmPassword) {
-            alert("Password is not equal to Confirm Password.")
-            return
-        }
-        let data = {name: name, email: email, password: password, confirmPassword: confirmPassword, captchaToken: captchaToken}
-        const response = await fetch("http://localhost:3001/user/register", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(data)
-        })
-        if (!response.ok) {
-            const data = await response.json()
-            alert(data.data)
-            window.location.reload()
-            return
-        }
-        alert("User Registered!")
-        navigate("/login")
+  const postUser = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+    if (!captchaToken) {
+      alert("Captcha inválido.");
+      return;
+    }
+    if (!validate(email)) {
+      alert("E-mail inválido.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert("As senhas não coincidem.");
+      return;
     }
 
-    return (
-        <>
-            <Navbar />
+    const data = {
+      name,
+      email,
+      password,
+      confirmPassword,
+      captchaToken,
+    };
 
-            <div className="register-wrapper">
-                <h1>CRIE UMA CONTA</h1>
-                <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    postUser()
-                }}
-                >
-                <IconInput
-                    type="text"
-                    placeholder="Nome completo"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    icon={MdPersonOutline}
-                />
-                <IconInput
-                    type="email"
-                    placeholder="E-mail"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    icon={MdOutlineEmail}
-                />
-                <IconInput
-                    type="password"
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    icon={MdLockOutline}
-                />
-                <IconInput
-                    type="password"
-                    placeholder="Confirme a senha"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    icon={MdLockOutline}
-                />
-                <ReCAPTCHA sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY" onChange={setCaptchaToken}/>
-                <button type="submit">Registrar</button>
+    const response = await fetch("http://localhost:3001/user/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-                <div className="divider">
-                    <span>ou</span>
-                </div>
+    if (!response.ok) {
+      const result = await response.json();
+      alert(result.data || "Erro ao registrar.");
+      window.location.reload();
+      return;
+    }
 
-                <p>
-                    Já tem uma conta?{" "}
-                    <Link to="/login" className="login-link">
-                    Faça login
-                    </Link>
-                </p>
-                </form>
+    alert("Usuário registrado com sucesso!");
+    navigate("/login");
+  };
+
+  return (
+    <>
+      <NavBar />
+      <div className="register-container">
+        <div className="register-content">
+          <h1>CRIE UMA CONTA</h1>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              postUser();
+            }}
+            className="register-form"
+          >
+            <FloatingInput
+              type="text"
+              label="Nome completo"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              icon={MdPersonOutline}
+            />
+            <FloatingInput
+              type="email"
+              label="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              icon={FaEnvelope}
+            />
+            <FloatingInput
+              type="password"
+              label="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={{ Closed: FaLock, Open: FaUnlock }}
+            />
+            <FloatingInput
+              type="password"
+              label="Confirme a senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              icon={{ Closed: FaLock, Open: FaUnlock }}
+            />
+            <ReCAPTCHA
+              sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY"
+              onChange={setCaptchaToken}
+              className="captcha"
+            />
+            <button type="submit" className="primary-btn register-btn">
+              Registrar
+            </button>
+
+            <div className="divider">
+              <div>ou</div>
             </div>
-        </>
-    )
+          </form>
+          <p className="register-login-p">
+            Já tem uma conta?
+            <Link to="/login" className="register-link">
+              {" "}
+              Faça login
+            </Link>
+          </p>
+        </div>
+      </div>
+    </>
+  );
 }
 
-export default Register
+export default Register;
+
