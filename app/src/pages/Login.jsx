@@ -71,7 +71,7 @@ function Login({ setToken }) {
                 {seePassword && (
                     <IconInput type="text" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} icon={MdLockOpen} 
                     onClick={() => setSeePassword(false)} /> )}
-                <ReCAPTCHA sitekey="6LdYRkorAAAAADYL-JYYlkMGlbFETAs6wy0WHEad" onChange={setCaptchaToken}/>
+                <ReCAPTCHA sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY" onChange={setCaptchaToken}/>
                 <button type="submit">Entrar</button>
                 <div className="divider">
                     <span>ou</span>

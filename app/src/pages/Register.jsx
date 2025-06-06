@@ -98,7 +98,7 @@ function Register() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     icon={MdLockOutline}
                 />
-                <ReCAPTCHA sitekey="6LdYRkorAAAAADYL-JYYlkMGlbFETAs6wy0WHEad" onChange={setCaptchaToken}/>
+                <ReCAPTCHA sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY" onChange={setCaptchaToken}/>
                 <button type="submit">Registrar</button>
 
                 <div className="divider">

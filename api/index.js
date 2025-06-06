@@ -11,8 +11,9 @@ dotenv.config()
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use("/", messagesRoutes)
 app.use("/user/", userRoutes)
 app.use("/email/", emailRoutes)
-app.use("/", messagesRoutes)
+app.use("/assets/", assetsRoutes)
 
-app.use("/assets", assetsRoutes);
+app.listen(3001)
