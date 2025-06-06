@@ -53,6 +53,25 @@ body {
   color: var(--foreground);
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 102, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 102, 255, 0.4);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 102, 255, 0.6);
+}
+
 .login-wrapper,
 .register-wrapper {
   display: flex;
