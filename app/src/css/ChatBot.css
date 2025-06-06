@@ -101,7 +101,7 @@
     width: 80px;
     background-color: var(--primary-blue);
     border: none;
-    border-radius: 15px;
+    border-radius: var(--custom-border-radius);
     color: var(--foreground);
     font-size: 1rem;
     font-weight: bold;
