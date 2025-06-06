@@ -1,22 +1,26 @@
-// Seleciona o ativo com maior marketCap, um para cada categoria
+import { useEffect, useState } from "react";
+import { fetchAssets } from "../api/assetsAPI";
+
 const getHighlightAssets = (assets) => {
   const groupedByType = assets.reduce((acc, asset) => {
     if (!acc[asset.type]) acc[asset.type] = [];
     acc[asset.type].push(asset);
     return acc;
   }, {});
+
   const sortedByType = Object.keys(groupedByType).reduce((acc, type) => {
     acc[type] = groupedByType[type].sort((a, b) => {
       const marketCapA = parseFloat(
-        a.marketCap.replace("R$", "").replace("B", ""),
+        a.marketCap.replace("R$", "").replace("B", "").replace(",", "."),
       );
       const marketCapB = parseFloat(
-        b.marketCap.replace("R$", "").replace("B", ""),
+        b.marketCap.replace("R$", "").replace("B", "").replace(",", "."),
       );
       return marketCapB - marketCapA;
     });
     return acc;
   }, {});
+
   const highlightTypes = ["stock", "fii", "etf", "bdr", "crypto"];
   return highlightTypes
     .map((type) => sortedByType[type]?.[0])
@@ -24,540 +28,50 @@ const getHighlightAssets = (assets) => {
     .slice(0, 5);
 };
 
-const assetsData = [
-  // Stocks (22)
-  {
-    name: "PETR4",
-    fullName: "Petrobras",
-    price: "R$41.66",
-    change: "-14.45%",
-    marketCap: "R$723.62B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "VALE3",
-    fullName: "Vale",
-    price: "R$44.21",
-    change: "+9.00%",
-    marketCap: "R$391.77B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "ITUB4",
-    fullName: "Itaú Unibanco",
-    price: "R$35.12",
-    change: "-2.15%",
-    marketCap: "R$345.22B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "WEGE3",
-    fullName: "WEG",
-    price: "R$45.90",
-    change: "+1.30%",
-    marketCap: "R$192.15B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "MGLU3",
-    fullName: "Magazine Luiza",
-    price: "R$12.30",
-    change: "-8.15%",
-    marketCap: "R$85.40B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "BBAS3",
-    fullName: "Banco do Brasil",
-    price: "R$28.75",
-    change: "+0.50%",
-    marketCap: "R$200.45B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "BBDC4",
-    fullName: "Bradesco",
-    price: "R$15.80",
-    change: "-1.25%",
-    marketCap: "R$280.10B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "ABEV3",
-    fullName: "Ambev",
-    price: "R$13.45",
-    change: "+2.10%",
-    marketCap: "R$210.88B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "JBSS3",
-    fullName: "JBS",
-    price: "R$30.20",
-    change: "-3.40%",
-    marketCap: "R$165.33B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "RENT3",
-    fullName: "Localiza",
-    price: "R$50.15",
-    change: "+4.75%",
-    marketCap: "R$180.22B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "LREN3",
-    fullName: "Lojas Renner",
-    price: "R$16.90",
-    change: "-2.80%",
-    marketCap: "R$140.55B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "GGBR4",
-    fullName: "Gerdau",
-    price: "R$20.35",
-    change: "+1.15%",
-    marketCap: "R$220.77B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "CSNA3",
-    fullName: "CSN",
-    price: "R$14.60",
-    change: "-5.20%",
-    marketCap: "R$95.12B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "EMBR3",
-    fullName: "Embraer",
-    price: "R$36.40",
-    change: "+3.30%",
-    marketCap: "R$160.45B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "BRFS3",
-    fullName: "BRF",
-    price: "R$18.25",
-    change: "-4.10%",
-    marketCap: "R$130.88B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "SUZB3",
-    fullName: "Suzano",
-    price: "R$52.10",
-    change: "+2.50%",
-    marketCap: "R$190.33B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "EGIE3",
-    fullName: "Engie Brasil",
-    price: "R$43.80",
-    change: "+1.90%",
-    marketCap: "R$175.66B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "CPFE3",
-    fullName: "CPFL Energia",
-    price: "R$34.15",
-    change: "-0.75%",
-    marketCap: "R$145.22B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "CMIG4",
-    fullName: "Cemig",
-    price: "R$11.30",
-    change: "+0.90%",
-    marketCap: "R$110.50B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "VIVT3",
-    fullName: "Vivo",
-    price: "R$48.70",
-    change: "-1.60%",
-    marketCap: "R$155.88B",
-    chart: "down",
-    type: "stock",
-  },
-  {
-    name: "PRIO3",
-    fullName: "PetroRio",
-    price: "R$47.25",
-    change: "+5.10%",
-    marketCap: "R$200.15B",
-    chart: "up",
-    type: "stock",
-  },
-  {
-    name: "RAIL3",
-    fullName: "Rumo",
-    price: "R$22.90",
-    change: "-2.30%",
-    marketCap: "R$120.44B",
-    chart: "down",
-    type: "stock",
-  },
+export const useAssetsData = () => {
+  const [assetsData, setAssetsData] = useState([]);
+  const [highlightAssets, setHighlightAssets] = useState([]);
 
-  // FIIs (18)
-  {
-    name: "HGLG11",
-    fullName: "CSHG Logística",
-    price: "R$302.45",
-    change: "-12.30%",
-    marketCap: "R$178.31B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "XPML11",
-    fullName: "XP Malls",
-    price: "R$247.71",
-    change: "-1.10%",
-    marketCap: "R$497.82B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "KNRI11",
-    fullName: "Kinea Renda Imobiliária",
-    price: "R$160.25",
-    change: "+0.85%",
-    marketCap: "R$210.33B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "BCFF11",
-    fullName: "BTG Pactual Fundo de Fundos",
-    price: "R$90.10",
-    change: "-0.95%",
-    marketCap: "R$130.22B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "VILG11",
-    fullName: "Vinci Logística",
-    price: "R$105.20",
-    change: "+1.10%",
-    marketCap: "R$145.65B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "MXRF11",
-    fullName: "Maxi Renda",
-    price: "R$10.25",
-    change: "+0.75%",
-    marketCap: "R$120.50B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "HGRU11",
-    fullName: "CSHG Renda Urbana",
-    price: "R$130.40",
-    change: "+1.25%",
-    marketCap: "R$155.33B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "KNCR11",
-    fullName: "Kinea Rendimentos Imobiliários",
-    price: "R$105.80",
-    change: "-0.50%",
-    marketCap: "R$140.22B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "BRCR11",
-    fullName: "BTG Pactual Corporate Office",
-    price: "R$80.15",
-    change: "-1.80%",
-    marketCap: "R$110.88B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "JSRE11",
-    fullName: "JS Real Estate Multigestão",
-    price: "R$95.30",
-    change: "+0.90%",
-    marketCap: "R$125.44B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "HGBS11",
-    fullName: "Hedge Brasil Shopping",
-    price: "R$210.60",
-    change: "-2.10%",
-    marketCap: "R$190.77B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "MCCI11",
-    fullName: "Mauá Capital Recebíveis",
-    price: "R$90.45",
-    change: "+1.15%",
-    marketCap: "R$135.66B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "RBRR11",
-    fullName: "RBR Rendimento High Grade",
-    price: "R$85.20",
-    change: "-0.75%",
-    marketCap: "R$115.33B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "CPTS11",
-    fullName: "Capitânia Securities",
-    price: "R$100.10",
-    change: "+0.60%",
-    marketCap: "R$130.55B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "HFOF11",
-    fullName: "Hedge Fundo de Fundos",
-    price: "R$75.90",
-    change: "-1.30%",
-    marketCap: "R$105.22B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "IRDM11",
-    fullName: "Iridium Recebíveis",
-    price: "R$82.50",
-    change: "+1.40%",
-    marketCap: "R$120.88B",
-    chart: "up",
-    type: "fii",
-  },
-  {
-    name: "RBVA11",
-    fullName: "Rio Bravo Varejo",
-    price: "R$110.30",
-    change: "-0.85%",
-    marketCap: "R$140.11B",
-    chart: "down",
-    type: "fii",
-  },
-  {
-    name: "XPLG11",
-    fullName: "XP Log",
-    price: "R$115.75",
-    change: "+0.95%",
-    marketCap: "R$150.33B",
-    chart: "up",
-    type: "fii",
-  },
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchAssets();
 
-  // ETFs (6)
-  {
-    name: "IVVB11",
-    fullName: "iShares S&P 500",
-    price: "R$246.46",
-    change: "-9.94%",
-    marketCap: "R$458.85B",
-    chart: "down",
-    type: "etf",
-  },
-  {
-    name: "HASH11",
-    fullName: "Hashdex Crypto ETF",
-    price: "R$420.99",
-    change: "+6.75%",
-    marketCap: "R$165.71B",
-    chart: "up",
-    type: "etf",
-  },
-  {
-    name: "BOVA11",
-    fullName: "iShares Ibovespa",
-    price: "R$125.80",
-    change: "-3.50%",
-    marketCap: "R$280.45B",
-    chart: "down",
-    type: "etf",
-  },
-  {
-    name: "SMAL11",
-    fullName: "iShares Small Cap",
-    price: "R$110.45",
-    change: "-4.20%",
-    marketCap: "R$150.60B",
-    chart: "down",
-    type: "etf",
-  },
-  {
-    name: "XINA11",
-    fullName: "Trend China ETF",
-    price: "R$80.50",
-    change: "-2.75%",
-    marketCap: "R$95.88B",
-    chart: "down",
-    type: "etf",
-  },
-  {
-    name: "GOLD11",
-    fullName: "Trend Gold ETF",
-    price: "R$65.30",
-    change: "-1.80%",
-    marketCap: "R$88.15B",
-    chart: "down",
-    type: "etf",
-  },
+      const latestPerTicker = Object.values(
+        data.reduce((acc, item) => {
+          const key = item.ticker;
+          const itemDate = new Date(item.date);
+          const current = acc[key];
 
-  // BDRs (6)
-  {
-    name: "AAPL34",
-    fullName: "Apple Inc.",
-    price: "R$383.17",
-    change: "+1.26%",
-    marketCap: "R$404.90B",
-    chart: "up",
-    type: "bdr",
-  },
-  {
-    name: "MSFT34",
-    fullName: "Microsoft Corporation",
-    price: "R$559.91",
-    change: "+3.40%",
-    marketCap: "R$253.77B",
-    chart: "up",
-    type: "bdr",
-  },
-  {
-    name: "GOGL34",
-    fullName: "Alphabet Inc.",
-    price: "R$420.50",
-    change: "+2.75%",
-    marketCap: "R$510.88B",
-    chart: "up",
-    type: "bdr",
-  },
-  {
-    name: "AMZO34",
-    fullName: "Amazon.com Inc.",
-    price: "R$380.75",
-    change: "+2.90%",
-    marketCap: "R$490.30B",
-    chart: "up",
-    type: "bdr",
-  },
-  {
-    name: "TSLA34",
-    fullName: "Tesla Inc.",
-    price: "R$320.15",
-    change: "+5.40%",
-    marketCap: "R$430.22B",
-    chart: "up",
-    type: "bdr",
-  },
-  {
-    name: "NVDC34",
-    fullName: "NVIDIA Corporation",
-    price: "R$510.80",
-    change: "+4.60%",
-    marketCap: "R$380.90B",
-    chart: "up",
-    type: "bdr",
-  },
+          if (!current || itemDate > new Date(current.date)) {
+            acc[key] = item;
+          }
 
-  // Cryptos (6)
-  {
-    name: "BTC",
-    fullName: "Bitcoin",
-    price: "R$468.43",
-    change: "-10.41%",
-    marketCap: "R$239.23B",
-    chart: "down",
-    type: "crypto",
-  },
-  {
-    name: "ETH",
-    fullName: "Ethereum",
-    price: "R$471.83",
-    change: "+6.26%",
-    marketCap: "R$401.93B",
-    chart: "up",
-    type: "crypto",
-  },
-  {
-    name: "BNB",
-    fullName: "Binance Coin",
-    price: "R$350.20",
-    change: "+4.10%",
-    marketCap: "R$190.75B",
-    chart: "up",
-    type: "crypto",
-  },
-  {
-    name: "ADA",
-    fullName: "Cardano",
-    price: "R$2.85",
-    change: "-5.60%",
-    marketCap: "R$100.12B",
-    chart: "down",
-    type: "crypto",
-  },
-  {
-    name: "XRP",
-    fullName: "Ripple",
-    price: "R$3.10",
-    change: "-3.25%",
-    marketCap: "R$170.90B",
-    chart: "down",
-    type: "crypto",
-  },
-  {
-    name: "SOL",
-    fullName: "Solana",
-    price: "R$950.40",
-    change: "+7.20%",
-    marketCap: "R$220.33B",
-    chart: "up",
-    type: "crypto",
-  },
-];
+          return acc;
+        }, {}),
+      );
 
-const highlightAssets = getHighlightAssets(assetsData);
+      const formatted = latestPerTicker.map((item) => {
+        const price = item.close.toFixed(2).replace(".", ",");
+        const changeValue = parseFloat(item.variation_24h ?? 0);
+        const marketCapB = item.market_cap ? item.market_cap / 1e9 : 0;
 
-export { assetsData, getHighlightAssets, highlightAssets };
+        return {
+          name: item.ticker.replace(".SA", ""),
+          fullName: item.full_name,
+          price: `R$${price}`,
+          change: `${changeValue >= 0 ? "+" : ""}${changeValue.toFixed(2)}%`,
+          marketCap: `R$${marketCapB.toFixed(2)}B`,
+          chart: changeValue >= 0 ? "up" : "down",
+          type: item.asset_type,
+        };
+      });
+
+      setAssetsData(formatted);
+      setHighlightAssets(getHighlightAssets(formatted));
+    };
+
+    loadData();
+  }, []);
+
+  return { assetsData, highlightAssets };
+};

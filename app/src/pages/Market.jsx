@@ -8,7 +8,7 @@ import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { FaChartLine, FaUniversity } from "react-icons/fa";
 import { MdShowChart } from "react-icons/md";
 import { RiCoinsLine } from "react-icons/ri";
-import { assetsData, highlightAssets } from "../data/assetsData";
+import { useAssetsData } from "../data/assetsData";
 
 const getAssetIcon = (type) => {
   switch (type) {
@@ -30,7 +30,7 @@ const getAssetIcon = (type) => {
 function Market() {
   const [assetsSearch, setAssetsSearch] = useState("");
   const [activeAssetsFilter, setActiveAssetsFilter] = useState("all");
-
+  const { assetsData, highlightAssets } = useAssetsData();
   // Para não ficar reescrevendo
   const normalizeString = (str) => str.toLowerCase().trim().replace(/\s+/g, "");
 
