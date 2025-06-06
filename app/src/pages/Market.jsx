@@ -148,16 +148,16 @@ function Market() {
                 >
                   BDRs
                 </button>
-                <button
-                  className={`market-filter ${
-                    activeAssetsFilter === "crypto"
-                      ? "market-filter-active"
-                      : "secondary-btn"
-                  }`}
-                  onClick={() => handleFilterClick("crypto")}
-                >
-                  Cripto
-                </button>
+                {/* <button */}
+                {/*   className={`market-filter ${ */}
+                {/*     activeAssetsFilter === "crypto" */}
+                {/*       ? "market-filter-active" */}
+                {/*       : "secondary-btn" */}
+                {/*   }`} */}
+                {/*   onClick={() => handleFilterClick("crypto")} */}
+                {/* > */}
+                {/*   Cripto */}
+                {/* </button> */}
               </div>
             </div>
           </AnimatedSection>
