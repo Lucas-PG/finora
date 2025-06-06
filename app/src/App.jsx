@@ -15,6 +15,7 @@ import AssetPercentage from "./pages/calculators/AssetPercentage";
 import ChatBot from "./components/ChatBot";
 import Update from "./components/Update";
 import "./style.css";
+import Email from "./components/Email";
 
 function App() {
   const { isAuthenticated, setToken, token, logout } = useContext(AuthContext);
@@ -61,7 +62,15 @@ function App() {
           </>
         )}
       </Routes>
-      {isAuthenticated && <ChatBot token={token} onLogout={logout} />}
+      {isAuthenticated ? (
+        <div>
+          <ChatBot token={token} onLogout={logout} ></ChatBot>
+          <Email token={token}></Email>
+        </div>
+      ) : 
+        <div>
+          <Email token={token}></Email>
+        </div>}
     </BrowserRouter>
   );
 }

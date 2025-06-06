@@ -65,7 +65,7 @@ export const postUser = async (req, res) => {
     const query = "INSERT INTO users (uuid, name, email, password) VALUES (?, ?, ?, ?)"
     db.query(query, [uuid, name, email, hashPassword], (err, results) => {
         if (err) return res.status(500).send("Error while registering user. Email already been registered.")
-        return res.status(201).json({id: results.insertId, name, email, password})
+        return res.status(201).json({name, email})
     })
 }
 

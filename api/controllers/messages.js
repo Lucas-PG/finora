@@ -18,6 +18,6 @@ export const postMessage = (req, res) => {
     const query = "INSERT INTO messages (userId, prompt, message) VALUES (?, ?, ?)"
     db.query(query, [userId, prompt, message], (err, results) => {
         if (err) return res.status(500).send("Error while saving user prompt.")
-        return res.status(201).json({id: results.insertId, userId, prompt, message})
+        return res.status(201).json({prompt, message})
     })
 }
