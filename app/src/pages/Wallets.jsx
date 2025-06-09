@@ -1,245 +1,586 @@
 import Navbar from "../components/NavBar";
-import "../css/Wallets.css";
-import { FaPlus } from "react-icons/fa";
-import { Pie, Line } from "react-chartjs-2";
+import HeroSection from "../components/HeroSection";
+import WalletChart from "../components/WalletChart";
+import { AnimatedSection } from "../components/ui/AnimatedSection.jsx";
+import { FaWallet } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
+import { LuX } from "react-icons/lu";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import { assetList } from "../data/assetsData.js";
 import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-} from "chart.js";
-
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-);
+  Modal,
+  Button,
+  Typography,
+  Autocomplete,
+  Box,
+  TextField,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import FloatingInput from "../components/ui/FloatingInput.jsx";
+import "../css/Wallets.css";
 
 function Wallets() {
-  const pieData = {
-    labels: ["AÇÕES", "RENDA FIXA", "ETFs"],
-    datasets: [
-      {
-        data: [50, 25, 25],
-        backgroundColor: ["#0000ff", "#ffff00", "#00ff00"],
-        borderWidth: 0,
-      },
-    ],
-  };
-  const pieOptions = {
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxWidth: 20,
-          padding: 15,
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            const label = context.label || "";
-            const value = context.raw;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percent = ((value / total) * 100).toFixed(0) + "%";
-            return `${label}: ${percent}`;
-          },
-        },
-      },
-    },
+  const [selectedWallet, setSelectedWallet] = useState(null);
+  const [wallets, setWallets] = useState([]);
+  const { token } = useContext(AuthContext);
+  const [showWalletForm, setShowWalletForm] = useState(false);
+  const [newWalletName, setNewWalletName] = useState("");
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [transactionType, setTransactionType] = useState("buy");
+  const [ticker, setTicker] = useState("");
+  const [price, setPrice] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [assetType, setAssetType] = useState("");
+  const [assetData, setAssetData] = useState({});
+  const tickerOptions = assetList[assetType] || [];
+
+  const fetchWallets = async () => {
+    try {
+      const res = await axios.get("http://localhost:3001/wallets", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setWallets(res.data);
+      if (res.data.length > 0) setSelectedWallet(res.data[0]);
+    } catch (err) {
+      console.error(
+        "Erro ao buscar carteiras:",
+        err.response?.data || err.message,
+      );
+    }
   };
 
-  const lineData = {
-    labels: [
-      "Jan",
-      "Fev",
-      "Mar",
-      "Abr",
-      "Mai",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Set",
-      "Out",
-    ],
-    datasets: [
-      {
-        label: "Evolução da Carteira",
-        data: [
-          5000, 23000, 11000, 19000, 8000, 7000, 15000, 20000, 9000, 18000,
-        ],
-        borderColor: "#a78bfa",
-        backgroundColor: "rgba(167, 139, 250, 0.2)",
-        pointBackgroundColor: "#ffffff",
-        tension: 0.4,
-        fill: true,
-      },
-    ],
+  const fetchAssetData = async () => {
+    try {
+      const res = await axios.get("http://localhost:3001/assets", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = res.data;
+      const latestData = {};
+      data.forEach((item) => {
+        if (
+          !latestData[item.ticker] ||
+          new Date(item.date) > new Date(latestData[item.ticker].date)
+        ) {
+          latestData[item.ticker] = item;
+        }
+      });
+      setAssetData(latestData);
+    } catch (err) {
+      console.error(
+        "Erro ao buscar dados de ativos:",
+        err.response?.data || err.message,
+      );
+    }
   };
 
-  const lineOptions = {
-    responsive: true,
-    plugins: {
-      tooltip: {
-        mode: "index",
-        intersect: false,
-        backgroundColor: "#1e1e2e",
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-        callbacks: {
-          label: function (context) {
-            const value = context.raw.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            });
-            return ` ${value}`;
-          },
-        },
-      },
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      x: {
-        ticks: { color: "#94a3b8" },
-        grid: { color: "#1e293b" },
-      },
-      y: {
-        ticks: {
-          color: "#94a3b8",
-          callback: function (value) {
-            return "R$ " + value.toLocaleString("pt-BR");
-          },
-        },
-        grid: { color: "#1e293b" },
-      },
-    },
+  useEffect(() => {
+    fetchWallets();
+    fetchAssetData();
+  }, [token]);
+
+  const handleCreateWallet = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/wallets",
+        { walletName: newWalletName },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const newWallet = { ...res.data, assets: res.data.assets || [] };
+      setWallets([...wallets, newWallet]);
+      setSelectedWallet(newWallet);
+      setNewWalletName("");
+      setShowWalletForm(false);
+    } catch (err) {
+      console.error(
+        "Erro ao criar carteira:",
+        err.response?.data || err.message,
+      );
+    }
   };
+
+  const handleAddAsset = async () => {
+    const parsedPrice = parseFloat(price);
+    const parsedAmount = parseFloat(amount);
+
+    if (
+      !ticker ||
+      isNaN(parsedPrice) ||
+      isNaN(parsedAmount) ||
+      !date ||
+      !assetType
+    ) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `http://localhost:3001/wallets/${selectedWallet.id}/assets`,
+        {
+          walletId: selectedWallet.id,
+          ticker: ticker.toUpperCase(),
+          quantity: transactionType === "buy" ? parsedAmount : -parsedAmount,
+          buy_price: parsedPrice,
+          buy_date: new Date(date).toISOString().split("T")[0],
+          type: assetType,
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      const newAsset = res.data;
+      setSelectedWallet((prev) => ({
+        ...prev,
+        assets: [...(prev.assets || []), newAsset],
+      }));
+
+      await fetchWallets();
+      await fetchAssetData();
+      setShowTransactionModal(false);
+      setTicker("");
+      setPrice("");
+      setAmount("");
+      setDate("");
+      setAssetType("acao");
+      alert("Ativo adicionado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao adicionar ativo:", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+      });
+      alert(
+        `Erro ao adicionar ativo: ${
+          err.response?.data?.error || err.message || "Tente novamente"
+        }`,
+      );
+    }
+  };
+
+  // Calculate total invested value
+  const totalInvested = (selectedWallet?.assets || []).reduce(
+    (sum, asset) => sum + (asset.quantity || 0) * (asset.buy_price || 0),
+    0,
+  );
+
+  // Calculate current market value and rentability
+  const totalMarketValue = (selectedWallet?.assets || []).reduce(
+    (sum, asset) => {
+      const latest = assetData[asset.ticker];
+      const currentPrice = latest ? latest.close : asset.buy_price || 0;
+      return sum + (asset.quantity || 0) * currentPrice;
+    },
+    0,
+  );
+
+  const totalDividends = (selectedWallet?.assets || []).reduce((sum, asset) => {
+    const latest = assetData[asset.ticker];
+    return sum + (latest?.dividends || 0);
+  }, 0);
+
+  const walletRentability =
+    totalInvested > 0
+      ? ((totalMarketValue + totalDividends - totalInvested) / totalInvested) *
+        100
+      : 0;
+
+  const title = "Suas Carteiras";
+  const subtitle =
+    "Acompanhe seu portfolio ou simule carteiras para planejar seus investimentos.";
 
   return (
     <>
       <Navbar />
-      <div className="wallets-container">
-        <div className="wallets-header">
-          <h2>Suas Carteiras</h2>
-          <button className="add-asset-btn">
-            <FaPlus /> Adicionar Ativo
-          </button>
-        </div>
+      <HeroSection title={title} subtitle={subtitle} />
+      <div className="page-container">
+        <div className="page-content">
+          <AnimatedSection className="your-wallets-section wallets-section">
+            {wallets.length > 0 && (
+              <div className="your-wallets-title">
+                <h2>
+                  Suas<span className="blue"> Carteiras</span>
+                </h2>
+              </div>
+            )}
+            {wallets.length === 0 && (
+              <div className="your-wallets-title">
+                <h2>
+                  Cadastre sua <span className="blue">Primeira Carteira</span>
+                </h2>
+              </div>
+            )}
+            <div className="your-wallets-content">
+              {wallets.length > 0 &&
+                wallets.map((wallet) => {
+                  const totalValue = (wallet.assets || []).reduce(
+                    (sum, asset) =>
+                      sum + (asset.quantity || 0) * (asset.buy_price || 0),
+                    0,
+                  );
 
-        <div className="wallets-charts">
-          <div className="wallets-charts-left">
-            <div className="card wallet-value">
-              <div className="wallet-value-header card-header">
-                <span>PATRIMÔNIO LÍQUIDO</span>
-              </div>
-              <div className="wallet-value-body card-body">
-                <h3 className="wallet-value-num">R$ 19.560,78</h3>
-                <p className="wallet-value-percent">+4,04%</p>
-              </div>
-            </div>
-
-            <div className="card pizza-chart">
-              <div className="card-header">
-                <span>DISTRIBUIÇÃO DA CARTEIRA</span>
-              </div>
-              <div className="pizza-chart-container card-body">
-                <Pie data={pieData} options={pieOptions} />
-              </div>
-            </div>
-          </div>
-
-          <div className="wallets-charts-right">
-            <div className="card line-chart">
-              <div className="card-header">
-                <span>EVOLUÇÃO DA CARTEIRA</span>
-              </div>
-              <div className="card-body line-chart-body">
-                <div className="line-chart-container">
-                  <Line data={lineData} options={lineOptions} />
+                  return (
+                    <div
+                      key={wallet.id}
+                      className={`wallet-card ${
+                        wallet.id === selectedWallet?.id
+                          ? "wallet-card-active"
+                          : ""
+                      }`}
+                      onClick={() => setSelectedWallet(wallet)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className="wallet-card-left">
+                        <div className="wallet-icon-around">
+                          <FaWallet size={20} />
+                        </div>
+                      </div>
+                      <div className="wallet-card-right">
+                        <h3>{wallet.name}</h3>
+                        <span>
+                          {totalValue.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              <div
+                className="add-wallet-card"
+                onClick={() => setShowWalletForm(true)}
+              >
+                <div className="add-wallet-icon-around">
+                  <FaPlus size={15} />
                 </div>
+                <h3>Adicionar Carteira</h3>
               </div>
+              {showWalletForm && (
+                <Modal
+                  open={showWalletForm}
+                  onClose={() => setShowWalletForm(false)}
+                  disableAutoFocus={true}
+                >
+                  <div className="modal-box">
+                    <h3>Criar Nova Carteira</h3>
+                    <FloatingInput
+                      type="text"
+                      label="Nome da Carteira"
+                      value={newWalletName}
+                      onChange={(e) => setNewWalletName(e.target.value)}
+                      icon={FaWallet}
+                    />
+                    <button
+                      className="primary-btn modal-btn"
+                      onClick={handleCreateWallet}
+                    >
+                      Criar
+                    </button>
+                  </div>
+                </Modal>
+              )}
             </div>
-          </div>
-        </div>
+          </AnimatedSection>
 
-        <div className="ativos-section">
-          <h3>
-            AÇÕES <span className="subinfo">9 ativos - R$ 10.000</span>
-          </h3>
-          <div className="tabela-ativos">
-            <table>
-              <thead>
-                <tr>
-                  <th>Ativo</th>
-                  <th>Quantidade</th>
-                  <th>Preço Médio</th>
-                  <th>Preço Atual</th>
-                  <th>Rentabilidade</th>
-                  <th>Saldo</th>
-                  <th>% na Carteira</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>BBAS3</td>
-                  <td>100</td>
-                  <td>R$23,00</td>
-                  <td>R$28,50</td>
-                  <td className="positivo">+23,91%</td>
-                  <td>R$2850,00</td>
-                  <td>28,50%</td>
-                </tr>
-                <tr>
-                  <td>PETR4</td>
-                  <td>100</td>
-                  <td>R$35,00</td>
-                  <td>R$36,00</td>
-                  <td className="positivo">+2,8%</td>
-                  <td>R$3600,00</td>
-                  <td>36%</td>
-                </tr>
-                <tr>
-                  <td>BBSE3</td>
-                  <td>100</td>
-                  <td>R$40,00</td>
-                  <td>R$38,00</td>
-                  <td className="negativo">-5%</td>
-                  <td>R$3800,00</td>
-                  <td>38%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+          {wallets.length > 0 && selectedWallet && (
+            <>
+              <AnimatedSection className="wallets-dividing-section">
+                <div>Informações da Carteira</div>
+              </AnimatedSection>
 
-        <div className="ativos-section">
-          <h3>FIIs</h3>
-          <p>Você ainda não adicionou nenhum FII.</p>
-        </div>
+              <AnimatedSection className="wallets-wallet-name-section wallets-section">
+                <h3>{selectedWallet.name}</h3>
+                <button
+                  type="button"
+                  className="include-transaction-btn primary-btn"
+                  onClick={() => setShowTransactionModal(true)}
+                >
+                  Incluir Lançamento
+                </button>
+              </AnimatedSection>
+              <Modal
+                open={showTransactionModal}
+                onClose={() => setShowTransactionModal(false)}
+                disableAutoFocus={true}
+              >
+                <Box className="modal-box">
+                  <h3>Incluir Lançamento</h3>
+                  <div className="modal-inputs">
+                    <div className="transaction-type-buttons">
+                      <button
+                        type="button"
+                        className={`type-btn ${transactionType === "buy" ? "active" : ""}`}
+                        onClick={() => setTransactionType("buy")}
+                      >
+                        Compra
+                      </button>
+                      <button
+                        type="button"
+                        className={`type-btn ${transactionType === "sell" ? "active" : ""}`}
+                        onClick={() => setTransactionType("sell")}
+                      >
+                        Venda
+                      </button>
+                    </div>
 
-        <div className="ativos-section">
-          <h3>BDRs</h3>
-          <p>Você ainda não adicionou nenhum BDR.</p>
-        </div>
+                    {/* Tipo de Ativo */}
+                    <FormControl
+                      fullWidth
+                      className="transaction-asset-type-input"
+                    >
+                      <InputLabel id="asset-type-label">
+                        Tipo de Ativo
+                      </InputLabel>
+                      <Select
+                        labelId="asset-type-label"
+                        value={assetType}
+                        label="Tipo de Ativo"
+                        onChange={(e) => setAssetType(e.target.value)}
+                      >
+                        <MenuItem value="acao">Ação</MenuItem>
+                        <MenuItem value="fii">FII</MenuItem>
+                        <MenuItem value="bdr">BDR</MenuItem>
+                        <MenuItem value="etf">ETF</MenuItem>
+                      </Select>
+                    </FormControl>
 
-        <div className="ativos-section">
-          <h3>ETFs</h3>
-          <p>Você ainda não adicionou nenhum ETF.</p>
-        </div>
+                    {/* Ticker */}
+                    <Autocomplete
+                      fullWidth
+                      options={tickerOptions}
+                      value={ticker}
+                      onChange={(event, newValue) => setTicker(newValue || "")}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Ticker"
+                          variant="outlined"
+                        />
+                      )}
+                    />
 
-        <div className="ativos-section">
-          <h3>Cripto</h3>
-          <p>Você ainda não adicionou nenhum ativo de Criptomoedas.</p>
+                    {/* Preço */}
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label="Preço por Unidade"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      variant="outlined"
+                    />
+
+                    {/* Quantidade e Data */}
+                    <div
+                      className="include-transaction-modal-middle"
+                      style={{ display: "flex", gap: "1rem" }}
+                    >
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Quantidade"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        variant="outlined"
+                      />
+                      <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="custom-date-input"
+                        onFocus={(e) =>
+                          e.target.showPicker && e.target.showPicker()
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="modal-btn primary-btn"
+                    onClick={handleAddAsset}
+                  >
+                    Confirmar
+                  </button>
+                </Box>
+              </Modal>
+              <AnimatedSection className="wallets-info-section wallets-section">
+                <div className="wallet-total-value-card">
+                  <span>Seu Patrimônio</span>
+                  <div>
+                    <h3>
+                      {totalMarketValue.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </h3>
+                    <div
+                      className={
+                        "wallet-total-value-percentage " +
+                        (walletRentability >= 0
+                          ? "green-opacity"
+                          : "red-opacity")
+                      }
+                    >
+                      <span
+                        className={walletRentability >= 0 ? "green" : "red"}
+                      >
+                        {walletRentability.toFixed(2)}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="wallet-value-invested-card">
+                  <span>Valor Investido</span>
+                  <h3>
+                    {totalInvested.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </h3>
+                </div>
+                <div className="wallet-dividends-card">
+                  <span>Dividendos Recebidos</span>
+                  <h3>
+                    {totalDividends.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </h3>
+                </div>
+                <div className="wallet-total-assets-card">
+                  <span>Ativos na Carteira</span>
+                  <h3>
+                    {
+                      new Set(
+                        (selectedWallet.assets || []).map(
+                          (asset) => asset.ticker,
+                        ),
+                      ).size
+                    }
+                  </h3>
+                </div>
+              </AnimatedSection>
+              <AnimatedSection className="wallets-chart-section wallets-section">
+                <div className="wallets-chart-title">
+                  <h3>Performance da Carteira</h3>
+                </div>
+              </AnimatedSection>
+              <AnimatedSection
+                className="wallets-list-section wallets-section"
+                rootMargin="600px"
+              >
+                <div className="wallets-list-container">
+                  <div className="wallets-list-header">
+                    <div>
+                      <span>Nome</span>
+                    </div>
+                    <div>
+                      <span>Cotação Atual</span>
+                    </div>
+                    <div>
+                      <span>Preço de Compra</span>
+                    </div>
+                    <div>
+                      <span>Rentabilidade (%)</span>
+                    </div>
+                    <div>
+                      <span>Dividend Yield (%)</span>
+                    </div>
+                    <div>
+                      <span>Ver Mais</span>
+                    </div>
+                  </div>
+                  <div className="wallets-list-body">
+                    {(selectedWallet.assets || [])
+                      .reduce((uniqueAssets, asset) => {
+                        if (
+                          !uniqueAssets.some((a) => a.ticker === asset.ticker)
+                        ) {
+                          uniqueAssets.push(asset);
+                        }
+                        return uniqueAssets;
+                      }, [])
+                      .map((asset, index) => {
+                        const latest = assetData[asset.ticker];
+                        const currentPrice = latest
+                          ? latest.close
+                          : asset.buy_price || 0;
+                        const assetInvested =
+                          (asset.quantity || 0) * (asset.buy_price || 0);
+                        const assetMarketValue =
+                          (asset.quantity || 0) * currentPrice;
+                        const assetDividends = latest
+                          ? latest.dividends || 0
+                          : 0;
+                        const assetRentability =
+                          assetInvested > 0
+                            ? ((assetMarketValue +
+                                assetDividends -
+                                assetInvested) /
+                                assetInvested) *
+                              100
+                            : 0;
+                        const dividendYield = latest
+                          ? latest.dividend_yield || 0
+                          : 0;
+                        const isPositiveRentability = assetRentability >= 0;
+
+                        return (
+                          <div key={index} className="wallets-list-asset-card">
+                            <div>
+                              <span>{asset.ticker}</span>
+                            </div>
+                            <div>
+                              <span>
+                                {currentPrice.toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })}
+                              </span>
+                            </div>
+                            <div>
+                              <span>
+                                {Number(asset.buy_price).toLocaleString(
+                                  "pt-BR",
+                                  {
+                                    style: "currency",
+                                    currency: "BRL",
+                                  },
+                                )}
+                              </span>
+                            </div>
+                            <div>
+                              <span
+                                className={
+                                  isPositiveRentability ? "green" : "red"
+                                }
+                              >
+                                {assetRentability.toFixed(2)}%
+                              </span>
+                            </div>
+                            <div>
+                              <span>{dividendYield.toFixed(2)}%</span>
+                            </div>
+                            <div>
+                              <button className="secondary-btn wallets-list-asset-btn">
+                                Detalhes
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              </AnimatedSection>
+            </>
+          )}
         </div>
       </div>
     </>
