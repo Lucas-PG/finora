@@ -2,18 +2,17 @@ import { useState } from "react";
 import { validate } from "react-email-validator";
 import { Link, useNavigate } from "react-router-dom";
 import FloatingInput from "../components/ui/FloatingInput";
-import { FaLock, FaUnlock, FaEnvelope } from "react-icons/fa";
-import { MdPersonOutline } from "react-icons/md";
-import ReCAPTCHA from "react-google-recaptcha";
+import { FaLock, FaUnlock, FaEnvelope, FaUser } from "react-icons/fa";
+// import ReCAPTCHA from "react-google-recaptcha"; // CAPTCHA desativado
 import NavBar from "../components/NavBar";
-import "../css/Register.css"; // Usa o mesmo CSS base, mas com novas classes
+import "../css/Register.css";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [captchaToken, setCaptchaToken] = useState(null);
+  // const [captchaToken, setCaptchaToken] = useState(null); // CAPTCHA desativado
   const navigate = useNavigate();
 
   const postUser = async () => {
@@ -21,10 +20,7 @@ function Register() {
       alert("Preencha todos os campos.");
       return;
     }
-    if (!captchaToken) {
-      alert("Captcha inválido.");
-      return;
-    }
+
     if (!validate(email)) {
       alert("E-mail inválido.");
       return;
@@ -39,7 +35,6 @@ function Register() {
       email,
       password,
       confirmPassword,
-      captchaToken,
     };
 
     const response = await fetch("http://localhost:3001/user/register", {
@@ -77,7 +72,7 @@ function Register() {
               label="Nome completo"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              icon={MdPersonOutline}
+              icon={FaUser}
             />
             <FloatingInput
               type="email"
@@ -100,15 +95,14 @@ function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               icon={{ Closed: FaLock, Open: FaUnlock }}
             />
-            <ReCAPTCHA
+            {/* <ReCAPTCHA
               sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY"
               onChange={setCaptchaToken}
               className="captcha"
-            />
+            /> */}
             <button type="submit" className="primary-btn register-btn">
               Registrar
             </button>
-
             <div className="divider">
               <div>ou</div>
             </div>
@@ -117,7 +111,7 @@ function Register() {
             Já tem uma conta?
             <Link to="/login" className="register-link">
               {" "}
-              Faça login
+              Faça login{" "}
             </Link>
           </p>
         </div>
@@ -127,4 +121,3 @@ function Register() {
 }
 
 export default Register;
-

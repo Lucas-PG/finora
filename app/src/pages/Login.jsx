@@ -4,14 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import FloatingInput from "../components/ui/FloatingInput";
 import { FaLock, FaUnlock, FaEnvelope } from "react-icons/fa";
 import PropTypes from "prop-types";
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
 import NavBar from "../components/NavBar";
 import "../css/Login.css";
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captchaToken, setCaptchaToken] = useState(null);
+  // const [captchaToken, setCaptchaToken] = useState(null);
   const [seePassword, setSeePassword] = useState(true);
   const navigate = useNavigate();
 
@@ -22,16 +22,22 @@ function Login({ setToken }) {
     const response = await fetch("http://localhost:3001/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+      // body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password,
+      }),
     });
     return await response.json();
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userInfo = await userLogin({ email, password, captchaToken });
+    // const userInfo = await userLogin({ email, password, captchaToken });
+    const userInfo = await userLogin({ email, password });
     if (userInfo.token) {
       setToken(userInfo.token);
+      sessionStorage.setItem("name", userInfo.name);
       navigate("/");
     } else {
       alert("Invalid Credentials or Missing Captcha. Try again.");
@@ -61,11 +67,11 @@ function Login({ setToken }) {
               onChange={(e) => setPassword(e.target.value)}
               icon={{ Closed: FaLock, Open: FaUnlock }}
             />
-            <ReCAPTCHA
-              sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY"
-              onChange={setCaptchaToken}
-              className="captcha"
-            />
+            {/* <ReCAPTCHA */}
+            {/*   sitekey="6LdnzVcrAAAAAKZwfRfIxRjypg7gbZ-gAvyaElLY" */}
+            {/*   onChange={setCaptchaToken} */}
+            {/*   className="captcha" */}
+            {/* /> */}
             <button type="submit" className="primary-btn login-btn">
               Entrar
             </button>
@@ -87,4 +93,3 @@ function Login({ setToken }) {
 }
 
 export default Login;
-
