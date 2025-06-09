@@ -49,7 +49,7 @@
   transition: box-shadow 0.3s;
   border-radius: 100%;
   color: var(--primary-blue);
-  margin-left: 10px;
+  margin-left: 1rem;
 }
 
 .wallet-card-right {
@@ -64,13 +64,13 @@
 }
 
 .wallet-card-right > h3 {
-  margin-left: 10px;
+  margin-left: 1rem;
   font-size: 1rem;
 }
 
 .wallet-card-right > span {
   color: var(--faded);
-  margin-left: 10px;
+  margin-left: 1rem;
 }
 
 .add-wallet-card {
@@ -139,6 +139,12 @@
 
 .wallets-wallet-name-section > h3 {
   font-size: 1.5rem;
+}
+
+.include-transaction-btn-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .include-transaction-btn {

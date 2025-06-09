@@ -1,6 +1,5 @@
 import Navbar from "../components/NavBar";
 import HeroSection from "../components/HeroSection";
-import WalletChart from "../components/WalletChart";
 import { AnimatedSection } from "../components/ui/AnimatedSection.jsx";
 import { FaWallet } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
@@ -40,6 +39,7 @@ function Wallets() {
   const [date, setDate] = useState("");
   const [assetType, setAssetType] = useState("");
   const [assetData, setAssetData] = useState({});
+  const [receivedDividends, setReceivedDividends] = useState(0);
   const tickerOptions = assetList[assetType] || [];
 
   const fetchWallets = async () => {
@@ -47,8 +47,22 @@ function Wallets() {
       const res = await axios.get("http://localhost:3001/wallets", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setWallets(res.data);
-      if (res.data.length > 0) setSelectedWallet(res.data[0]);
+
+      const fetchedWallets = res.data;
+      setWallets(fetchedWallets);
+
+      const savedId = localStorage.getItem("selectedWalletId");
+      const restoredWallet = fetchedWallets.find(
+        (w) => w.id === Number(savedId),
+      );
+
+      if (restoredWallet) {
+        setSelectedWallet(restoredWallet);
+      } else if (fetchedWallets.length > 0) {
+        setSelectedWallet(fetchedWallets[0]);
+      }
+
+      return fetchedWallets;
     } catch (err) {
       console.error(
         "Erro ao buscar carteiras:",
@@ -80,6 +94,29 @@ function Wallets() {
       );
     }
   };
+
+  useEffect(() => {
+    const fetchAndCalculateDividends = async () => {
+      if (!selectedWallet || !selectedWallet.assets) return;
+
+      try {
+        const res = await axios.get("http://localhost:3001/assets", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const historicalData = res.data;
+        const total = calculateReceivedDividends(
+          selectedWallet.assets,
+          historicalData,
+        );
+        setReceivedDividends(total);
+      } catch (err) {
+        console.error("Erro ao calcular dividendos recebidos:", err);
+      }
+    };
+
+    fetchAndCalculateDividends();
+  }, [selectedWallet, token]);
 
   useEffect(() => {
     fetchWallets();
@@ -141,8 +178,14 @@ function Wallets() {
         assets: [...(prev.assets || []), newAsset],
       }));
 
-      await fetchWallets();
+      const updatedWallets = await fetchWallets();
       await fetchAssetData();
+
+      const updatedWallet = updatedWallets.find(
+        (w) => w.id === selectedWallet.id,
+      );
+      setSelectedWallet(updatedWallet);
+
       setShowTransactionModal(false);
       setTicker("");
       setPrice("");
@@ -164,13 +207,11 @@ function Wallets() {
     }
   };
 
-  // Calculate total invested value
   const totalInvested = (selectedWallet?.assets || []).reduce(
     (sum, asset) => sum + (asset.quantity || 0) * (asset.buy_price || 0),
     0,
   );
 
-  // Calculate current market value and rentability
   const totalMarketValue = (selectedWallet?.assets || []).reduce(
     (sum, asset) => {
       const latest = assetData[asset.ticker];
@@ -190,6 +231,30 @@ function Wallets() {
       ? ((totalMarketValue + totalDividends - totalInvested) / totalInvested) *
         100
       : 0;
+
+  const calculateReceivedDividends = (walletAssets, historicalData) => {
+    let totalDividends = 0;
+
+    walletAssets.forEach((asset) => {
+      const ticker = asset.ticker;
+      const buyDate = new Date(asset.buy_date);
+      const quantity = asset.quantity;
+
+      const dividendsForTicker = historicalData.filter(
+        (entry) =>
+          entry.ticker === ticker &&
+          entry.dividends > 0 &&
+          entry.ex_dividend_date &&
+          new Date(entry.ex_dividend_date) >= buyDate,
+      );
+
+      dividendsForTicker.forEach((entry) => {
+        totalDividends += quantity * entry.dividends;
+      });
+    });
+
+    return totalDividends;
+  };
 
   const title = "Suas Carteiras";
   const subtitle =
@@ -233,7 +298,10 @@ function Wallets() {
                           ? "wallet-card-active"
                           : ""
                       }`}
-                      onClick={() => setSelectedWallet(wallet)}
+                      onClick={() => {
+                        setSelectedWallet(wallet);
+                        localStorage.setItem("selectedWalletId", wallet.id);
+                      }}
                       style={{ cursor: "pointer" }}
                     >
                       <div className="wallet-card-left">
@@ -297,13 +365,27 @@ function Wallets() {
 
               <AnimatedSection className="wallets-wallet-name-section wallets-section">
                 <h3>{selectedWallet.name}</h3>
-                <button
-                  type="button"
-                  className="include-transaction-btn primary-btn"
-                  onClick={() => setShowTransactionModal(true)}
-                >
-                  Incluir Lançamento
-                </button>
+                <div className="include-transaction-btn-div">
+                  <button
+                    type="button"
+                    className="include-transaction-btn primary-btn"
+                    onClick={() => setShowTransactionModal(true)}
+                  >
+                    Incluir Lançamento
+                  </button>
+                  <button
+                    type="button"
+                    className="include-transaction-btn secondary-btn"
+                  >
+                    Ver Lançamentos
+                  </button>
+                  {/* <button */}
+                  {/*   type="button" */}
+                  {/*   className="include-transaction-btn secondary-btn" */}
+                  {/* > */}
+                  {/*   Proventos */}
+                  {/* </button> */}
+                </div>
               </AnimatedSection>
               <Modal
                 open={showTransactionModal}
@@ -448,7 +530,7 @@ function Wallets() {
                 <div className="wallet-dividends-card">
                   <span>Dividendos Recebidos</span>
                   <h3>
-                    {totalDividends.toLocaleString("pt-BR", {
+                    {receivedDividends.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}
@@ -485,7 +567,10 @@ function Wallets() {
                       <span>Cotação Atual</span>
                     </div>
                     <div>
-                      <span>Preço de Compra</span>
+                      <span>Preço Médio</span>
+                    </div>
+                    <div>
+                      <span>Quantidade</span>
                     </div>
                     <div>
                       <span>Rentabilidade (%)</span>
@@ -494,88 +579,106 @@ function Wallets() {
                       <span>Dividend Yield (%)</span>
                     </div>
                     <div>
+                      <span>Valor Total</span>
+                    </div>
+                    <div>
                       <span>Ver Mais</span>
                     </div>
                   </div>
                   <div className="wallets-list-body">
-                    {(selectedWallet.assets || [])
-                      .reduce((uniqueAssets, asset) => {
-                        if (
-                          !uniqueAssets.some((a) => a.ticker === asset.ticker)
-                        ) {
-                          uniqueAssets.push(asset);
+                    {Object.values(
+                      (selectedWallet.assets || []).reduce((acc, asset) => {
+                        const key = asset.ticker;
+                        if (!acc[key]) {
+                          acc[key] = {
+                            ...asset,
+                            quantity: 0,
+                            totalInvested: 0,
+                          };
                         }
-                        return uniqueAssets;
-                      }, [])
-                      .map((asset, index) => {
-                        const latest = assetData[asset.ticker];
-                        const currentPrice = latest
-                          ? latest.close
-                          : asset.buy_price || 0;
-                        const assetInvested =
-                          (asset.quantity || 0) * (asset.buy_price || 0);
-                        const assetMarketValue =
-                          (asset.quantity || 0) * currentPrice;
-                        const assetDividends = latest
-                          ? latest.dividends || 0
-                          : 0;
-                        const assetRentability =
-                          assetInvested > 0
-                            ? ((assetMarketValue +
-                                assetDividends -
-                                assetInvested) /
-                                assetInvested) *
-                              100
-                            : 0;
-                        const dividendYield = latest
-                          ? latest.dividend_yield || 0
-                          : 0;
-                        const isPositiveRentability = assetRentability >= 0;
 
-                        return (
-                          <div key={index} className="wallets-list-asset-card">
-                            <div>
-                              <span>{asset.ticker}</span>
-                            </div>
-                            <div>
-                              <span>
-                                {currentPrice.toLocaleString("pt-BR", {
-                                  style: "currency",
-                                  currency: "BRL",
-                                })}
-                              </span>
-                            </div>
-                            <div>
-                              <span>
-                                {Number(asset.buy_price).toLocaleString(
-                                  "pt-BR",
-                                  {
-                                    style: "currency",
-                                    currency: "BRL",
-                                  },
-                                )}
-                              </span>
-                            </div>
-                            <div>
-                              <span
-                                className={
-                                  isPositiveRentability ? "green" : "red"
-                                }
-                              >
-                                {assetRentability.toFixed(2)}%
-                              </span>
-                            </div>
-                            <div>
-                              <span>{dividendYield.toFixed(2)}%</span>
-                            </div>
-                            <div>
-                              <button className="secondary-btn wallets-list-asset-btn">
-                                Detalhes
-                              </button>
-                            </div>
+                        acc[key].quantity += asset.quantity;
+                        acc[key].totalInvested +=
+                          asset.quantity * asset.buy_price;
+                        acc[key].averagePrice =
+                          acc[key].quantity > 0
+                            ? acc[key].totalInvested / acc[key].quantity
+                            : 0;
+
+                        return acc;
+                      }, {}),
+                    ).map((asset, index) => {
+                      const latest = assetData[asset.ticker];
+                      const currentPrice = latest
+                        ? latest.close
+                        : asset.averagePrice || 0;
+                      const assetMarketValue = asset.quantity * currentPrice;
+                      const assetDividends = latest ? latest.dividends || 0 : 0;
+                      const assetRentability =
+                        asset.totalInvested > 0
+                          ? ((assetMarketValue +
+                              assetDividends -
+                              asset.totalInvested) /
+                              asset.totalInvested) *
+                            100
+                          : 0;
+                      const dividendYield = latest
+                        ? latest.dividend_yield || 0
+                        : 0;
+                      const isPositiveRentability = assetRentability >= 0;
+
+                      return (
+                        <div key={index} className="wallets-list-asset-card">
+                          <div>
+                            <span>{asset.ticker}</span>
                           </div>
-                        );
-                      })}
+                          <div>
+                            <span>
+                              {currentPrice.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </div>
+                          <div>
+                            <span>
+                              {asset.averagePrice.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </div>
+                          <div>
+                            <span>{asset.quantity}</span>
+                          </div>
+                          <div>
+                            <span
+                              className={
+                                isPositiveRentability ? "green" : "red"
+                              }
+                            >
+                              {assetRentability.toFixed(2)}%
+                            </span>
+                          </div>
+                          <div>
+                            <span>{dividendYield.toFixed(2)}%</span>
+                          </div>
+                          <div>
+                            <span>
+                              {assetMarketValue.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </span>
+                          </div>
+                          <div>
+                            <button className="secondary-btn wallets-list-asset-btn">
+                              Detalhes
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </AnimatedSection>
