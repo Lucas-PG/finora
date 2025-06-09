@@ -7,7 +7,13 @@ function FloatingInput({ type, label, value, onChange, icon }) {
   const isPassword = type === "password";
   const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
-  const Icon = isPassword ? (showPassword ? icon.Open : icon.Closed) : icon;
+  const Icon = isPassword
+    ? icon
+      ? showPassword
+        ? icon.Open
+        : icon.Closed
+      : null
+    : icon;
 
   return (
     <div className="input-group-login">
@@ -19,12 +25,26 @@ function FloatingInput({ type, label, value, onChange, icon }) {
         className={`floating-input ${value ? "filled" : ""}`}
       />
       <label className="floating-label">{label}</label>
-      <Icon
-        className={`floating-input-icon ${isPassword ? "pointer" : ""}`}
-        onClick={() => isPassword && setShowPassword(!showPassword)}
-      />
+      {Icon && (
+        <Icon
+          className={`floating-input-icon ${isPassword ? "pointer" : ""}`}
+          onClick={() => isPassword && setShowPassword(!showPassword)}
+        />
+      )}
     </div>
   );
 }
+
+FloatingInput.propTypes = {
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  icon: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+};
+
+FloatingInput.defaultProps = {
+  icon: null,
+};
 
 export default FloatingInput;
