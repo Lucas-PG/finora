@@ -32,6 +32,8 @@ function Wallets() {
   const [showWalletForm, setShowWalletForm] = useState(false);
   const [newWalletName, setNewWalletName] = useState("");
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [showTransactionsModal, setShowTransactionsModal] = useState(false);
+  const [showDividendsModal, setShowDividendsModal] = useState(false);
   const [transactionType, setTransactionType] = useState("buy");
   const [ticker, setTicker] = useState("");
   const [price, setPrice] = useState("");
@@ -280,7 +282,7 @@ function Wallets() {
       }
       return acc;
     }, {}),
-  );
+  ).filter((asset) => asset.quantity > 0);
 
   const filteredTotalAssets = filteredAssets.length;
 
@@ -400,6 +402,11 @@ function Wallets() {
                 </Modal>
               )}
             </div>
+            <div className="edit-wallets-btn">
+              <button type="button" className="secondary-btn">
+                Editar Carteiras
+              </button>
+            </div>
           </AnimatedSection>
 
           {wallets.length > 0 && selectedWallet && (
@@ -421,15 +428,17 @@ function Wallets() {
                   <button
                     type="button"
                     className="include-transaction-btn secondary-btn"
+                    onClick={() => setShowTransactionsModal(true)}
                   >
                     Ver Lançamentos
                   </button>
-                  {/* <button */}
-                  {/*   type="button" */}
-                  {/*   className="include-transaction-btn secondary-btn" */}
-                  {/* > */}
-                  {/*   Proventos */}
-                  {/* </button> */}
+                  <button
+                    type="button"
+                    className="include-transaction-btn secondary-btn"
+                    onClick={() => setShowDividendsModal(true)}
+                  >
+                    Ver Proventos
+                  </button>
                 </div>
               </AnimatedSection>
               <Modal
@@ -537,6 +546,56 @@ function Wallets() {
                   </button>
                 </Box>
               </Modal>
+              <Modal
+                open={showTransactionsModal}
+                onClose={() => setShowTransactionsModal(false)}
+                disableAutoFocus={true}
+              >
+                <Box className="modal-box">
+                  <h3>Lançamentos da Carteira</h3>
+                  <div className="transaction-list">
+                    {(selectedWallet?.assets || []).map((asset, i) => (
+                      <div key={i} className="transaction-item">
+                        <p>
+                          <strong>{asset.ticker}</strong>
+                        </p>
+                        <p>Tipo: {asset.quantity >= 0 ? "Compra" : "Venda"}</p>
+                        <p>Quantidade: {Math.abs(asset.quantity)}</p>
+
+                        <p>
+                          Preço: R${" "}
+                          {Number(asset.buy_price || 0).toLocaleString(
+                            "pt-BR",
+                            {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            },
+                          )}
+                        </p>
+                        <p>
+                          Data: {new Date(asset.buy_date).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </Box>
+              </Modal>
+              <Modal
+                open={showDividendsModal}
+                onClose={() => setShowDividendsModal(false)}
+                disableAutoFocus={true}
+              >
+                <Box className="modal-box">
+                  <h3>Proventos Recebidos</h3>
+                  <p>
+                    Total:{" "}
+                    {receivedDividends.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </p>
+                </Box>
+              </Modal>
               <AnimatedSection className="wallets-info-section wallets-section">
                 <div className="wallet-total-value-card">
                   <span>Seu Patrimônio</span>
@@ -573,7 +632,7 @@ function Wallets() {
                   </h3>
                 </div>
                 <div className="wallet-dividends-card">
-                  <span>Dividendos Recebidos</span>
+                  <span>Proventos Recebidos</span>
                   <h3>
                     {receivedDividends.toLocaleString("pt-BR", {
                       style: "currency",
@@ -757,14 +816,18 @@ function Wallets() {
                             </span>
                           </div>
                           <div>
-                            <span>
-                              {(
-                                asset.totalInvested / asset.quantity
-                              ).toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              })}
-                            </span>
+                            <div>
+                              <span>
+                                {asset.quantity > 0
+                                  ? (
+                                      asset.totalInvested / asset.quantity
+                                    ).toLocaleString("pt-BR", {
+                                      style: "currency",
+                                      currency: "BRL",
+                                    })
+                                  : "—"}
+                              </span>
+                            </div>
                           </div>
                           <div>
                             <span>{asset.quantity}</span>

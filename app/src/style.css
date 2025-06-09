@@ -138,6 +138,7 @@ body.modal-open {
 }
 
 .secondary-btn {
+  font-size: 1rem;
   background-color: var(--secondary-btn);
   color: var(--foreground);
   font-weight: bold;
