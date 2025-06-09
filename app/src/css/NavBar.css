@@ -204,6 +204,7 @@
 .user-avatar {
   width: 40px !important;
   height: 40px !important;
+  background-color: var(--primary-blue) !important;
   cursor: pointer;
 }
 
@@ -214,9 +215,6 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Existing styles... */
-
-/* Style for the user avatar menu container with translucent effect */
 .user-avatar-menu-container {
   .MuiPaper-root {
     background-color: rgba(
@@ -239,7 +237,6 @@
 .user-avatar-menu {
   font-size: 0.95rem !important;
   color: white !important; /* White text for contrast */
-  padding: 8px 16px !important;
   background-color: transparent; /* Default background without !important to allow overrides */
   transition: background-color 0.2s ease !important;
 
@@ -264,13 +261,7 @@
   }
 }
 
-/* Ensure the menu fits well with the navbar */
-.navbar-right .user-avatar {
-  margin-left: 10px !important;
-}
-
 /* Optional: Adjust menu positioning if needed */
 .MuiMenu-list {
-  padding: 4px 0 !important; /* Reduce padding inside menu */
   background-color: transparent !important; /* Ensure list inherits paper background */
 }
