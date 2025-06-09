@@ -298,8 +298,36 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   margin-left: 15px;
 }
 
-.wallets-list-section {
-  margin-top: 10vh;
+.wallets-list-title-section {
+  margin-top: 15vh;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallets-list-title-section > h3 {
+  font-size: 1.5rem;
+}
+
+.wallets-list-filter-div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wallets-list-filter {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--faded);
+}
+
+.wallets-list-filter-active {
+  background-color: transparent;
+  border: 1px solid var(--primary-blue);
+  color: var(--foreground);
+  font-weight: bold;
+  border-radius: var(--custom-border-radius);
 }
 
 .wallets-list-container {
@@ -311,6 +339,55 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.wallets-list-info {
+  display: flex;
+  width: calc(95% - 2vw);
+  align-items: center;
+  padding-bottom: 5vh;
+  justify-content: space-between;
+}
+
+.wallets-list-info-left {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 5px;
+}
+
+.wallets-list-info-left-top {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.wallets-list-info-left-top > h3 {
+  font-size: 1.5rem;
+}
+
+.wallets-list-info-assets-num {
+  color: var(--faded);
+}
+.wallets-list-info-right {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 5px;
+}
+
+.wallets-list-info-right > h3 {
+  font-size: 1.5rem;
+}
+
+.wallets-list-info-right > span {
+  font-size: 1rem;
+}
+
+.wallet-percentage {
+  padding: 3px 6px;
+  border-radius: var(--custom-border-radius);
+  font-size: 1rem;
 }
 
 .wallets-list-header {

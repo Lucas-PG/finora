@@ -40,6 +40,7 @@ function Wallets() {
   const [assetType, setAssetType] = useState("");
   const [assetData, setAssetData] = useState({});
   const [receivedDividends, setReceivedDividends] = useState(0);
+  const [walletListFilter, setWalletListFilter] = useState("Tudo");
   const tickerOptions = assetList[assetType] || [];
 
   const fetchWallets = async () => {
@@ -255,6 +256,50 @@ function Wallets() {
 
     return totalDividends;
   };
+
+  const filteredAssets = Object.values(
+    (selectedWallet?.assets || []).reduce((acc, asset) => {
+      if (
+        walletListFilter === "Tudo" ||
+        (walletListFilter === "Ações" && asset.type === "acao") ||
+        (walletListFilter === "FIIs" && asset.type === "fii") ||
+        (walletListFilter === "BDRs" && asset.type === "bdr") ||
+        (walletListFilter === "ETFs" && asset.type === "etf")
+      ) {
+        const key = asset.ticker;
+        if (!acc[key]) {
+          acc[key] = {
+            ...asset,
+            quantity: 0,
+            totalInvested: 0,
+          };
+        }
+
+        acc[key].quantity += asset.quantity;
+        acc[key].totalInvested += asset.quantity * asset.buy_price;
+      }
+      return acc;
+    }, {}),
+  );
+
+  const filteredTotalAssets = filteredAssets.length;
+
+  const filteredMarketValue = filteredAssets.reduce((sum, asset) => {
+    const currentPrice = assetData[asset.ticker]?.close || asset.buy_price;
+    return sum + asset.quantity * currentPrice;
+  }, 0);
+
+  const filteredInvestedValue = filteredAssets.reduce(
+    (sum, asset) => sum + asset.totalInvested,
+    0,
+  );
+
+  const filteredRentability =
+    filteredInvestedValue > 0
+      ? ((filteredMarketValue - filteredInvestedValue) /
+          filteredInvestedValue) *
+        100
+      : 0;
 
   const title = "Suas Carteiras";
   const subtitle =
@@ -554,11 +599,103 @@ function Wallets() {
                   <h3>Performance da Carteira</h3>
                 </div>
               </AnimatedSection>
+              <AnimatedSection className="wallets-list-title-section wallets-section">
+                <h3>Ativos</h3>
+                <div className="wallets-list-filter-div">
+                  <button
+                    type="button"
+                    className={`wallets-list-filter ${walletListFilter == "Tudo" ? "wallets-list-filter-active" : "secondary-btn"}`}
+                    onClick={() => setWalletListFilter("Tudo")}
+                  >
+                    Tudo
+                  </button>
+                  <button
+                    type="button"
+                    className={`wallets-list-filter ${walletListFilter == "Ações" ? "wallets-list-filter-active" : "secondary-btn"}`}
+                    onClick={() => setWalletListFilter("Ações")}
+                  >
+                    Ações
+                  </button>
+                  <button
+                    type="button"
+                    className={`wallets-list-filter ${walletListFilter == "FIIs" ? "wallets-list-filter-active" : "secondary-btn"}`}
+                    onClick={() => setWalletListFilter("FIIs")}
+                  >
+                    FIIs
+                  </button>
+                  <button
+                    type="button"
+                    className={`wallets-list-filter ${walletListFilter == "BDRs" ? "wallets-list-filter-active" : "secondary-btn"}`}
+                    onClick={() => setWalletListFilter("BDRs")}
+                  >
+                    BDRs
+                  </button>
+                  <button
+                    type="button"
+                    className={`wallets-list-filter ${walletListFilter == "ETFs" ? "wallets-list-filter-active" : "secondary-btn"}`}
+                    onClick={() => setWalletListFilter("ETFs")}
+                  >
+                    ETFs
+                  </button>
+                </div>
+              </AnimatedSection>
               <AnimatedSection
                 className="wallets-list-section wallets-section"
                 rootMargin="600px"
               >
                 <div className="wallets-list-container">
+                  <div className="wallets-list-info">
+                    <div className="wallets-list-info-left">
+                      <div className="wallets-list-info-left-top">
+                        <h3>{walletListFilter}</h3>
+
+                        <div
+                          className={
+                            filteredRentability >= 0
+                              ? "green-opacity wallet-percentage"
+                              : "red-opacity wallet-percentage"
+                          }
+                        >
+                          <span
+                            className={
+                              filteredRentability >= 0 ? "green" : "red"
+                            }
+                          >
+                            {filteredRentability.toFixed(2)}%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="wallets-list-info-assets-num">
+                        {filteredTotalAssets} ativos
+                      </div>
+                    </div>
+
+                    <div className="wallets-list-info-right">
+                      <h3>
+                        {filteredMarketValue.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </h3>
+                      <span
+                        className={
+                          filteredMarketValue - filteredInvestedValue >= 0
+                            ? "green"
+                            : "red"
+                        }
+                      >
+                        {(filteredMarketValue - filteredInvestedValue >= 0
+                          ? "+"
+                          : "") +
+                          (
+                            filteredMarketValue - filteredInvestedValue
+                          ).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                      </span>
+                    </div>
+                  </div>
                   <div className="wallets-list-header">
                     <div>
                       <span>Nome</span>
@@ -586,28 +723,7 @@ function Wallets() {
                     </div>
                   </div>
                   <div className="wallets-list-body">
-                    {Object.values(
-                      (selectedWallet.assets || []).reduce((acc, asset) => {
-                        const key = asset.ticker;
-                        if (!acc[key]) {
-                          acc[key] = {
-                            ...asset,
-                            quantity: 0,
-                            totalInvested: 0,
-                          };
-                        }
-
-                        acc[key].quantity += asset.quantity;
-                        acc[key].totalInvested +=
-                          asset.quantity * asset.buy_price;
-                        acc[key].averagePrice =
-                          acc[key].quantity > 0
-                            ? acc[key].totalInvested / acc[key].quantity
-                            : 0;
-
-                        return acc;
-                      }, {}),
-                    ).map((asset, index) => {
+                    {filteredAssets.map((asset, index) => {
                       const latest = assetData[asset.ticker];
                       const currentPrice = latest
                         ? latest.close
@@ -642,7 +758,9 @@ function Wallets() {
                           </div>
                           <div>
                             <span>
-                              {asset.averagePrice.toLocaleString("pt-BR", {
+                              {(
+                                asset.totalInvested / asset.quantity
+                              ).toLocaleString("pt-BR", {
                                 style: "currency",
                                 currency: "BRL",
                               })}
