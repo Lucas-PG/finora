@@ -52,17 +52,6 @@ function Navbar() {
     navigate("/logout");
   };
 
-  const getRandomColor = () => {
-    const colors = [
-      deepOrange[500],
-      deepPurple[500],
-      blue[500],
-      green[500],
-      red[500],
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-
   return (
     <div
       className={`navbar-container ${isScrolled ? "navbar-active" : "navbar-inactive"}`}
@@ -151,11 +140,7 @@ function Navbar() {
           )}
           {!isAuthPage && isAuthenticated && (
             <>
-              <Avatar
-                sx={{ bgcolor: getRandomColor(), cursor: "pointer" }}
-                className="user-avatar"
-                onClick={handleMenuClick}
-              >
+              <Avatar className="user-avatar" onClick={handleMenuClick}>
                 {userName ? userName.charAt(0).toUpperCase() : "U"}
               </Avatar>
               <Menu
