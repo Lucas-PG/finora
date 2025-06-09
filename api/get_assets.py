@@ -250,6 +250,7 @@ cursor.execute(
         variation_24h DOUBLE,
         full_name TEXT,
         asset_type VARCHAR(10),
+        ex_dividend_date DATE DEFAULT NULL,
         PRIMARY KEY (ticker, date)
     )
     """
@@ -303,6 +304,9 @@ for i, ticker in enumerate(tickers, 1):
                     (close_today - close_yesterday) / close_yesterday
                 ) * 100
 
+        dividends = stock.dividends
+        dividend_dates = dividends.index.strftime("%Y-%m-%d").tolist()
+
         # Calculate dividend yield for each date based on cumulative dividends
         data = data[["Close", "Volume", "Dividends"]].reset_index()
         data["ticker"] = ticker.replace(".SA", "")
@@ -311,19 +315,39 @@ for i, ticker in enumerate(tickers, 1):
         data["asset_type"] = asset_type
         data["dividend_yield"] = 0.0
         data["variation_24h"] = None
+        data["ex_dividend_date"] = pd.NaT
 
         # Calculate dividend yield for each row
         cumulative_dividends = 0.0
         for index, row in data.iterrows():
+            current_date = row["Date"].strftime("%Y-%m-%d")
+
+            # Acumula dividendos pagos
             cumulative_dividends += row["Dividends"]
-            if row["Close"] != 0:  # Avoid division by zero
+
+            # Calcula dividend_yield com base nos dividendos acumulados
+            if row["Close"] != 0:
                 data.at[index, "dividend_yield"] = (
                     cumulative_dividends / row["Close"]
                 ) * 100
+
+            # Marca a data ex-dividendo (se a data atual for uma data de pagamento)
+            if row["Dividends"] > 0 and current_date in dividend_dates:
+                data.at[index, "ex_dividend_date"] = pd.to_datetime(current_date)
+
+            # Adiciona variação de 24h somente na última linha
             if index == len(data) - 1 and variation_24h is not None:
                 data.at[index, "variation_24h"] = variation_24h
 
-        data = data.fillna(0)
+        numeric_columns = [
+            "Close",
+            "Volume",
+            "Dividends",
+            "market_cap",
+            "dividend_yield",
+            "variation_24h",
+        ]
+        data[numeric_columns] = data[numeric_columns].fillna(0)
 
         data_tuples = [
             (
@@ -337,6 +361,7 @@ for i, ticker in enumerate(tickers, 1):
                 row["variation_24h"],
                 row["full_name"],
                 row["asset_type"],
+                row["ex_dividend_date"] if pd.notna(row["ex_dividend_date"]) else None,
             )
             for _, row in data.iterrows()
         ]
@@ -344,8 +369,8 @@ for i, ticker in enumerate(tickers, 1):
         cursor.executemany(
             """
             INSERT INTO historical_data
-            (ticker, date, close, volume, dividends, market_cap, dividend_yield, variation_24h, full_name, asset_type)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            (ticker, date, close, volume, dividends, market_cap, dividend_yield, variation_24h, full_name, asset_type, ex_dividend_date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE
                 close=VALUES(close),
                 volume=VALUES(volume),
@@ -354,7 +379,8 @@ for i, ticker in enumerate(tickers, 1):
                 dividend_yield=VALUES(dividend_yield),
                 variation_24h=VALUES(variation_24h),
                 full_name=VALUES(full_name),
-                asset_type=VALUES(asset_type)
+                asset_type=VALUES(asset_type),
+                ex_dividend_date=VALUES(ex_dividend_date)
             """,
             data_tuples,
         )
