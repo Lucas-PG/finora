@@ -1,18 +1,25 @@
 import { NavLink } from "react-router-dom";
+import { Menu, MenuItem } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { CiSearch, CiLight, CiDark } from "react-icons/ci";
 import { LuMoon, LuSun, LuSearch } from "react-icons/lu";
 import { useTheme } from "../context/ThemeContext";
 import { useLocation } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { Avatar } from "@mui/material"; // Import Avatar
+import { deepOrange, deepPurple, blue, green, red } from "@mui/material/colors"; // Import color palettes
 import "../css/NavBar.css";
 
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, userName } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const open = Boolean(anchorEl);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +37,30 @@ function Navbar() {
 
   const toggleSearch = () => {
     setIsSearching((prev) => !prev);
+  };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/logout");
+  };
+
+  const getRandomColor = () => {
+    const colors = [
+      deepOrange[500],
+      deepPurple[500],
+      blue[500],
+      green[500],
+      red[500],
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
   };
 
   return (
@@ -117,6 +148,39 @@ function Navbar() {
             <NavLink to="/login">
               <button className="home-login-btn primary-btn">Entrar</button>
             </NavLink>
+          )}
+          {!isAuthPage && isAuthenticated && (
+            <>
+              <Avatar
+                sx={{ bgcolor: getRandomColor(), cursor: "pointer" }}
+                className="user-avatar"
+                onClick={handleMenuClick}
+              >
+                {userName ? userName.charAt(0).toUpperCase() : "U"}
+              </Avatar>
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                className="user-avatar-menu-container"
+              >
+                <div className=""></div>
+                <MenuItem onClick={handleClose} className="user-avatar-menu">
+                  Configurações
+                </MenuItem>
+                <MenuItem onClick={handleLogout} className="user-avatar-menu">
+                  Logout
+                </MenuItem>
+              </Menu>
+            </>
           )}
         </div>
       </header>
