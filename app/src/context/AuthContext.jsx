@@ -14,8 +14,21 @@ function setToken(token) {
   sessionStorage.setItem("token", token);
 }
 
+function getName() {
+  return sessionStorage.getItem("name");
+}
+
+function setName(name) {
+  sessionStorage.setItem("name", name);
+}
+
+function removeName() {
+  sessionStorage.removeItem("name");
+}
+
 function logout() {
   removeToken();
+  removeName();
   window.location.reload();
 }
 
@@ -44,11 +57,18 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     verifyToken(token, setIsAuthenticated);
-  }, [token]);
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, token, setToken, logout }}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        token,
+        setToken,
+        logout,
+        userName: getName(),
+      }}
     >
       {children}
     </AuthContext.Provider>
