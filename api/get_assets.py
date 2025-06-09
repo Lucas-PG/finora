@@ -2,7 +2,7 @@ import yfinance as yf
 import pandas as pd
 import mysql.connector
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 tickers = [
     "PETR4.SA",
@@ -121,26 +121,26 @@ def classify_asset_type(ticker):
 
 
 conn = mysql.connector.connect(
-    host="localhost", user="user", password="password", database="projeto_react"
+    host="localhost", user="root", password="password", database="projeto_react"
 )
 cursor = conn.cursor()
 
 cursor.execute(
     """
-CREATE TABLE IF NOT EXISTS historical_data (
-    ticker VARCHAR(10),
-    date DATETIME,
-    close DOUBLE,
-    volume BIGINT,
-    dividends DOUBLE,
-    market_cap DOUBLE,
-    dividend_yield DOUBLE,
-    variation_24h DOUBLE,
-    full_name TEXT,
-    asset_type VARCHAR(10),
-    PRIMARY KEY (ticker, date)
-)
-"""
+    CREATE TABLE IF NOT EXISTS historical_data (
+        ticker VARCHAR(10),
+        date DATETIME,
+        close DOUBLE,
+        volume BIGINT,
+        dividends DOUBLE,
+        market_cap DOUBLE,
+        dividend_yield DOUBLE,
+        variation_24h DOUBLE,
+        full_name TEXT,
+        asset_type VARCHAR(10),
+        PRIMARY KEY (ticker, date)
+    )
+    """
 )
 
 for i, ticker in enumerate(tickers, 1):
@@ -156,6 +156,7 @@ for i, ticker in enumerate(tickers, 1):
         info = stock.info
         asset_type = classify_asset_type(ticker)
 
+        # Calculate market cap
         market_cap = None
         if asset_type == "etf":
             market_cap = info.get("totalAssets")
@@ -177,26 +178,38 @@ for i, ticker in enumerate(tickers, 1):
             print(f"Aviso: marketCap não disponível para {ticker}. Atribuindo 0.")
             market_cap = 0
 
-        dividend_yield = info.get("dividendYield", 0)
         full_name = info.get("longName", "Desconhecido")
 
+        # Fetch 2 days of data for 24h variation
         data_2d = stock.history(period="2d", interval="1d")
         variation_24h = None
         if len(data_2d) >= 2:
             close_today = data_2d["Close"].iloc[-1]
             close_yesterday = data_2d["Close"].iloc[-2]
-            variation_24h = ((close_today - close_yesterday) / close_yesterday) * 100
+            if close_yesterday != 0:  # Avoid division by zero
+                variation_24h = (
+                    (close_today - close_yesterday) / close_yesterday
+                ) * 100
 
+        # Calculate dividend yield for each date based on cumulative dividends
         data = data[["Close", "Volume", "Dividends"]].reset_index()
         data["ticker"] = ticker.replace(".SA", "")
         data["market_cap"] = market_cap
-        data["dividend_yield"] = dividend_yield
-        data["variation_24h"] = None
         data["full_name"] = full_name
         data["asset_type"] = asset_type
+        data["dividend_yield"] = 0.0
+        data["variation_24h"] = None
 
-        if variation_24h is not None:
-            data.loc[data.index[-1], "variation_24h"] = variation_24h
+        # Calculate dividend yield for each row
+        cumulative_dividends = 0.0
+        for index, row in data.iterrows():
+            cumulative_dividends += row["Dividends"]
+            if row["Close"] != 0:  # Avoid division by zero
+                data.at[index, "dividend_yield"] = (
+                    cumulative_dividends / row["Close"]
+                ) * 100
+            if index == len(data) - 1 and variation_24h is not None:
+                data.at[index, "variation_24h"] = variation_24h
 
         data = data.fillna(0)
 
@@ -230,7 +243,7 @@ for i, ticker in enumerate(tickers, 1):
                 variation_24h=VALUES(variation_24h),
                 full_name=VALUES(full_name),
                 asset_type=VALUES(asset_type)
-        """,
+            """,
             data_tuples,
         )
 
