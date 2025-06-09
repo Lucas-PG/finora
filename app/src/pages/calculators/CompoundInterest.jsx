@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import Arrow from "../../components/Arrow";
+import { FaCalculator } from "react-icons/fa";
+import { HiArrowTrendingUp } from "react-icons/hi2";
 import HeroSection from "../../components/HeroSection.jsx";
 import {
-  LineChart,
-  Line,
+  PieChart,
+  Pie,
+  Cell,
   BarChart,
   Bar,
   AreaChart,
@@ -15,7 +18,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import "../../css/CompoundInterest.css";
+import "../../css/calculators/CompoundInterest.css";
 
 function CompoundInterest() {
   const [initialValue, setInitialValue] = useState("");
@@ -23,40 +26,97 @@ function CompoundInterest() {
   const [period, setPeriod] = useState("");
   const [monthlyInvestment, setMonthlyInvestment] = useState("");
   const [finalAmount, setFinalAmount] = useState(null);
-  const [graphMode, setGraphMode] = useState("linha");
+  const [graphMode, setGraphMode] = useState("pizza");
   const [chartData, setChartData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const title = "Juros Compostos";
+  const subtitle =
+    'O modelo mais comum em aplicações de renda fixa. Veja sua "bola de neve" formando.';
 
   const calculateCompoundInterest = () => {
     const P = parseFloat(initialValue);
-    const r = parseFloat(interestRate) / 100;
+    const r = parseFloat(interestRate) / 100 / 12;
     const t = parseInt(period);
     const PMT = parseFloat(monthlyInvestment);
 
     if (isNaN(P) || isNaN(r) || isNaN(t) || isNaN(PMT)) {
-      alert("Preencha todos os campos corretamente.");
+      setFinalAmount(null);
+      setChartData([]);
+      setErrorMessage("Preencha todos os campos corretamente.");
       return;
     }
 
-    let total = P;
-    const data = [];
+    const months = t * 12;
+    const total =
+      P * Math.pow(1 + r, months) + PMT * ((Math.pow(1 + r, months) - 1) / r);
 
-    for (let i = 1; i <= t; i++) {
-      total = total * (1 + r) + PMT * ((Math.pow(1 + r, i) - 1) / r);
-      data.push({ ano: `${i}º`, montante: parseFloat(total.toFixed(2)) });
+    const data = [];
+    for (let i = 1; i <= months; i++) {
+      const partial =
+        P * Math.pow(1 + r, i) + PMT * ((Math.pow(1 + r, i) - 1) / r);
+      if (i % 12 === 0) {
+        data.push({
+          ano: `${i / 12}º`,
+          montante: partial,
+        });
+      }
     }
 
     setChartData(data);
-    setFinalAmount(total.toFixed(2));
+    setFinalAmount(total);
+    setGraphMode("resumo");
+    setErrorMessage("");
+  };
+
+  const customTooltip = {
+    contentStyle: {
+      backgroundColor: "#181e2b",
+      border: "1px solid #41434a",
+      borderRadius: "8px",
+      color: "#fff",
+    },
+    labelStyle: { color: "#ccc" },
+    itemStyle: { color: "#fff" },
+    formatter: (value) =>
+      Number(value).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }),
   };
 
   const renderChart = () => {
+    const invested =
+      Number(initialValue) + Number(monthlyInvestment) * Number(period) * 12;
+    const interest = Number(finalAmount) - invested;
+
     if (graphMode === "resumo") {
       return finalAmount !== null ? (
         <div className="compound-resume">
-          <p className="compound-result-description">
-            Montante acumulado ao final de {period} anos:{" "}
-            <strong>R$ {finalAmount}</strong>
-          </p>
+          <div className="resume-flex-box">
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Final</span>
+                <span className="result-value">
+                  <HiArrowTrendingUp className="growth-icon" /> R${" "}
+                  {Number(finalAmount).toFixed(2)}
+                </span>
+              </div>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Investido</span>
+                <span className="result-value">R$ {invested.toFixed(2)}</span>
+              </div>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Total em Juros</span>
+                <span className="result-value">R$ {interest.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+
           <ul className="compound-resume-list">
             <li>
               Valor inicial:{" "}
@@ -73,7 +133,7 @@ function CompoundInterest() {
               Investimento mensal:{" "}
               <strong>R$ {parseFloat(monthlyInvestment).toFixed(2)}</strong>
             </li>
-            <li>
+            <li className="compound-tip">
               Juros compostos crescem de forma exponencial com o tempo. Quanto
               mais longo o período, maior o impacto dos juros.
             </li>
@@ -89,21 +149,33 @@ function CompoundInterest() {
     if (chartData.length === 0) return null;
 
     switch (graphMode) {
-      case "linha":
+      case "pizza":
+        const pieData = [
+          { name: "Investido", value: invested },
+          { name: "Juros", value: interest },
+        ];
+        const COLORS = ["#0066ff", "#ffff"];
         return (
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="ano" />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="montante"
-                stroke="#0066FF"
-                strokeWidth={2}
-              />
-            </LineChart>
+            <PieChart>
+              <Tooltip {...customTooltip} />
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+                minAngle={3}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(1)}%`
+                }
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Pie>
+            </PieChart>
           </ResponsiveContainer>
         );
       case "barra":
@@ -113,7 +185,7 @@ function CompoundInterest() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="ano" />
               <YAxis />
-              <Tooltip />
+              <Tooltip {...customTooltip} />
               <Bar dataKey="montante" fill="#0066FF" />
             </BarChart>
           </ResponsiveContainer>
@@ -125,7 +197,7 @@ function CompoundInterest() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="ano" />
               <YAxis />
-              <Tooltip />
+              <Tooltip {...customTooltip} />
               <Area
                 type="monotone"
                 dataKey="montante"
@@ -140,10 +212,6 @@ function CompoundInterest() {
     }
   };
 
-  const title = "Juros Compostos";
-  const subtitle =
-    'O modelo mais comum em aplicações de renda fixa. Veja sua "bola de neve" formando';
-
   return (
     <>
       <Navbar />
@@ -151,42 +219,69 @@ function CompoundInterest() {
       <div className="compound-bottom-section">
         <div className="compound-box-calculator">
           <h3 className="compound-calculator-title">
+            <FaCalculator className="calculator-icon-inline" />
             Calculadora de Juros Compostos
           </h3>
+
           <input
             className="compound-input-initial"
             placeholder="Valor Inicial"
             value={initialValue}
-            onChange={(e) => setInitialValue(e.target.value)}
+            onChange={(e) => {
+              setInitialValue(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
           <input
             className="compound-input-rate"
             placeholder="Taxa de Juros (%)"
             value={interestRate}
-            onChange={(e) => setInterestRate(e.target.value)}
+            onChange={(e) => {
+              setInterestRate(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
           <input
             className="compound-input-period"
             placeholder="Período (anos)"
             value={period}
-            onChange={(e) => setPeriod(e.target.value)}
+            onChange={(e) => {
+              setPeriod(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
           <input
             className="compound-input-monthly"
             placeholder="Investimento Mensal"
             value={monthlyInvestment}
-            onChange={(e) => setMonthlyInvestment(e.target.value)}
+            onChange={(e) => {
+              setMonthlyInvestment(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
+
           <button
             className="compound-button"
             onClick={calculateCompoundInterest}
           >
             <span className="compound-button-content">Calcular</span>
           </button>
+
+          {errorMessage && (
+            <p className="compound-error-message">{errorMessage}</p>
+          )}
         </div>
 
         <Arrow />
@@ -195,52 +290,23 @@ function CompoundInterest() {
           <h3 className="compound-result-title">Resultados</h3>
 
           <div className="graph-mode-toggle">
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="linha"
-                checked={graphMode === "linha"}
-                onChange={() => setGraphMode("linha")}
-              />
-              <span className="graph-label">Linha</span>
-            </label>
-
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="barra"
-                checked={graphMode === "barra"}
-                onChange={() => setGraphMode("barra")}
-              />
-              <span className="graph-label">Barra</span>
-            </label>
-
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="area"
-                checked={graphMode === "area"}
-                onChange={() => setGraphMode("area")}
-              />
-              <span className="graph-label">Área</span>
-            </label>
-
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="resumo"
-                checked={graphMode === "resumo"}
-                onChange={() => setGraphMode("resumo")}
-              />
-              <span className="graph-label">Resumo</span>
-            </label>
+            {["resumo", "pizza", "barra", "area"].map((mode) => (
+              <label key={mode} className="graph-radio">
+                <input
+                  type="radio"
+                  name="graphMode"
+                  value={mode}
+                  checked={graphMode === mode}
+                  onChange={() => setGraphMode(mode)}
+                />
+                <span className="graph-label">
+                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                </span>
+              </label>
+            ))}
           </div>
 
-          <div>{renderChart()}</div>
+          <div className="compound-chart-area">{renderChart()}</div>
         </div>
       </div>
     </>

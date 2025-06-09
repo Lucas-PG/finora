@@ -1,0 +1,295 @@
+.simple-container {
+  padding: 1rem;
+  min-height: 20vh;
+  background: linear-gradient(
+    90deg,
+    rgba(6, 10, 22, 1) 0%,
+    rgba(26, 43, 76, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.simple-bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0rem 6rem 2rem 6rem;
+  gap: 2rem;
+  background-color: #060a16;
+  flex-wrap: wrap;
+  position: relative;
+  margin-top: 10vh;
+}
+
+.simple-box-calculator {
+  flex: 1;
+  background-color: #10141d;
+  padding: 2rem 2rem 3rem 2rem;
+  border: 1px solid #41434a;
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  max-width: 500px;
+  max-height: 400px;
+}
+
+.simple-box-graph {
+  flex: 1;
+  background-color: #10141d;
+  padding: 2rem 4rem 2rem 4rem;
+  border-radius: 30px;
+  border: 1px solid #41434a;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  min-width: 300px;
+  max-width: 800px;
+  max-height: 600px;
+  flex-wrap: wrap;
+}
+
+.simple-calculator-title {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.simple-result-title {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.simple-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  padding-bottom: 0.25rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.simple-description {
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.calculator-icon-inline {
+  margin-right: 10px;
+  color: #0066ff;
+  vertical-align: middle;
+}
+
+.simple-input-initial,
+.simple-input-rate,
+.simple-input-period,
+.simple-input-monthly {
+  width: 80%;
+  background: none;
+  border: 2px solid #41434a;
+  outline: none;
+  padding: 15px 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: #181e2b;
+  margin: 10px;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+.simple-button {
+  width: 80%;
+  margin-top: 20px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 100%;
+  background-color: var(--primary-blue);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 102, 255, 0.5);
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--foreground);
+  border: none;
+  white-space: nowrap;
+}
+
+.simple-button:hover {
+  box-shadow: 0 10px 15px rgba(0, 102, 255, 0.5);
+  transform: scale(1.02);
+}
+
+.simple-chart-area {
+  padding: 1rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.graph-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  border: 2px solid #0066ff;
+  border-radius: 1rem;
+  padding: 0.3rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.graph-radio {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.graph-radio input {
+  display: none;
+}
+
+.graph-label {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: #c5c5c5;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.graph-radio input:checked + .graph-label {
+  background: #0066ff;
+  color: white;
+}
+
+.simple-result-description {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: left;
+  border-radius: var(--custom-border-radius);
+}
+
+.simple-resume {
+  color: #fdfdfd;
+}
+
+.simple-resume-flex-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 0rem 1rem 0rem;
+  margin-bottom: 1.5rem;
+}
+
+.simple-resume-card {
+  flex-grow: 1;
+  min-width: 200px;
+  max-width: 100%;
+  background-color: #181e2b;
+  border: 1px solid #41434a;
+  border-radius: 15px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  transition: transform 0.2s ease;
+}
+
+.simple-resume-card:hover {
+  transform: scale(1.03);
+}
+
+.simple-result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.simple-result-label {
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.simple-result-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+
+.simple-resume-list {
+  list-style: none;
+  margin-top: 1rem;
+  color: #fdfdfd;
+}
+
+.simple-resume-list li {
+  margin-bottom: 0.75rem;
+}
+
+.simple-resume-list strong {
+  color: #ffffff;
+}
+
+.simple-tip {
+  color: #0066ff;
+  font-size: 1rem;
+  text-shadow: 0 0 2px #0066ff;
+}
+
+.simple-error-message {
+  color: #ffffff;
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: #ccc;
+  font-size: 0.9rem;
+}
+
+.recharts-yAxis .recharts-cartesian-axis-tick-value {
+  fill: #aaa;
+}
+
+.recharts-bar,
+.recharts-area {
+  transition: all 0.3s ease;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .simple-bottom-section {
+    flex-direction: column;
+  }
+}
