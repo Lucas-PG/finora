@@ -200,3 +200,77 @@
   background-color: var(--primary-blue);
   border-radius: 1px;
 }
+
+.user-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  cursor: pointer;
+}
+
+.user-avatar-menu {
+  backdrop-filter: blur(10px);
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Existing styles... */
+
+/* Style for the user avatar menu container with translucent effect */
+.user-avatar-menu-container {
+  .MuiPaper-root {
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.5
+    ) !important; /* Semi-transparent dark overlay */
+    backdrop-filter: blur(10px) !important; /* Blur effect */
+    -webkit-backdrop-filter: blur(10px) !important; /* Safari support */
+    border-radius: var(--custom-border-radius) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid var(--card-border) !important;
+    margin-top: 8px !important; /* Adjust spacing from avatar */
+    color: white !important; /* Ensure text is visible against dark background */
+  }
+}
+
+/* Style for individual menu items */
+.user-avatar-menu {
+  font-size: 0.95rem !important;
+  color: white !important; /* White text for contrast */
+  padding: 8px 16px !important;
+  background-color: transparent; /* Default background without !important to allow overrides */
+  transition: background-color 0.2s ease !important;
+
+  /* Override MUI's default selected/focused state */
+  &.Mui-selected,
+  &.Mui-focused {
+    background-color: transparent !important;
+  }
+
+  /* Ensure the first item doesn't inherit auto-focus styling */
+  &:first-child {
+    background-color: transparent !important;
+  }
+
+  /* Apply primary-blue on hover and focus */
+  &:hover,
+  &:focus {
+    background-color: var(
+      --primary-blue
+    ) !important; /* Hover and focus background */
+    color: white !important; /* Maintain white text */
+  }
+}
+
+/* Ensure the menu fits well with the navbar */
+.navbar-right .user-avatar {
+  margin-left: 10px !important;
+}
+
+/* Optional: Adjust menu positioning if needed */
+.MuiMenu-list {
+  padding: 4px 0 !important; /* Reduce padding inside menu */
+  background-color: transparent !important; /* Ensure list inherits paper background */
+}
