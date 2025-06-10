@@ -324,6 +324,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   margin-left: 15px;
 }
 
+.wallet-chart-container {
+  width: 90%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .wallets-list-title-section {
   margin-top: 15vh;
   margin-bottom: 1rem;

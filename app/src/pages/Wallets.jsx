@@ -24,7 +24,30 @@ import {
   Alert,
 } from "@mui/material";
 import FloatingInput from "../components/ui/FloatingInput.jsx";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import "chartjs-adapter-date-fns";
+import { ptBR } from "date-fns/locale";
 import "../css/Wallets.css";
+
+ChartJS.register(
+  LineElement,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 function Wallets() {
   const [selectedWallet, setSelectedWallet] = useState(null);
@@ -52,7 +75,11 @@ function Wallets() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [editingAssetId, setEditingAssetId] = useState(null);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmDeleteWalletOpen, setConfirmDeleteWalletOpen] = useState(false);
+  const [confirmDeleteTransactionOpen, setConfirmDeleteTransactionOpen] =
+    useState(false);
+
+  const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [walletToDelete, setWalletToDelete] = useState(null);
 
   const fetchWallets = async () => {
@@ -173,7 +200,7 @@ function Wallets() {
 
   const handleClickDeleteWallet = (wallet) => {
     setWalletToDelete(wallet);
-    setConfirmOpen(true);
+    setConfirmDeleteWalletOpen(true);
   };
 
   const confirmDeleteWallet = async () => {
@@ -186,7 +213,7 @@ function Wallets() {
     } catch (err) {
       showSnackbar("Erro ao deletar carteira.", "error");
     } finally {
-      setConfirmOpen(false);
+      setConfirmDeleteWalletOpen(false);
       setWalletToDelete(null);
     }
   };
@@ -268,14 +295,15 @@ function Wallets() {
     }
   };
 
-  const handleDeleteTransaction = async (transactionId) => {
-    if (!window.confirm("Tem certeza que deseja deletar este lançamento?")) {
-      return;
-    }
+  const handleDeleteTransaction = (transactionId) => {
+    setTransactionToDelete(transactionId);
+    setConfirmDeleteTransactionOpen(true);
+  };
 
+  const confirmDeleteTransaction = async () => {
     try {
       await axios.delete(
-        `http://localhost:3001/wallets/${selectedWallet.id}/assets/${transactionId}`,
+        `http://localhost:3001/wallets/${selectedWallet.id}/assets/${transactionToDelete}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
@@ -287,22 +315,18 @@ function Wallets() {
       );
       setSelectedWallet(updatedWallet);
 
-      setSnackbarMessage("Lançamento deletado com sucesso!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
+      showSnackbar("Lançamento deletado com sucesso!", "success");
     } catch (err) {
-      console.error("Erro ao deletar lançamento:", {
-        status: err.response?.status,
-        data: err.response?.data,
-        message: err.message,
-      });
-      setSnackbarMessage(
+      console.error("Erro ao deletar lançamento:", err);
+      showSnackbar(
         `Erro ao deletar lançamento: ${
           err.response?.data?.error || err.message || "Tente novamente"
         }`,
+        "error",
       );
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+    } finally {
+      setConfirmDeleteTransactionOpen(false);
+      setTransactionToDelete(null);
     }
   };
 
@@ -475,6 +499,74 @@ function Wallets() {
     setSnackbarOpen(true);
   };
 
+  const prepareChartData = () => {
+    if (!selectedWallet || !selectedWallet.assets || !assetData) {
+      return {
+        labels: [],
+        datasets: [],
+      };
+    }
+
+    const buyDates = selectedWallet.assets
+      .map((asset) => new Date(asset.buy_date))
+      .filter((date) => !isNaN(date.getTime()));
+    const startDate =
+      buyDates.length > 0 ? new Date(Math.min(...buyDates)) : new Date();
+
+    const walletTickers = [
+      ...new Set(selectedWallet.assets.map((asset) => asset.ticker)),
+    ];
+
+    const assetDates = Object.values(assetData)
+      .filter((data) => walletTickers.includes(data.ticker))
+      .map((data) => new Date(data.date))
+      .filter((date) => !isNaN(date.getTime()));
+    const latestAssetDate =
+      assetDates.length > 0 ? new Date(Math.max(...assetDates)) : startDate;
+
+    let currentDate = new Date();
+    const endDate =
+      latestAssetDate < currentDate ? latestAssetDate : currentDate;
+
+    const dates = [];
+    currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      dates.push(new Date(currentDate).toISOString().split("T")[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    const marketValues = dates.map((date) => {
+      return selectedWallet.assets.reduce((sum, asset) => {
+        if (new Date(asset.buy_date) <= new Date(date)) {
+          const priceData = Object.values(assetData)
+            .filter(
+              (data) =>
+                data.ticker === asset.ticker &&
+                new Date(data.date) <= new Date(date),
+            )
+            .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+          const price = priceData ? priceData.close : asset.buy_price;
+          return sum + asset.quantity * price;
+        }
+        return sum;
+      }, 0);
+    });
+
+    return {
+      labels: dates,
+      datasets: [
+        {
+          label: "Valor de Mercado da Carteira (BRL)",
+          data: marketValues,
+          borderColor: "#4CAF50",
+          backgroundColor: "rgba(76, 175, 80, 0.2)",
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
+  };
+
   const title = "Suas Carteiras";
   const subtitle =
     "Acompanhe seu portfolio ou simule carteiras para planejar seus investimentos.";
@@ -551,13 +643,6 @@ function Wallets() {
                     </div>
                   );
                 })}
-              <ConfirmDialog
-                open={confirmOpen}
-                onClose={() => setConfirmOpen(false)}
-                onConfirm={confirmDeleteWallet}
-                title="Deletar Carteira"
-                message={`Tem certeza que deseja deletar a carteira "${walletToDelete?.name}"?`}
-              />
               <div
                 className="add-wallet-card"
                 onClick={() => setShowWalletForm(true)}
@@ -622,13 +707,13 @@ function Wallets() {
                   >
                     Ver Lançamentos
                   </button>
-                  <button
-                    type="button"
-                    className="include-transaction-btn secondary-btn"
-                    onClick={() => setShowDividendsModal(true)}
-                  >
-                    Ver Proventos
-                  </button>
+                  {/* <button */}
+                  {/*   type="button" */}
+                  {/*   className="include-transaction-btn secondary-btn" */}
+                  {/*   onClick={() => setShowDividendsModal(true)} */}
+                  {/* > */}
+                  {/*   Ver Proventos */}
+                  {/* </button> */}
                 </div>
               </AnimatedSection>
               <Modal
@@ -893,6 +978,73 @@ function Wallets() {
                 <div className="wallets-chart-title">
                   <h3>Performance da Carteira</h3>
                 </div>
+                <div className="wallet-chart-container">
+                  <Line
+                    data={prepareChartData()}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          position: "top",
+                          labels: { color: "#333" },
+                        },
+                        title: {
+                          display: true,
+                          text: "Desempenho da Carteira ao Longo do Tempo",
+                          color: "#333",
+                          font: { size: 16 },
+                        },
+                      },
+                      scales: {
+                        x: {
+                          type: "time",
+                          time: {
+                            unit: "day",
+                            locale: ptBR,
+                            displayFormats: {
+                              day: "dd MMM yyyy",
+                            },
+                          },
+                          title: { display: true, text: "Data", color: "#333" },
+                          ticks: {
+                            color: "#333",
+                            callback: function (value, index, values) {
+                              const date = new Date(value);
+                              return date.toLocaleDateString("pt-BR", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              });
+                            },
+                          },
+                          grid: { color: "rgba(0, 0, 0, 0.1)" },
+                        },
+                        y: {
+                          title: {
+                            display: true,
+                            text: "Valor de Mercado (BRL)",
+                            color: "#333",
+                          },
+                          ticks: {
+                            color: "#333",
+                            callback: function (value) {
+                              return (
+                                "R$ " +
+                                value.toLocaleString("pt-BR", {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                                })
+                              );
+                            },
+                          },
+                          grid: { color: "rgba(0, 0, 0, 0.1)" },
+                        },
+                      },
+                    }}
+                    height={400}
+                  />
+                </div>
               </AnimatedSection>
               <AnimatedSection className="wallets-list-title-section wallets-section">
                 <h3>Ativos</h3>
@@ -1117,6 +1269,20 @@ function Wallets() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      <ConfirmDialog
+        open={confirmDeleteTransactionOpen}
+        onClose={() => setConfirmDeleteTransactionOpen(false)}
+        onConfirm={confirmDeleteTransaction}
+        title="Deletar lançamento"
+        message="Tem certeza que deseja deletar este lançamento? Essa ação não pode ser desfeita."
+      />
+      <ConfirmDialog
+        open={confirmDeleteWalletOpen}
+        onClose={() => setConfirmDeleteWalletOpen(false)}
+        onConfirm={confirmDeleteWallet}
+        title="Deletar Carteira"
+        message={`Tem certeza que deseja deletar a carteira "${walletToDelete?.name}"?`}
+      />
     </>
   );
 }
