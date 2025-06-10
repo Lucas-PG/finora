@@ -990,7 +990,9 @@ function Wallets() {
                           </div>
                           <div>
                             <span>
-                              {new Date(asset.buy_date).toLocaleDateString()}
+                              {new Date(asset.buy_date).toLocaleDateString(
+                                "pt-BR",
+                              )}
                             </span>
                           </div>
                           <div className="assets-edit-list-btns">
