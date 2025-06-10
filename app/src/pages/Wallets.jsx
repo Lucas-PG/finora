@@ -1,9 +1,10 @@
 import Navbar from "../components/NavBar";
 import HeroSection from "../components/HeroSection";
+import ConfirmDialog from "../components/ui/ConfirmDialog";
 import { AnimatedSection } from "../components/ui/AnimatedSection.jsx";
 import { FaWallet } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import { LuX } from "react-icons/lu";
+import { LuX, LuPencil, LuTrash2 } from "react-icons/lu";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -44,6 +45,15 @@ function Wallets() {
   const [receivedDividends, setReceivedDividends] = useState(0);
   const [walletListFilter, setWalletListFilter] = useState("Tudo");
   const tickerOptions = assetList[assetType] || [];
+  const [showEditTransactionModal, setShowEditTransactionModal] =
+    useState(false);
+  const [editTransaction, setEditTransaction] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [editingAssetId, setEditingAssetId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [walletToDelete, setWalletToDelete] = useState(null);
 
   const fetchWallets = async () => {
     try {
@@ -127,6 +137,21 @@ function Wallets() {
   }, [token]);
 
   const handleCreateWallet = async () => {
+    if (!newWalletName.trim()) {
+      showSnackbar("O nome da carteira é obrigatório.", "error");
+      return;
+    }
+
+    const alreadyExists = wallets.some(
+      (wallet) =>
+        wallet.name.toLowerCase() === newWalletName.trim().toLowerCase(),
+    );
+
+    if (alreadyExists) {
+      showSnackbar("Já existe uma carteira com esse nome.", "error");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "http://localhost:3001/wallets",
@@ -146,7 +171,38 @@ function Wallets() {
     }
   };
 
-  const handleAddAsset = async () => {
+  const handleClickDeleteWallet = (wallet) => {
+    setWalletToDelete(wallet);
+    setConfirmOpen(true);
+  };
+
+  const confirmDeleteWallet = async () => {
+    try {
+      await axios.delete(`http://localhost:3001/wallets/${walletToDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      showSnackbar("Carteira deletada com sucesso!", "success");
+      fetchWallets();
+    } catch (err) {
+      showSnackbar("Erro ao deletar carteira.", "error");
+    } finally {
+      setConfirmOpen(false);
+      setWalletToDelete(null);
+    }
+  };
+
+  const handleEditAsset = (asset) => {
+    setTicker(asset.ticker);
+    setPrice(asset.buy_price);
+    setAmount(Math.abs(asset.quantity));
+    setDate(asset.buy_date);
+    setAssetType(asset.type);
+    setTransactionType(asset.quantity >= 0 ? "buy" : "sell");
+    setEditingAssetId(asset.id);
+    setShowTransactionModal(true);
+  };
+
+  const handleUpdateTransaction = async (transactionId) => {
     const parsedPrice = parseFloat(price);
     const parsedAmount = parseFloat(amount);
 
@@ -157,13 +213,15 @@ function Wallets() {
       !date ||
       !assetType
     ) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
+      setSnackbarMessage("Por favor, preencha todos os campos obrigatórios.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
       return;
     }
 
     try {
-      const res = await axios.post(
-        `http://localhost:3001/wallets/${selectedWallet.id}/assets`,
+      const res = await axios.put(
+        `http://localhost:3001/wallets/${selectedWallet.id}/assets/${transactionId}`,
         {
           walletId: selectedWallet.id,
           ticker: ticker.toUpperCase(),
@@ -175,11 +233,51 @@ function Wallets() {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      const newAsset = res.data;
-      setSelectedWallet((prev) => ({
-        ...prev,
-        assets: [...(prev.assets || []), newAsset],
-      }));
+      const updatedWallets = await fetchWallets();
+      await fetchAssetData();
+
+      const updatedWallet = updatedWallets.find(
+        (w) => w.id === selectedWallet.id,
+      );
+      setSelectedWallet(updatedWallet);
+
+      setShowEditTransactionModal(false);
+      setTicker("");
+      setPrice("");
+      setAmount("");
+      setDate("");
+      setAssetType("acao");
+      setEditTransaction(null);
+
+      setSnackbarMessage("Lançamento atualizado com sucesso!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error("Erro ao atualizar lançamento:", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+      });
+      setSnackbarMessage(
+        `Erro ao atualizar lançamento: ${
+          err.response?.data?.error || err.message || "Tente novamente"
+        }`,
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleDeleteTransaction = async (transactionId) => {
+    if (!window.confirm("Tem certeza que deseja deletar este lançamento?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `http://localhost:3001/wallets/${selectedWallet.id}/assets/${transactionId}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
 
       const updatedWallets = await fetchWallets();
       await fetchAssetData();
@@ -189,24 +287,92 @@ function Wallets() {
       );
       setSelectedWallet(updatedWallet);
 
+      setSnackbarMessage("Lançamento deletado com sucesso!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error("Erro ao deletar lançamento:", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+      });
+      setSnackbarMessage(
+        `Erro ao deletar lançamento: ${
+          err.response?.data?.error || err.message || "Tente novamente"
+        }`,
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleAddAsset = async () => {
+    const parsedPrice = parseFloat(price);
+    const parsedAmount = parseFloat(amount);
+
+    if (
+      !ticker ||
+      isNaN(parsedPrice) ||
+      isNaN(parsedAmount) ||
+      !date ||
+      !assetType
+    ) {
+      showSnackbar(
+        "Por favor, preencha todos os campos obrigatórios.",
+        "error",
+      );
+      return;
+    }
+
+    const payload = {
+      walletId: selectedWallet.id,
+      ticker: ticker.toUpperCase(),
+      quantity: transactionType === "buy" ? parsedAmount : -parsedAmount,
+      buy_price: parsedPrice,
+      buy_date: new Date(date).toISOString().split("T")[0],
+      type: assetType,
+    };
+
+    try {
+      if (editingAssetId) {
+        await axios.put(
+          `http://localhost:3001/wallets/${selectedWallet.id}/assets/${editingAssetId}`,
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        showSnackbar("Transação editada com sucesso!", "success");
+      } else {
+        await axios.post(
+          `http://localhost:3001/wallets/${selectedWallet.id}/assets`,
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        showSnackbar("Transação adicionada com sucesso!", "success");
+      }
+
+      const updatedWallets = await fetchWallets();
+      const updatedWallet = updatedWallets.find(
+        (w) => w.id === selectedWallet.id,
+      );
+      setSelectedWallet(updatedWallet);
+    } catch (err) {
+      console.error("Erro ao salvar transação:", err);
+      if (err.response?.data?.error?.includes("Venda excede")) {
+        showSnackbar(
+          "Você não possui ações suficientes para essa venda",
+          "error",
+        );
+      } else {
+        showSnackbar("Erro ao salvar transação. Tente novamente.", "error");
+      }
+    } finally {
       setShowTransactionModal(false);
+      setEditingAssetId(null);
       setTicker("");
       setPrice("");
       setAmount("");
       setDate("");
       setAssetType("acao");
-      alert("Ativo adicionado com sucesso!");
-    } catch (err) {
-      console.error("Erro ao adicionar ativo:", {
-        status: err.response?.status,
-        data: err.response?.data,
-        message: err.message,
-      });
-      alert(
-        `Erro ao adicionar ativo: ${
-          err.response?.data?.error || err.message || "Tente novamente"
-        }`,
-      );
     }
   };
 
@@ -303,6 +469,12 @@ function Wallets() {
         100
       : 0;
 
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
   const title = "Suas Carteiras";
   const subtitle =
     "Acompanhe seu portfolio ou simule carteiras para planejar seus investimentos.";
@@ -359,15 +531,33 @@ function Wallets() {
                       <div className="wallet-card-right">
                         <h3>{wallet.name}</h3>
                         <span>
-                          {totalValue.toLocaleString("pt-BR", {
+                          {(totalMarketValue >= 0
+                            ? totalMarketValue
+                            : 0
+                          ).toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",
                           })}
                         </span>
                       </div>
+                      <button
+                        className="delete-wallet-btn"
+                        onClick={() => {
+                          handleClickDeleteWallet(wallet);
+                        }}
+                      >
+                        <LuX size={20} />
+                      </button>
                     </div>
                   );
                 })}
+              <ConfirmDialog
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={confirmDeleteWallet}
+                title="Deletar Carteira"
+                message={`Tem certeza que deseja deletar a carteira "${walletToDelete?.name}"?`}
+              />
               <div
                 className="add-wallet-card"
                 onClick={() => setShowWalletForm(true)}
@@ -402,13 +592,11 @@ function Wallets() {
                 </Modal>
               )}
             </div>
-            {wallets.length > 0 && (
-              <div className="edit-wallets-btn">
-                <button type="button" className="secondary-btn">
-                  Editar Carteiras
-                </button>
-              </div>
-            )}
+            <div className="edit-wallets-btn">
+              <button type="button" className="secondary-btn">
+                Editar Carteiras
+              </button>
+            </div>
           </AnimatedSection>
 
           {wallets.length > 0 && selectedWallet && (
@@ -552,33 +740,81 @@ function Wallets() {
                 open={showTransactionsModal}
                 onClose={() => setShowTransactionsModal(false)}
                 disableAutoFocus={true}
+                className="transaction-list-modal"
               >
-                <Box className="modal-box">
-                  <h3>Lançamentos da Carteira</h3>
-                  <div className="transaction-list">
-                    {(selectedWallet?.assets || []).map((asset, i) => (
-                      <div key={i} className="transaction-item">
-                        <p>
-                          <strong>{asset.ticker}</strong>
-                        </p>
-                        <p>Tipo: {asset.quantity >= 0 ? "Compra" : "Venda"}</p>
-                        <p>Quantidade: {Math.abs(asset.quantity)}</p>
-
-                        <p>
-                          Preço: R${" "}
-                          {Number(asset.buy_price || 0).toLocaleString(
-                            "pt-BR",
-                            {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            },
-                          )}
-                        </p>
-                        <p>
-                          Data: {new Date(asset.buy_date).toLocaleDateString()}
-                        </p>
+                <Box className="modal-box transaction-list-box">
+                  <div className="transaction-list-title">
+                    <h3>Lançamentos da Carteira</h3>
+                  </div>
+                  <div className="transaction-list-container">
+                    <div className="wallets-list-header">
+                      <div>
+                        <span>Ticker</span>
                       </div>
-                    ))}
+                      <div>
+                        <span>Tipo</span>
+                      </div>
+                      <div>
+                        <span>Quantidade</span>
+                      </div>
+                      <div>
+                        <span>Preço</span>
+                      </div>
+                      <div>
+                        <span>Data</span>
+                      </div>
+                      <div>
+                        <span>Ações</span>
+                      </div>
+                    </div>
+                    <div className="wallets-list-body">
+                      {(selectedWallet?.assets || []).map((asset, i) => (
+                        <div key={i} className="wallets-list-asset-card">
+                          <div>
+                            <span>{asset.ticker}</span>
+                          </div>
+                          <div>
+                            <span>
+                              {asset.quantity >= 0 ? "Compra" : "Venda"}
+                            </span>
+                          </div>
+                          <div>
+                            <span>{Math.abs(asset.quantity)}</span>
+                          </div>
+                          <div>
+                            <span>
+                              {Number(asset.buy_price || 0).toLocaleString(
+                                "pt-BR",
+                                {
+                                  style: "currency",
+                                  currency: "BRL",
+                                },
+                              )}
+                            </span>
+                          </div>
+                          <div>
+                            <span>
+                              {new Date(asset.buy_date).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <div>
+                            <button
+                              className="secondary-btn wallets-list-asset-btn"
+                              onClick={() => handleEditAsset(asset)}
+                            >
+                              <LuPencil size={20} />
+                            </button>
+                            <button
+                              className="secondary-btn wallets-list-asset-btn"
+                              style={{ marginLeft: "10px", color: "red" }}
+                              onClick={() => handleDeleteTransaction(asset.id)}
+                            >
+                              <LuTrash2 size={20} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </Box>
               </Modal>
@@ -603,7 +839,10 @@ function Wallets() {
                   <span>Seu Patrimônio</span>
                   <div>
                     <h3>
-                      {totalMarketValue.toLocaleString("pt-BR", {
+                      {(totalMarketValue >= 0
+                        ? totalMarketValue
+                        : 0
+                      ).toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                       })}
@@ -627,10 +866,13 @@ function Wallets() {
                 <div className="wallet-value-invested-card">
                   <span>Valor Investido</span>
                   <h3>
-                    {totalInvested.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
+                    {(totalInvested >= 0 ? totalInvested : 0).toLocaleString(
+                      "pt-BR",
+                      {
+                        style: "currency",
+                        currency: "BRL",
+                      },
+                    )}
                   </h3>
                 </div>
                 <div className="wallet-dividends-card">
@@ -644,15 +886,7 @@ function Wallets() {
                 </div>
                 <div className="wallet-total-assets-card">
                   <span>Ativos na Carteira</span>
-                  <h3>
-                    {
-                      new Set(
-                        (selectedWallet.assets || []).map(
-                          (asset) => asset.ticker,
-                        ),
-                      ).size
-                    }
-                  </h3>
+                  <h3>{filteredTotalAssets}</h3>
                 </div>
               </AnimatedSection>
               <AnimatedSection className="wallets-chart-section wallets-section">
@@ -869,6 +1103,20 @@ function Wallets() {
           )}
         </div>
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
