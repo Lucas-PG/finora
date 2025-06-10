@@ -4,7 +4,7 @@ import ConfirmDialog from "../components/ui/ConfirmDialog";
 import { AnimatedSection } from "../components/ui/AnimatedSection.jsx";
 import { FaWallet } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import { LuX, LuPencil, LuTrash2 } from "react-icons/lu";
+import { LuX, LuPencil, LuTrash2, LuCheck } from "react-icons/lu";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -34,9 +34,10 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
+  CategoryScale,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
-import { ptBR } from "date-fns/locale";
 import "../css/Wallets.css";
 
 ChartJS.register(
@@ -47,6 +48,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  Filler,
+  CategoryScale,
 );
 
 function Wallets() {
@@ -78,9 +81,12 @@ function Wallets() {
   const [confirmDeleteWalletOpen, setConfirmDeleteWalletOpen] = useState(false);
   const [confirmDeleteTransactionOpen, setConfirmDeleteTransactionOpen] =
     useState(false);
-
+  const [historicalTickerData, setHistoricalTickerData] = useState([]);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [walletToDelete, setWalletToDelete] = useState(null);
+  const [showEditWalletsModal, setShowEditWalletsModal] = useState(false);
+  const [editingWalletId, setEditingWalletId] = useState(null);
+  const [editedWalletName, setEditedWalletName] = useState("");
 
   const fetchWallets = async () => {
     try {
@@ -195,6 +201,28 @@ function Wallets() {
         "Erro ao criar carteira:",
         err.response?.data || err.message,
       );
+    }
+  };
+
+  const handleUpdateWalletName = async (walletId) => {
+    if (!editedWalletName.trim()) {
+      showSnackbar("O nome da carteira não pode ser vazio.", "error");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `http://localhost:3001/wallets/${walletId}`,
+        { walletName: editedWalletName },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      showSnackbar("Nome da carteira atualizado!", "success");
+      setEditingWalletId(null);
+      fetchWallets();
+    } catch (err) {
+      console.error("Erro ao atualizar nome da carteira:", err);
+      showSnackbar("Erro ao atualizar nome da carteira.", "error");
     }
   };
 
@@ -425,7 +453,7 @@ function Wallets() {
         100
       : 0;
 
-  const calculateReceivedDividends = (walletAssets, historicalData) => {
+  const calculateReceivedDividends = (walletAssets, historicalEntries) => {
     let totalDividends = 0;
 
     walletAssets.forEach((asset) => {
@@ -433,7 +461,7 @@ function Wallets() {
       const buyDate = new Date(asset.buy_date);
       const quantity = asset.quantity;
 
-      const dividendsForTicker = historicalData.filter(
+      const dividendsForTicker = historicalEntries.filter(
         (entry) =>
           entry.ticker === ticker &&
           entry.dividends > 0 &&
@@ -499,73 +527,94 @@ function Wallets() {
     setSnackbarOpen(true);
   };
 
-  const prepareChartData = () => {
-    if (!selectedWallet || !selectedWallet.assets || !assetData) {
+  useEffect(() => {
+    if (selectedWallet) {
+      fetchWalletHistorical(selectedWallet.id); // só chama a função, ela já faz o set
+    }
+  }, [selectedWallet]);
+
+  const fetchWalletHistorical = async (walletId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/wallets/${walletId}/historical`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setHistoricalTickerData(res.data);
+    } catch (err) {
+      console.error("Erro ao buscar histórico:", err);
+      setHistoricalTickerData([]);
+    }
+  };
+
+  const buildWalletChartData = (wallet, historicalTickerData) => {
+    const firstBuyDate = new Date(
+      Math.min(...wallet.assets.map((a) => new Date(a.buy_date))),
+    );
+
+    if (
+      !wallet ||
+      !wallet.assets ||
+      !Array.isArray(historicalTickerData) ||
+      historicalTickerData.length === 0
+    ) {
       return {
         labels: [],
         datasets: [],
       };
     }
+    const portfolio = {};
+    const launchesByTicker = {};
 
-    const buyDates = selectedWallet.assets
-      .map((asset) => new Date(asset.buy_date))
-      .filter((date) => !isNaN(date.getTime()));
-    const startDate =
-      buyDates.length > 0 ? new Date(Math.min(...buyDates)) : new Date();
-
-    const walletTickers = [
-      ...new Set(selectedWallet.assets.map((asset) => asset.ticker)),
-    ];
-
-    const assetDates = Object.values(assetData)
-      .filter((data) => walletTickers.includes(data.ticker))
-      .map((data) => new Date(data.date))
-      .filter((date) => !isNaN(date.getTime()));
-    const latestAssetDate =
-      assetDates.length > 0 ? new Date(Math.max(...assetDates)) : startDate;
-
-    let currentDate = new Date();
-    const endDate =
-      latestAssetDate < currentDate ? latestAssetDate : currentDate;
-
-    const dates = [];
-    currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-      dates.push(new Date(currentDate).toISOString().split("T")[0]);
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    const marketValues = dates.map((date) => {
-      return selectedWallet.assets.reduce((sum, asset) => {
-        if (new Date(asset.buy_date) <= new Date(date)) {
-          const priceData = Object.values(assetData)
-            .filter(
-              (data) =>
-                data.ticker === asset.ticker &&
-                new Date(data.date) <= new Date(date),
-            )
-            .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-          const price = priceData ? priceData.close : asset.buy_price;
-          return sum + asset.quantity * price;
-        }
-        return sum;
-      }, 0);
+    wallet.assets.forEach((asset) => {
+      if (!launchesByTicker[asset.ticker]) launchesByTicker[asset.ticker] = [];
+      launchesByTicker[asset.ticker].push(asset);
     });
 
+    historicalTickerData.forEach(({ date, ticker, close }) => {
+      const currentDate = new Date(date);
+
+      if (currentDate < firstBuyDate) return;
+
+      if (!portfolio[date]) portfolio[date] = 0;
+
+      const relevantAssets = (launchesByTicker[ticker] || []).filter(
+        (a) => new Date(a.buy_date) <= currentDate,
+      );
+
+      relevantAssets.forEach((a) => {
+        portfolio[date] += a.quantity * close;
+      });
+    });
+
+    const sortedDates = Object.keys(portfolio).sort();
+
     return {
-      labels: dates,
+      labels: sortedDates,
       datasets: [
         {
-          label: "Valor de Mercado da Carteira (BRL)",
-          data: marketValues,
-          borderColor: "#4CAF50",
-          backgroundColor: "rgba(76, 175, 80, 0.2)",
+          label: "Evolução do Patrimônio",
+          data: sortedDates.map((d) => portfolio[d]),
+          // borderColor: "#0066ff",
+          // backgroundColor: "rgba(0, 102, 255, 0.2)",
+          // borderColor: "#4CAF50",
+          // backgroundColor: "rgba(76, 175, 80, 0.2)",
+          borderColor: "#7a00ff",
+          backgroundColor: "rgba(122, 0, 255, 0.15)",
           fill: true,
           tension: 0.4,
+          pointRadius: 0,
         },
       ],
     };
   };
+
+  const chartData = selectedWallet
+    ? buildWalletChartData(selectedWallet, historicalTickerData)
+    : { labels: [], datasets: [] };
 
   const title = "Suas Carteiras";
   const subtitle =
@@ -632,14 +681,6 @@ function Wallets() {
                           })}
                         </span>
                       </div>
-                      <button
-                        className="delete-wallet-btn"
-                        onClick={() => {
-                          handleClickDeleteWallet(wallet);
-                        }}
-                      >
-                        <LuX size={20} />
-                      </button>
                     </div>
                   );
                 })}
@@ -678,11 +719,81 @@ function Wallets() {
               )}
             </div>
             <div className="edit-wallets-btn">
-              <button type="button" className="secondary-btn">
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={() => setShowEditWalletsModal(true)}
+              >
                 Editar Carteiras
               </button>
             </div>
           </AnimatedSection>
+          <Modal
+            open={showEditWalletsModal}
+            onClose={() => setShowEditWalletsModal(false)}
+            disableAutoFocus={true}
+            className="wallets-edit-modal"
+          >
+            <Box className="modal-box wallets-edit-box">
+              <div className="wallets-edit-list-title">
+                <h3>Editar Carteiras</h3>
+              </div>
+              <div className="wallets-edit-list-container">
+                {wallets.map((wallet) => (
+                  <div key={wallet.id} className="wallets-edit-list-card">
+                    <div>
+                      {editingWalletId === wallet.id ? (
+                        <FloatingInput
+                          type="text"
+                          label={wallet.name}
+                          value={editedWalletName}
+                          onChange={(e) => setEditedWalletName(e.target.value)}
+                        />
+                      ) : (
+                        <span>{wallet.name}</span>
+                      )}
+                    </div>
+                    <div className="wallets-edit-list-btns">
+                      {editingWalletId === wallet.id ? (
+                        <>
+                          <button
+                            className="wallets-edit-list-delete-btn"
+                            onClick={() => handleUpdateWalletName(wallet.id)}
+                          >
+                            <LuCheck size={20} />
+                          </button>
+                          <button
+                            className="wallets-edit-list-delete-btn red"
+                            onClick={() => setEditingWalletId(null)}
+                          >
+                            <LuX size={20} />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className="wallets-edit-list-delete-btn"
+                            onClick={() => {
+                              setEditingWalletId(wallet.id);
+                              setEditedWalletName("");
+                            }}
+                          >
+                            <LuPencil size={20} />
+                          </button>
+                          <button
+                            className="wallets-edit-list-delete-btn red"
+                            onClick={() => handleClickDeleteWallet(wallet)}
+                          >
+                            <LuTrash2 size={20} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Box>
+          </Modal>
 
           {wallets.length > 0 && selectedWallet && (
             <>
@@ -882,15 +993,15 @@ function Wallets() {
                               {new Date(asset.buy_date).toLocaleDateString()}
                             </span>
                           </div>
-                          <div>
+                          <div className="assets-edit-list-btns">
                             <button
-                              className="secondary-btn wallets-list-asset-btn"
+                              className="wallets-edit-list-delete-btn"
                               onClick={() => handleEditAsset(asset)}
                             >
                               <LuPencil size={20} />
                             </button>
                             <button
-                              className="secondary-btn wallets-list-asset-btn"
+                              className="wallets-edit-list-delete-btn red"
                               style={{ marginLeft: "10px", color: "red" }}
                               onClick={() => handleDeleteTransaction(asset.id)}
                             >
@@ -979,71 +1090,58 @@ function Wallets() {
                   <h3>Performance da Carteira</h3>
                 </div>
                 <div className="wallet-chart-container">
-                  <Line
-                    data={prepareChartData()}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          position: "top",
-                          labels: { color: "#333" },
+                  {selectedWallet &&
+                  Array.isArray(historicalTickerData) &&
+                  historicalTickerData.length > 0 ? (
+                    <Line
+                      data={chartData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                          mode: "index",
+                          intersect: false,
                         },
-                        title: {
-                          display: true,
-                          text: "Desempenho da Carteira ao Longo do Tempo",
-                          color: "#333",
-                          font: { size: 16 },
-                        },
-                      },
-                      scales: {
-                        x: {
-                          type: "time",
-                          time: {
-                            unit: "day",
-                            locale: ptBR,
-                            displayFormats: {
-                              day: "dd MMM yyyy",
-                            },
-                          },
-                          title: { display: true, text: "Data", color: "#333" },
-                          ticks: {
-                            color: "#333",
-                            callback: function (value, index, values) {
-                              const date = new Date(value);
-                              return date.toLocaleDateString("pt-BR", {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              });
-                            },
-                          },
-                          grid: { color: "rgba(0, 0, 0, 0.1)" },
-                        },
-                        y: {
-                          title: {
-                            display: true,
-                            text: "Valor de Mercado (BRL)",
-                            color: "#333",
-                          },
-                          ticks: {
-                            color: "#333",
-                            callback: function (value) {
-                              return (
-                                "R$ " +
-                                value.toLocaleString("pt-BR", {
+                        plugins: {
+                          tooltip: {
+                            callbacks: {
+                              title: (tooltipItems) => {
+                                const date = new Date(tooltipItems[0].label);
+                                return date.toLocaleDateString("pt-BR");
+                              },
+                              label: (tooltipItem) => {
+                                const value = Number(
+                                  tooltipItem.raw,
+                                ).toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
                                   minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                                })
-                              );
+                                });
+                                return `Patrimônio: ${value}`;
+                              },
                             },
                           },
-                          grid: { color: "rgba(0, 0, 0, 0.1)" },
+                          legend: {
+                            display: false,
+                          },
                         },
-                      },
-                    }}
-                    height={400}
-                  />
+                        scales: {
+                          x: {
+                            ticks: {
+                              display: false,
+                            },
+                            grid: {
+                              display: false,
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  ) : (
+                    <p style={{ textAlign: "center" }}>
+                      Nenhum dado suficiente para mostrar o gráfico.
+                    </p>
+                  )}
                 </div>
               </AnimatedSection>
               <AnimatedSection className="wallets-list-title-section wallets-section">

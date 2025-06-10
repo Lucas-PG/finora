@@ -140,6 +140,74 @@
   justify-content: end;
 }
 
+.wallets-edit-box {
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 40vh;
+}
+
+.wallets-edit-list-title {
+  height: 10%;
+  width: 95%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.wallets-edit-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  overflow-x: scroll;
+  height: 85%;
+  width: 95%;
+}
+
+.wallets-edit-list-card {
+  display: flex;
+  width: 100% !important;
+  padding: 1.5rem 0px;
+  border-bottom: 1px solid var(--card-border);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallets-edit-list-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.assets-edit-list-btns {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  width: 100%;
+}
+
+.wallets-edit-list-delete-btn {
+  background-color: transparent;
+  border: 1px solid var(--card-border);
+  height: 40px;
+  width: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--foreground);
+}
+
+.red {
+  color: var(--red);
+}
+
 .wallets-dividing-section {
   width: 100%;
   height: 1.5px;
@@ -325,15 +393,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .wallet-chart-container {
-  width: 90%;
-  height: 80%;
+  width: 95%;
+  height: 85%;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .wallets-list-title-section {
-  margin-top: 15vh;
+  margin-top: 10vh;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
