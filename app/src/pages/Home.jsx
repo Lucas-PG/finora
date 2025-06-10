@@ -47,7 +47,7 @@ function Home() {
           </span>
 
           <div className="home-hero-buttons">
-            <NavLink className="home-btn-primary primary-btn" to="/login">
+            <NavLink className="home-btn-primary primary-btn" to="/register">
               Comece já
               <FiArrowRight size={20} />
             </NavLink>
@@ -131,9 +131,12 @@ function Home() {
                     </span>
                   </div>
 
-                  <button className="home-dashboard-btn secondary-btn">
+                  <NavLink
+                    className="home-dashboard-btn secondary-btn"
+                    to="/register"
+                  >
                     Monte sua carteira
-                  </button>
+                  </NavLink>
                 </div>
                 <div className="home-dashboard-right">
                   <img src="/img/home-dashboard-img.png" alt="Img" />

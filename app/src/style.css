@@ -68,7 +68,8 @@ body.modal-open {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 0px;
+  /* width: 8px; */
   height: 8px;
 }
 

@@ -402,11 +402,13 @@ function Wallets() {
                 </Modal>
               )}
             </div>
-            <div className="edit-wallets-btn">
-              <button type="button" className="secondary-btn">
-                Editar Carteiras
-              </button>
-            </div>
+            {wallets.length > 0 && (
+              <div className="edit-wallets-btn">
+                <button type="button" className="secondary-btn">
+                  Editar Carteiras
+                </button>
+              </div>
+            )}
           </AnimatedSection>
 
           {wallets.length > 0 && selectedWallet && (
