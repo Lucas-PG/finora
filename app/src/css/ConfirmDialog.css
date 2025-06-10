@@ -1,0 +1,23 @@
+.confirm-dialog {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--card-border) !important;
+  padding: 1rem !important;
+}
+
+.confirm-dialog-btns {
+  display: flex !important;
+  width: 100% !important;
+  gap: 5px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.confirm-dialog-cancel-btn {
+  border: 1px solid var(--card-border) !important;
+}
+
+.confirm-dialog-delete-btn:hover {
+  filter: brightness(90%);
+  transform: scale(1.03);
+}
