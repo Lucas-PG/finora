@@ -83,7 +83,6 @@
 
 .wallet-card-right > h3 {
   margin-left: 1rem;
-  font-size: 1rem;
 }
 
 .wallet-card-right > span {
@@ -112,10 +111,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.add-wallet-card > h3 {
-  font-size: 1rem;
 }
 
 .add-wallet-form {
@@ -229,10 +224,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.wallets-wallet-name-section > h3 {
-  font-size: 1.5rem;
 }
 
 .include-transaction-btn-div {
@@ -357,10 +348,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   align-items: center;
 }
 
-.wallets-info-section h3 {
-  font-size: 1.5rem;
-}
-
 .wallet-total-value-percentage {
   padding: 3px 6px;
   border-radius: var(--custom-border-radius);
@@ -407,10 +394,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.wallets-list-title-section > h3 {
-  font-size: 1.5rem;
 }
 
 .wallets-list-filter-div {
@@ -465,10 +448,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   align-items: center;
 }
 
-.wallets-list-info-left-top > h3 {
-  font-size: 1.5rem;
-}
-
 .wallets-list-info-assets-num {
   color: var(--faded);
 }
@@ -477,10 +456,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   flex-direction: column;
   align-items: end;
   gap: 5px;
-}
-
-.wallets-list-info-right > h3 {
-  font-size: 1.5rem;
 }
 
 .wallets-list-info-right > span {
@@ -559,10 +534,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: start;
 }
 
-.transaction-list-title > h3 {
-  font-size: 1.5rem;
-}
-
 .transaction-list {
   display: flex;
   flex-direction: column;
@@ -586,4 +557,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: start;
   margin-top: 1rem;
   overflow-y: scroll;
+}
+
+h3 {
+  font-size: 120%;
 }

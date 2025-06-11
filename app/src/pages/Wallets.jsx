@@ -718,15 +718,17 @@ function Wallets() {
                 </Modal>
               )}
             </div>
-            <div className="edit-wallets-btn">
-              <button
-                type="button"
-                className="secondary-btn"
-                onClick={() => setShowEditWalletsModal(true)}
-              >
-                Editar Carteiras
-              </button>
-            </div>
+            {wallets.length > 0 && (
+              <div className="edit-wallets-btn">
+                <button
+                  type="button"
+                  className="secondary-btn"
+                  onClick={() => setShowEditWalletsModal(true)}
+                >
+                  Editar Carteiras
+                </button>
+              </div>
+            )}
           </AnimatedSection>
           <Modal
             open={showEditWalletsModal}

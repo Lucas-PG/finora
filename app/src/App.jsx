@@ -14,6 +14,7 @@ import FirstMillion from "./pages/calculators/FirstMillion";
 import AssetPercentage from "./pages/calculators/AssetPercentage";
 import ChatBot from "./components/ChatBot";
 import Update from "./components/Update";
+import TickerDetails from "./pages/TickerDetails";
 import "./style.css";
 import Email from "./components/Email";
 
@@ -50,6 +51,7 @@ function App() {
             <Route path="/simple-interest" element={<SimpleInterest />} />
             <Route path="/first-million" element={<FirstMillion />} />
             <Route path="/asset-percentage" element={<AssetPercentage />} />
+            <Route path="/ticker" element={<TickerDetails />} />
           </>
         ) : (
           <>
@@ -70,6 +72,7 @@ function App() {
             <Route path="/first-million" element={<FirstMillion />} />
             <Route path="/asset-percentage" element={<AssetPercentage />} />
             <Route path="/logout" element={<LogoutHandler />} />
+            <Route path="/ticker" element={<TickerDetails />} />
             />
           </>
         )}

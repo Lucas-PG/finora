@@ -209,3 +209,49 @@ export const deleteAsset = async (req, res) => {
     res.status(500).json({ error: "Erro interno" });
   }
 };
+
+export const getWalletHistoricalData = async (req, res) => {
+  const walletId = req.params.walletId;
+
+  try {
+    // Pega os tickers da carteira
+    const [assets] = await db.query(
+      "SELECT DISTINCT ticker FROM wallet_assets WHERE walletId = ?",
+      [walletId],
+    );
+
+    const tickers = assets.map((a) => a.ticker);
+
+    if (tickers.length === 0) return res.json([]);
+
+    // Pega os dados históricos desses tickers
+    const [historicalData] = await db.query(
+      `SELECT ticker, date, close 
+       FROM historical_data 
+       WHERE ticker IN (?) 
+       ORDER BY date ASC`,
+      [tickers],
+    );
+
+    res.json(historicalData);
+  } catch (err) {
+    console.error("Erro ao buscar histórico:", err);
+    res.status(500).json({ error: "Erro ao buscar histórico" });
+  }
+};
+
+export const updateWalletName = async (req, res) => {
+  const { id } = req.params;
+  const { walletName } = req.body;
+
+  try {
+    await db.query("UPDATE wallets SET name = ? WHERE id = ?", [
+      walletName,
+      id,
+    ]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Erro ao atualizar nome da carteira:", err);
+    res.sendStatus(500);
+  }
+};
