@@ -1,0 +1,5 @@
+- [] Search engine
+- [] Adicionar year-to-date no gráfico de ticker
+- [] Alterações de usuário
+- [] Alterar cards de notícias para em destaque
+- [] Concertar dados ETFs
