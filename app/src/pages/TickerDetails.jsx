@@ -82,6 +82,10 @@ function TickerDetails() {
       case "1y":
         dateLimit.setFullYear(now.getFullYear() - 1);
         break;
+      case "ytd":
+        dateLimit.setMonth(0);
+        dateLimit.setDate(1);
+        break;
       case "6m":
         dateLimit.setMonth(now.getMonth() - 6);
         break;
@@ -234,6 +238,7 @@ function TickerDetails() {
               <div className="ticker-chart-btns">
                 {[
                   { label: "Tudo", value: "all" },
+                  { label: "YTD", value: "ytd" },
                   { label: "1 ano", value: "1y" },
                   { label: "6 meses", value: "6m" },
                   { label: "1 mês", value: "1m" },
