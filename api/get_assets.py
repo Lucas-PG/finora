@@ -239,6 +239,28 @@ cursor = conn.cursor()
 
 cursor.execute(
     """
+    CREATE TABLE IF NOT EXISTS fundamentals_data (
+        ticker VARCHAR(10) PRIMARY KEY,
+        trailing_pe DOUBLE,
+        forward_pe DOUBLE,
+        price_to_book DOUBLE,
+        book_value DOUBLE,
+        lpa DOUBLE,
+        trailing_eps DOUBLE,
+        roe DOUBLE,
+        roa DOUBLE,
+        beta DOUBLE,
+        peg_ratio DOUBLE,
+        ebitda_margin DOUBLE,
+        gross_margin DOUBLE,
+        operating_margin DOUBLE,
+        profit_margin DOUBLE
+    )
+    """
+)
+
+cursor.execute(
+    """
     CREATE TABLE IF NOT EXISTS historical_data (
         ticker VARCHAR(10),
         date DATETIME,
@@ -267,6 +289,66 @@ for i, ticker in enumerate(tickers, 1):
             continue
 
         info = stock.info
+
+        fundamentals = {
+            "trailing_pe": info.get("trailingPE"),
+            "forward_pe": info.get("forwardPE"),
+            "price_to_book": info.get("priceToBook"),
+            "book_value": info.get("bookValue"),
+            "lpa": info.get("earningsPerShare"),
+            "trailing_eps": info.get("trailingEps"),
+            "roe": info.get("returnOnEquity"),
+            "roa": info.get("returnOnAssets"),
+            "beta": info.get("beta"),
+            "peg_ratio": info.get("pegRatio"),
+            "ebitda_margin": info.get("ebitdaMargins"),
+            "gross_margin": info.get("grossMargins"),
+            "operating_margin": info.get("operatingMargins"),
+            "profit_margin": info.get("profitMargins"),
+        }
+
+        cursor.execute(
+            """
+            INSERT INTO fundamentals_data (
+                ticker, trailing_pe, forward_pe, price_to_book, book_value, lpa,
+                trailing_eps, roe, roa, beta, peg_ratio,
+                ebitda_margin, gross_margin, operating_margin, profit_margin
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                trailing_pe=VALUES(trailing_pe),
+                forward_pe=VALUES(forward_pe),
+                price_to_book=VALUES(price_to_book),
+                book_value=VALUES(book_value),
+                lpa=VALUES(lpa),
+                trailing_eps=VALUES(trailing_eps),
+                roe=VALUES(roe),
+                roa=VALUES(roa),
+                beta=VALUES(beta),
+                peg_ratio=VALUES(peg_ratio),
+                ebitda_margin=VALUES(ebitda_margin),
+                gross_margin=VALUES(gross_margin),
+                operating_margin=VALUES(operating_margin),
+                profit_margin=VALUES(profit_margin)
+        """,
+            (
+                ticker.replace(".SA", ""),
+                fundamentals["trailing_pe"],
+                fundamentals["forward_pe"],
+                fundamentals["price_to_book"],
+                fundamentals["book_value"],
+                fundamentals["lpa"],
+                fundamentals["trailing_eps"],
+                fundamentals["roe"],
+                fundamentals["roa"],
+                fundamentals["beta"],
+                fundamentals["peg_ratio"],
+                fundamentals["ebitda_margin"],
+                fundamentals["gross_margin"],
+                fundamentals["operating_margin"],
+                fundamentals["profit_margin"],
+            ),
+        )
+        conn.commit()
         asset_type = classify_asset_type(ticker)
 
         # Calculate market cap
