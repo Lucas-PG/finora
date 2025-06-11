@@ -2,30 +2,52 @@ import { useEffect, useState } from "react";
 import { fetchAssets } from "../api/assetsAPI";
 
 const getHighlightAssets = (assets) => {
-  const groupedByType = assets.reduce((acc, asset) => {
-    if (!acc[asset.type]) acc[asset.type] = [];
-    acc[asset.type].push(asset);
-    return acc;
-  }, {});
+  const parseMarketCap = (str) => {
+    if (!str) return 0;
+    return (
+      parseFloat(str.replace("R$", "").replace("B", "").replace(",", ".")) || 0
+    );
+  };
 
-  const sortedByType = Object.keys(groupedByType).reduce((acc, type) => {
-    acc[type] = groupedByType[type].sort((a, b) => {
-      const marketCapA = parseFloat(
-        a.marketCap.replace("R$", "").replace("B", "").replace(",", "."),
-      );
-      const marketCapB = parseFloat(
-        b.marketCap.replace("R$", "").replace("B", "").replace(",", "."),
-      );
-      return marketCapB - marketCapA;
-    });
-    return acc;
-  }, {});
+  const parseChange = (str) => {
+    if (!str) return 0;
+    return parseFloat(str.replace("%", "").replace(",", ".")) || 0;
+  };
 
-  const highlightTypes = ["stock", "fii", "etf", "bdr", "crypto"];
-  return highlightTypes
-    .map((type) => sortedByType[type]?.[0])
-    .filter(Boolean)
-    .slice(0, 5);
+  const highlights = [];
+
+  // 1. Ação, FII e BDR — top 5 por market cap → mais volátil
+  const typesWithTop5 = ["stock", "fii", "bdr"];
+  typesWithTop5.forEach((type) => {
+    const filtered = assets.filter((a) => a.type === type);
+
+    const top5 = filtered
+      .sort((a, b) => parseMarketCap(b.marketCap) - parseMarketCap(a.marketCap))
+      .slice(0, 5);
+
+    if (top5.length === 0) return;
+
+    const mostVolatile = top5.reduce((prev, curr) =>
+      Math.abs(parseChange(curr.change)) > Math.abs(parseChange(prev.change))
+        ? curr
+        : prev,
+    );
+
+    highlights.push(mostVolatile);
+  });
+
+  // 2. ETF — mais volátil entre todos
+  const etfs = assets.filter((a) => a.type === "etf");
+  if (etfs.length > 0) {
+    const mostVolatileETF = etfs.reduce((prev, curr) =>
+      Math.abs(parseChange(curr.change)) > Math.abs(parseChange(prev.change))
+        ? curr
+        : prev,
+    );
+    highlights.push(mostVolatileETF);
+  }
+
+  return highlights;
 };
 
 export const useAssetsData = () => {

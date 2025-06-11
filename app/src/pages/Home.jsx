@@ -7,6 +7,10 @@ import { HiOutlineViewGrid } from "react-icons/hi";
 import { BsPieChart } from "react-icons/bs";
 import { TbArrowsShuffle } from "react-icons/tb";
 import NewsCard from "../components/ui/NewsCard";
+import { useAssetsData } from "../data/assetsData";
+import { FaChartLine, FaUniversity } from "react-icons/fa";
+import { MdShowChart } from "react-icons/md";
+import { RiCoinsLine } from "react-icons/ri";
 
 function Home() {
   // TODO: Pegar isso de uma API
@@ -29,6 +33,25 @@ function Home() {
       source: "cnnbrasil.com.br",
     },
   ];
+
+  const { highlightAssets } = useAssetsData();
+
+  const getAssetIcon = (type) => {
+    switch (type) {
+      case "stock":
+        return <FaChartLine size={24} className="market-icon" />;
+      case "crypto":
+        return <RiCoinsLine size={24} className="market-icon" />;
+      case "etf":
+        return <MdShowChart size={24} className="market-icon" />;
+      case "fii":
+        return <FaUniversity size={24} className="market-icon" />;
+      case "bdr":
+        return <FaChartLine size={24} className="market-icon" />;
+      default:
+        return <FaChartLine size={24} className="market-icon" />;
+    }
+  };
 
   return (
     <>
@@ -144,21 +167,41 @@ function Home() {
               </AnimatedSection>
             </section>
 
-            <section className="home-section home-news-section">
-              <AnimatedSection className="home-news-animated-section">
+            <section className="home-section home-highlight-section">
+              <AnimatedSection className="home-highlight-animated-section">
                 <div className="home-section-title">
                   <h2>
-                    Acompanhe as <span className="blue">Últimas Notícias</span>{" "}
-                    do Mercado
+                    Ativos em <span className="blue">Destaque</span>
                   </h2>
                 </div>
-                <div className="home-news-grid">
-                  {news.map((noticia, index) => (
-                    <NewsCard
-                      key={index}
-                      title={noticia.title}
-                      source={noticia.source}
-                    />
+                <div className="home-highlight-cards-container">
+                  {highlightAssets.map((item, index) => (
+                    <div key={index} className="home-highlight-card">
+                      <div className="home-highlight-card-top">
+                        <div className="market-icon-around">
+                          {getAssetIcon(item.type)}
+                        </div>
+                      </div>
+                      <div className="home-highlight-card-bottom">
+                        <div className="home-highlight-card-name">
+                          <h3>{item.name}</h3>
+                        </div>
+                        <div className="home-highlight-card-price">
+                          <span>{item.price}</span>
+                          <div
+                            className={`home-highlight-variation-around ${item.change.startsWith("+") ? "green-opacity" : "red-opacity"} `}
+                          >
+                            <span
+                              className={`home-highlight-card-variation ${
+                                item.change.startsWith("+") ? "green" : "red"
+                              }`}
+                            >
+                              {item.change}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </AnimatedSection>
