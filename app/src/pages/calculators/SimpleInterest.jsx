@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import Arrow from "../../components/Arrow";
 import HeroSection from "../../components/HeroSection";
-import "../../css/calculators/FirstMillion.css";
+import "../../css/calculators/SimpleInterest.css";
 import { FaCalculator } from "react-icons/fa";
 
 import {
@@ -20,7 +20,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-function FirstMillion() {
+function SimpleInterest() {
   const [initialValue, setInitialValue] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [period, setPeriod] = useState("");
@@ -29,44 +29,14 @@ function FirstMillion() {
   const [chartData, setChartData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const title = "Primeiro Milhão";
+  const title = "Juros Simples";
   const subtitle =
-    "Veja quanto investir por mês para alcançar R$ 1.000.000 em determinado tempo.";
+    "Calcule o resultado final dos seus investimentos dessa modalidade";
 
-  const calculateFirstMillion = () => {
-    const P = parseFloat(initialValue);
-    const r = parseFloat(interestRate) / 100 / 12;
-    const t = parseInt(period);
-    const FV = 1000000;
-
-    if (isNaN(P) || isNaN(r) || isNaN(t)) {
-      setFinalAmount(null);
-      setChartData([]);
-      setErrorMessage("Preencha todos os campos corretamente.");
-      return;
-    }
-
-    const n = t * 12;
-    const PMT = ((FV - P * Math.pow(1 + r, n)) * r) / (Math.pow(1 + r, n) - 1);
-    const data = [];
-    let total = 0;
-
-    for (let i = 1; i <= n; i++) {
-      const parcial =
-        P * Math.pow(1 + r, i) + PMT * ((Math.pow(1 + r, i) - 1) / r);
-      if (i % 12 === 0) {
-        data.push({
-          ano: `${i / 12}º`,
-          montante: parseFloat(parcial.toFixed(2)),
-        });
-      }
-      total = parcial;
-    }
-
-    setChartData(data);
-    setFinalAmount(total.toFixed(2));
-    setGraphMode("resumo");
-    setErrorMessage("");
+  const calculateSimpleInterest = (initialValue, interestRate, years) => {
+    const rateDecimal = interestRate / 100;
+    const amount = initialValue * (1 + rateDecimal * years);
+    return amount;
   };
 
   const invested = Number(initialValue);
@@ -224,7 +194,7 @@ function FirstMillion() {
         <div className="million-box-calculator">
           <h3 className="million-calculator-title">
             <FaCalculator className="calculator-icon-inline" />
-            Calculadora do Primeiro Milhão
+            Calculadora de Juros Simples
           </h3>
           <input
             className="million-input-initial"
@@ -262,7 +232,33 @@ function FirstMillion() {
             }}
             type="number"
           />
-          <button className="million-button" onClick={calculateFirstMillion}>
+          <button
+            className="million-button"
+            onClick={() => {
+              if (!initialValue || !interestRate || !period) {
+                setErrorMessage("Preencha todos os campos para calcular.");
+                return;
+              }
+
+              const initial = parseFloat(initialValue);
+              const rate = parseFloat(interestRate);
+              const years = parseFloat(period);
+
+              if (isNaN(initial) || isNaN(rate) || isNaN(years)) {
+                setErrorMessage("Valores inválidos.");
+                return;
+              }
+
+              const final = calculateSimpleInterest(initial, rate, years);
+              setFinalAmount(final.toFixed(2));
+              setChartData(
+                Array.from({ length: years + 1 }, (_, i) => ({
+                  ano: i,
+                  montante: initial * (1 + (rate / 100) * i),
+                })),
+              );
+            }}
+          >
             <span className="million-button-content">Calcular</span>
           </button>
 
@@ -271,27 +267,27 @@ function FirstMillion() {
           )}
         </div>
 
-        <Arrow />
-
         <div className="million-box-graph">
           <h3 className="million-result-title">Resultados</h3>
 
-          <div className="graph-mode-toggle">
-            {["resumo", "pizza", "barra", "area"].map((mode) => (
-              <label key={mode} className="graph-radio">
-                <input
-                  type="radio"
-                  name="graphMode"
-                  value={mode}
-                  checked={graphMode === mode}
-                  onChange={() => setGraphMode(mode)}
-                />
-                <span className="graph-label">
-                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
-                </span>
-              </label>
-            ))}
-          </div>
+          {finalAmount !== null && (
+            <div className="graph-mode-toggle">
+              {["resumo", "pizza", "barra", "area"].map((mode) => (
+                <label key={mode} className="graph-radio">
+                  <input
+                    type="radio"
+                    name="graphMode"
+                    value={mode}
+                    checked={graphMode === mode}
+                    onChange={() => setGraphMode(mode)}
+                  />
+                  <span className="graph-label">
+                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
 
           <div className="million-chart-area">{renderChart()}</div>
         </div>
@@ -300,4 +296,4 @@ function FirstMillion() {
   );
 }
 
-export default FirstMillion;
+export default SimpleInterest;
