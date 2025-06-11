@@ -69,7 +69,7 @@ export const useAssetsData = () => {
 
       const options = formatted.map((item) => ({
         title: item.name,
-        link: `/ticker/${item.name}`,
+        link: `/ticker?ticker=${item.name}`,
         search: `${item.name} ${item.fullName}`,
       }));
 

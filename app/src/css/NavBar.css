@@ -33,7 +33,7 @@
 }
 
 .navbar-left {
-  width: 20%;
+  width: 40%;
 }
 
 .navbar-left img.navbar-logo {
@@ -43,7 +43,7 @@
 .navbar-center {
   display: flex;
   align-items: center;
-  flex-grow: 1;
+  width: 40%;
   justify-content: center;
 }
 
@@ -52,7 +52,7 @@
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  transition: color 0.3s;
+  transition: ease 0.3s all;
 }
 
 .nav-item {
@@ -174,32 +174,35 @@
 }
 
 .navbar-search-input {
-  background-color: transparent;
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--primary-blue);
-  border-radius: var(--custom-border-radius);
-  padding: 0.5rem 2rem;
-  color: var(--foreground);
-  outline: none;
-  box-shadow:
-    0 0 5px var(--primary-blue),
-    0 0 10px var(--primary-blue);
-  padding-left: 50px;
+  background-color: transparent !important;
+  backdrop-filter: blur(8px) !important;
+  /* border: 1px solid var(--primary-blue) !important; */
+  border-radius: var(--custom-border-radius) !important;
+  color: var(--foreground) !important;
+  outline: none !important;
   transition:
     padding 0.3s ease,
     width 0.3s ease,
-    opacity 0.2s ease;
-  font-size: 1rem;
-  width: 220px;
+    opacity 0.2s ease !important;
+  font-size: 1rem !important;
+  width: 200px !important;
+  padding: 0px 0px 0px 35px !important;
 }
 
 .navbar-search-input-inactive {
   width: 0px !important;
-  padding: 0px;
-  background-color: transparent;
-  border: none;
-  pointer-events: none;
-  opacity: 0;
+  padding: 0px !important;
+  background-color: transparent !important;
+  border: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transition:
+    padding 0.3s ease,
+    width 0.3s ease,
+    opacity 0.2s ease !important;
+}
+
+.navbar-search-icon {
   transition:
     padding 0.3s ease,
     width 0.3s ease,
@@ -210,10 +213,6 @@
   position: absolute;
   left: 10px;
   z-index: 100;
-  transition:
-    padding 0.3s ease,
-    width 0.3s ease,
-    opacity 0.2s ease;
 }
 
 .navbar-search input::placeholder {
@@ -226,7 +225,7 @@
   justify-content: end;
   gap: 1.2rem;
   height: 100%;
-  width: 20%;
+  width: 40%;
 }
 
 .icon-button {

@@ -249,10 +249,6 @@ body.modal-open {
   border-color: var(--card-border) !important;
 }
 
-.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: var(--primary-blue) !important;
-}
-
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: var(--primary-blue) !important;
 }
@@ -289,12 +285,6 @@ body.modal-open {
 
 .MuiAutocomplete-root .MuiOutlinedInput-notchedOutline {
   border-color: var(--card-border) !important;
-}
-
-.MuiAutocomplete-root
-  .MuiOutlinedInput-root:hover
-  .MuiOutlinedInput-notchedOutline {
-  border-color: var(--primary-blue) !important;
 }
 
 .MuiAutocomplete-root

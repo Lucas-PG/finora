@@ -117,21 +117,22 @@ function Navbar() {
         <div className="navbar-right">
           {!isAuthPage && (
             <div className="navbar-search-container">
-              <button className="navbar-search">
+              <div className="navbar-search">
                 <LuSearch
                   size={20}
                   className={`navbar-search-icon ${isSearching ? "navbar-search-icon-active" : ""}`}
                   onClick={toggleSearch}
                 />
-
                 <Autocomplete
                   freeSolo
+                  disableClearable
+                  disablePortal
+                  forcePopupIcon={false}
                   className={
                     isSearching
                       ? "navbar-autocomplete-active"
                       : "navbar-autocomplete-inactive"
                   }
-                  disableClearable
                   options={autocompleteOptions}
                   getOptionLabel={(option) =>
                     typeof option === "string" ? option : option.title
@@ -151,16 +152,18 @@ function Navbar() {
                   inputValue={searchValue}
                   onInputChange={(e, value) => setSearchValue(value)}
                   renderInput={(params) => (
-                    // TODO: Trocar por textfield senao quebra
-                    <input
-                      {...params.inputProps}
-                      ref={params.InputProps.ref}
-                      className={`navbar-search-input ${!isSearching ? "navbar-search-input-inactive" : ""}`}
-                      placeholder="Pesquise ativos, ferramentas..."
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      placeholder="Pesquise ativos..."
+                      InputProps={{
+                        ...params.InputProps,
+                        className: `navbar-search-input ${!isSearching ? "navbar-search-input-inactive" : ""}`,
+                      }}
                     />
                   )}
                 />
-              </button>
+              </div>
             </div>
           )}
           <button className="icon-button" onClick={toggleTheme}>

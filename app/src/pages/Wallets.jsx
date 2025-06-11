@@ -71,7 +71,6 @@ function Wallets() {
   const [assetData, setAssetData] = useState({});
   const [receivedDividends, setReceivedDividends] = useState(0);
   const [walletListFilter, setWalletListFilter] = useState("Tudo");
-  const tickerOptions = assetList[assetType] || [];
   const [showEditTransactionModal, setShowEditTransactionModal] =
     useState(false);
   const [editTransaction, setEditTransaction] = useState(null);
@@ -90,6 +89,8 @@ function Wallets() {
   const [editedWalletName, setEditedWalletName] = useState("");
   const { assetsData, highlightAssets, autocompleteOptions, assetList } =
     useAssetsData();
+
+  const tickerOptions = assetList[assetType] || [];
 
   const fetchWallets = async () => {
     try {
