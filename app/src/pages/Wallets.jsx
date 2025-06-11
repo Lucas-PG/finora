@@ -8,7 +8,8 @@ import { LuX, LuPencil, LuTrash2, LuCheck } from "react-icons/lu";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { assetList } from "../data/assetsData.js";
+import { Link } from "react-router-dom";
+import { useAssetsData } from "../data/assetsData.js";
 import {
   Modal,
   Button,
@@ -87,6 +88,8 @@ function Wallets() {
   const [showEditWalletsModal, setShowEditWalletsModal] = useState(false);
   const [editingWalletId, setEditingWalletId] = useState(null);
   const [editedWalletName, setEditedWalletName] = useState("");
+  const { assetsData, highlightAssets, autocompleteOptions, assetList } =
+    useAssetsData();
 
   const fetchWallets = async () => {
     try {
@@ -1343,9 +1346,12 @@ function Wallets() {
                             </span>
                           </div>
                           <div>
-                            <button className="secondary-btn wallets-list-asset-btn">
+                            <Link
+                              className="secondary-btn wallets-list-asset-btn"
+                              to={`/ticker?ticker=${asset.ticker}`}
+                            >
                               Detalhes
-                            </button>
+                            </Link>
                           </div>
                         </div>
                       );

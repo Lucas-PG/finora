@@ -162,7 +162,6 @@ function TickerDetails() {
   return (
     <>
       <Navbar />
-
       {/* <HeroSection title={data.ticker} subtitle={data.full_name} /> */}
       <div className="page-container ticker-page-container">
         <div className="ticker-page-header">
@@ -220,7 +219,7 @@ function TickerDetails() {
                 </div>
               )}
 
-            {data.market_cap && (
+            {data.market_cap > 0 && (
               <div className="ticker-info-card">
                 <span className="ticker-info-label">Valor de mercado</span>
                 <h3 className="ticker-info-value">

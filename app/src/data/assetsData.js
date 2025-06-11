@@ -31,6 +31,8 @@ const getHighlightAssets = (assets) => {
 export const useAssetsData = () => {
   const [assetsData, setAssetsData] = useState([]);
   const [highlightAssets, setHighlightAssets] = useState([]);
+  const [autocompleteOptions, setAutocompleteOptions] = useState([]);
+  const [assetList, setAssetList] = useState({});
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,11 +43,9 @@ export const useAssetsData = () => {
           const key = item.ticker;
           const itemDate = new Date(item.date);
           const current = acc[key];
-
           if (!current || itemDate > new Date(current.date)) {
             acc[key] = item;
           }
-
           return acc;
         }, {}),
       );
@@ -56,6 +56,7 @@ export const useAssetsData = () => {
         const marketCapB = item.market_cap ? item.market_cap / 1e9 : 0;
 
         return {
+          ticker: item.ticker.replace(".SA", ""),
           name: item.ticker.replace(".SA", ""),
           fullName: item.full_name,
           price: `R$${price}`,
@@ -66,120 +67,26 @@ export const useAssetsData = () => {
         };
       });
 
+      const options = formatted.map((item) => ({
+        title: item.name,
+        link: `/ticker/${item.name}`,
+        search: `${item.name} ${item.fullName}`,
+      }));
+
+      const byType = formatted.reduce((acc, item) => {
+        if (!acc[item.type]) acc[item.type] = [];
+        acc[item.type].push(item.name);
+        return acc;
+      }, {});
+
       setAssetsData(formatted);
       setHighlightAssets(getHighlightAssets(formatted));
+      setAutocompleteOptions(options);
+      setAssetList(byType);
     };
 
     loadData();
   }, []);
 
-  return { assetsData, highlightAssets };
-};
-
-export const assetList = {
-  acao: [
-    "PETR4",
-    "VALE3",
-    "ITUB4",
-    "WEGE3",
-    "MGLU3",
-    "BBAS3",
-    "BBDC4",
-    "ABEV3",
-    "JBSS3",
-    "RENT3",
-    "LREN3",
-    "GGBR4",
-    "CSNA3",
-    "EMBR3",
-    "BRFS3",
-    "SUZB3",
-    "EGIE3",
-    "CPFE3",
-    "CMIG4",
-    "VIVT3",
-    "PRIO3",
-    "RAIL3",
-    "B3SA3",
-    "ELET3",
-    "ELET6",
-    "ENBR3",
-    "GOLL4",
-    "HAPV3",
-    "KLBN11",
-    "MRFG3",
-    "MRVE3",
-    "NTCO3",
-    "RADL3",
-    "SBSP3",
-    "TIMS3",
-    "UGPA3",
-    "USIM5",
-    "VVAR3",
-    "YDUQ3",
-    "AZUL4",
-    "CVCB3",
-    "ECOR3",
-    "ENEV3",
-    "EQTL3",
-    "FLRY3",
-    "HYPE3",
-    "QUAL3",
-    "SANB11",
-    "TAEE11",
-    "TOTS3",
-    "VBBR3",
-    "VIIA3",
-  ],
-  fii: [
-    "HGLG11",
-    "XPML11",
-    "KNRI11",
-    "BCFF11",
-    "VILG11",
-    "MXRF11",
-    "HGRU11",
-    "KNCR11",
-    "BRCR11",
-    "JSRE11",
-    "HGBS11",
-    "MCCI11",
-    "RBRR11",
-    "CPTS11",
-    "HFOF11",
-    "IRDM11",
-    "RBVA11",
-    "XPLG11",
-    "FIIB11",
-    "HGCR11",
-    "KNHY11",
-    "RZTR11",
-    "VISC11",
-  ],
-  bdr: [
-    "AAPL34",
-    "MSFT34",
-    "GOGL34",
-    "AMZO34",
-    "TSLA34",
-    "NVDC34",
-    "AMZN34",
-    "META34",
-    "NFLX34",
-    "PYPL34",
-    "SQIA34",
-  ],
-  etf: [
-    "IVVB11",
-    "HASH11",
-    "BOVA11",
-    "SMAL11",
-    "XINA11",
-    "GOLD11",
-    "IMAB11",
-    "SPXI11",
-    "DIVO11",
-    "XBOV11",
-    "BRAX11",
-  ],
+  return { assetsData, highlightAssets, autocompleteOptions, assetList };
 };

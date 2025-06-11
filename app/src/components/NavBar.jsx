@@ -1,14 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { CiSearch, CiLight, CiDark } from "react-icons/ci";
 import { LuMoon, LuSun, LuSearch } from "react-icons/lu";
 import { useTheme } from "../context/ThemeContext";
 import { useLocation } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Avatar } from "@mui/material"; // Import Avatar
-import { deepOrange, deepPurple, blue, green, red } from "@mui/material/colors"; // Import color palettes
+import { Avatar, Autocomplete, TextField } from "@mui/material";
+import { useAssetsData } from "../data/assetsData";
 import "../css/NavBar.css";
 
 function Navbar() {
@@ -18,6 +17,8 @@ function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { autocompleteOptions } = useAssetsData();
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
@@ -116,16 +117,48 @@ function Navbar() {
         <div className="navbar-right">
           {!isAuthPage && (
             <div className="navbar-search-container">
-              <button type="button" className="navbar-search">
+              <button className="navbar-search">
                 <LuSearch
                   size={20}
                   className={`navbar-search-icon ${isSearching ? "navbar-search-icon-active" : ""}`}
                   onClick={toggleSearch}
                 />
-                <input
-                  type="text"
-                  placeholder="Pesquise..."
-                  className={`navbar-search-input ${isSearching ? "" : "navbar-search-input-inactive"}`}
+
+                <Autocomplete
+                  freeSolo
+                  className={
+                    isSearching
+                      ? "navbar-autocomplete-active"
+                      : "navbar-autocomplete-inactive"
+                  }
+                  disableClearable
+                  options={autocompleteOptions}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.title
+                  }
+                  isOptionEqualToValue={(option, value) =>
+                    typeof option === "string" || typeof value === "string"
+                      ? option === value
+                      : option.title === value.title
+                  }
+                  onChange={(event, newValue) => {
+                    if (newValue?.link) {
+                      navigate(newValue.link);
+                      setIsSearching(false);
+                      setSearchValue("");
+                    }
+                  }}
+                  inputValue={searchValue}
+                  onInputChange={(e, value) => setSearchValue(value)}
+                  renderInput={(params) => (
+                    // TODO: Trocar por textfield senao quebra
+                    <input
+                      {...params.inputProps}
+                      ref={params.InputProps.ref}
+                      className={`navbar-search-input ${!isSearching ? "navbar-search-input-inactive" : ""}`}
+                      placeholder="Pesquise ativos, ferramentas..."
+                    />
+                  )}
                 />
               </button>
             </div>

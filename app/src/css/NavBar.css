@@ -89,11 +89,73 @@
   width: 100%;
 }
 
+/* .navbar-search-container { */
+/*   display: flex; */
+/*   gap: 1.2rem; */
+/*   height: 100%; */
+/*   border-radius: 9999px; */
+/*   position: relative; */
+/* } */
+/**/
+/* .navbar-search { */
+/*   background: transparent; */
+/*   color: var(--custom-opposite); */
+/*   border: none; */
+/*   cursor: pointer; */
+/*   display: flex; */
+/*   align-items: center; */
+/*   justify-content: center; */
+/*   position: relative; */
+/* } */
+/**/
+/* .navbar-search-icon-active { */
+/*   position: absolute; */
+/*   left: 5px; */
+/*   z-index: 100; */
+/* } */
+/**/
+/* .navbar-search-input { */
+/*   background-color: transparent; */
+/*   backdrop-filter: blur(8px); */
+/*   border: 1px solid var(--primary-blue); */
+/*   border-radius: var(--custom-border-radius); */
+/*   padding: 0.5rem 2rem; */
+/*   color: var(--foreground); */
+/*   outline: none; */
+/*   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); */
+/*   z-index: 10; */
+/*   padding-left: 50px; */
+/*   transition: */
+/*     padding 0.3s ease, */
+/*     width 0.3s ease; */
+/*   font-size: 1rem; */
+/* } */
+/**/
+/* .navbar-search-input-inactive { */
+/*   width: 0px; */
+/*   padding: 0.5rem 0px; */
+/*   background-color: transparent; */
+/*   border: none; */
+/* } */
+/**/
+/* .navbar-search input:focus-within { */
+/*   box-shadow: */
+/*     0 0 5px var(--primary-blue), */
+/*     0 0 10px var(--primary-blue); */
+/* } */
+/**/
+/* .navbar-search input::placeholder { */
+/*   color: var(--faded); */
+/* } */
+
 .navbar-search-container {
   display: flex;
   gap: 1.2rem;
   height: 100%;
   border-radius: 9999px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
 }
 
 .navbar-search {
@@ -105,12 +167,10 @@
   align-items: center;
   justify-content: center;
   position: relative;
-}
-
-.navbar-search-icon-active {
-  position: absolute;
-  left: 5px;
-  z-index: 100;
+  transition:
+    padding 0.3s ease,
+    width 0.3s ease,
+    opacity 0.2s ease;
 }
 
 .navbar-search-input {
@@ -121,26 +181,39 @@
   padding: 0.5rem 2rem;
   color: var(--foreground);
   outline: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  padding-left: 50px;
-  transition:
-    padding 0.3s ease,
-    width 0.3s ease;
-  font-size: 1rem;
-}
-
-.navbar-search-input-inactive {
-  width: 0px;
-  padding: 0.5rem 0px;
-  background-color: transparent;
-  border: none;
-}
-
-.navbar-search input:focus-within {
   box-shadow:
     0 0 5px var(--primary-blue),
     0 0 10px var(--primary-blue);
+  padding-left: 50px;
+  transition:
+    padding 0.3s ease,
+    width 0.3s ease,
+    opacity 0.2s ease;
+  font-size: 1rem;
+  width: 220px;
+}
+
+.navbar-search-input-inactive {
+  width: 0px !important;
+  padding: 0px;
+  background-color: transparent;
+  border: none;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    padding 0.3s ease,
+    width 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.navbar-search-icon-active {
+  position: absolute;
+  left: 10px;
+  z-index: 100;
+  transition:
+    padding 0.3s ease,
+    width 0.3s ease,
+    opacity 0.2s ease;
 }
 
 .navbar-search input::placeholder {
@@ -217,51 +290,43 @@
 
 .user-avatar-menu-container {
   .MuiPaper-root {
-    background-color: rgba(
-      0,
-      0,
-      0,
-      0.5
-    ) !important; /* Semi-transparent dark overlay */
-    backdrop-filter: blur(10px) !important; /* Blur effect */
-    -webkit-backdrop-filter: blur(10px) !important; /* Safari support */
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
     border-radius: var(--custom-border-radius) !important;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
     border: 1px solid var(--card-border) !important;
-    margin-top: 8px !important; /* Adjust spacing from avatar */
-    color: white !important; /* Ensure text is visible against dark background */
+    margin-top: 8px !important;
+    color: white !important;
   }
 }
 
-/* Style for individual menu items */
 .user-avatar-menu {
   font-size: 0.95rem !important;
-  color: white !important; /* White text for contrast */
-  background-color: transparent; /* Default background without !important to allow overrides */
+  color: white !important;
+  background-color: transparent;
   transition: background-color 0.2s ease !important;
 
-  /* Override MUI's default selected/focused state */
   &.Mui-selected,
   &.Mui-focused {
     background-color: transparent !important;
   }
 
-  /* Ensure the first item doesn't inherit auto-focus styling */
   &:first-child {
     background-color: transparent !important;
   }
 
-  /* Apply primary-blue on hover and focus */
   &:hover,
   &:focus {
-    background-color: var(
-      --primary-blue
-    ) !important; /* Hover and focus background */
-    color: white !important; /* Maintain white text */
+    background-color: var(--primary-blue) !important;
+    color: white !important;
   }
 }
 
-/* Optional: Adjust menu positioning if needed */
 .MuiMenu-list {
-  background-color: transparent !important; /* Ensure list inherits paper background */
+  background-color: transparent !important;
+}
+
+.navbar-autocomplete {
+  width: 300px;
 }

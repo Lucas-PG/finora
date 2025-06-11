@@ -8,6 +8,7 @@ import { FaAngleDoubleDown, FaAngleDoubleUp } from "react-icons/fa";
 import { FaChartLine, FaUniversity } from "react-icons/fa";
 import { MdShowChart } from "react-icons/md";
 import { RiCoinsLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 import { useAssetsData } from "../data/assetsData";
 
 const getAssetIcon = (type) => {
@@ -30,7 +31,8 @@ const getAssetIcon = (type) => {
 function Market() {
   const [assetsSearch, setAssetsSearch] = useState("");
   const [activeAssetsFilter, setActiveAssetsFilter] = useState("all");
-  const { assetsData, highlightAssets } = useAssetsData();
+  const { assetsData, highlightAssets, autocompleteOptions, assetList } =
+    useAssetsData();
   // Para não ficar reescrevendo
   const normalizeString = (str) => str.toLowerCase().trim().replace(/\s+/g, "");
 
@@ -217,9 +219,12 @@ function Market() {
                       </span>
                     </div>
                     <div>
-                      <button className="secondary-btn market-list-asset-btn">
+                      <Link
+                        className="secondary-btn market-list-asset-btn"
+                        to={`/ticker?ticker=${asset.ticker}`}
+                      >
                         Detalhes
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}
