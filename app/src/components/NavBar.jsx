@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LuMoon, LuSun, LuSearch } from "react-icons/lu";
 import { useTheme } from "../context/ThemeContext";
 import { useLocation } from "react-router-dom";
+import { useRef } from "react";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Avatar, Autocomplete, TextField } from "@mui/material";
@@ -21,6 +22,7 @@ function Navbar() {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +39,15 @@ function Navbar() {
     location.pathname === "/login" || location.pathname === "/register";
 
   const toggleSearch = () => {
-    setIsSearching((prev) => !prev);
+    setIsSearching((prev) => {
+      const newState = !prev;
+      setTimeout(() => {
+        if (newState && searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+      return newState;
+    });
   };
 
   const handleMenuClick = (event) => {
@@ -154,6 +164,7 @@ function Navbar() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      inputRef={searchInputRef}
                       variant="outlined"
                       placeholder="Pesquise ativos..."
                       InputProps={{

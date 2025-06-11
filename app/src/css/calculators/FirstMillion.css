@@ -4,7 +4,7 @@
   align-items: flex-start;
   padding: 0rem 6rem 2rem 6rem;
   gap: 2rem;
-  background-color: #060a16;
+  background-color: var(--background);
   flex-wrap: wrap;
   position: relative;
   margin-top: 10vh;
@@ -12,26 +12,26 @@
 
 .million-box-calculator {
   flex: 1;
-  background-color: #10141d;
+  background-color: var(--card-bg);
   padding: 2rem 2rem 3rem 2rem;
-  border: 1px solid #41434a;
-  border-radius: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 10px var(--background);
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 300px;
   max-width: 500px;
   max-height: 520px;
+  border-radius: var(--custom-border-radius);
 }
 
 .million-box-graph {
   flex: 1;
-  background-color: #10141d;
+  background-color: var(--card-bg);
   padding: 2rem 4rem 2rem 4rem;
   border-radius: 30px;
-  border: 1px solid #41434a;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 10px var(--background);
   min-width: 300px;
   max-width: 800px;
   max-height: 600px;
@@ -39,14 +39,14 @@
 }
 
 .million-calculator-title {
-  color: #ffffff;
+  color: var(--foreground);
   margin-bottom: 1rem;
   font-size: 1.4rem;
   font-family: "Montserrat", sans-serif;
 }
 
 .million-result-title {
-  color: #ffffff;
+  color: var(--foreground);
   margin-bottom: 1rem;
   font-size: 1.4rem;
   font-family: "Montserrat", sans-serif;
@@ -54,7 +54,7 @@
 
 .calculator-icon-inline {
   margin-right: 10px;
-  color: #0066ff;
+  color: var(--primary-blue);
   vertical-align: middle;
 }
 
@@ -64,15 +64,15 @@
 .million-input-monthly {
   width: 95%;
   background: none;
-  border: 2px solid #41434a;
+  border: 2px solid var(--card-border);
   outline: none;
   padding: 15px 10px;
   font-size: 16px;
   border-radius: 10px;
-  background-color: #181e2b;
+  background-color: var(--card-bg);
   margin: 10px;
   box-sizing: border-box;
-  color: #fff;
+  color: var(--foreground);
 }
 
 .million-button {
@@ -86,7 +86,7 @@
   font-size: 100%;
   background-color: var(--primary-blue);
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0, 102, 255, 0.5);
+  box-shadow: 0 4px 15px var(--primary-blue-glow);
   border-radius: 15px;
   font-weight: bold;
   cursor: pointer;
@@ -97,7 +97,7 @@
 }
 
 .million-button:hover {
-  box-shadow: 0 10px 15px rgba(0, 102, 255, 0.5);
+  box-shadow: 0 10px 15px var(--primary-blue-glow);
   transform: scale(1.02);
 }
 
@@ -110,13 +110,13 @@
 .million-result-description {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ffffff;
+  color: var(--foreground);
   text-align: left;
   border-radius: var(--custom-border-radius);
 }
 
 .million-resume {
-  color: #fdfdfd;
+  color: var(--foreground);
 }
 
 .million-resume-flex-box {
@@ -132,8 +132,8 @@
   flex-grow: 1;
   min-width: 200px;
   max-width: 100%;
-  background-color: #181e2b;
-  border: 1px solid #41434a;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 15px;
   padding: 1.5rem 1rem;
   text-align: center;
@@ -156,7 +156,7 @@
 
 .million-result-label {
   font-size: 0.9rem;
-  color: #ffffff;
+  color: var(--foreground);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   font-weight: bold;
@@ -174,7 +174,7 @@
 }
 
 .million-error-message {
-  color: #ffffff;
+  color: var(--foreground);
   margin-top: 1rem;
   font-weight: bold;
   font-size: 1rem;
@@ -182,25 +182,17 @@
 }
 
 .recharts-cartesian-axis-tick-value {
-  fill: #ccc;
+  fill: var(--faded);
   font-size: 0.9rem;
 }
 
 .recharts-yAxis .recharts-cartesian-axis-tick-value {
-  fill: #aaa;
+  fill: var(--faded);
 }
 
 .recharts-bar,
 .recharts-area {
   transition: all 0.3s ease;
-}
-
-/* === INPUT NUMBER === */
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 @media (max-width: 768px) {
@@ -209,10 +201,12 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
-.million-error-message {
-  color: #ffffff;
-  margin-top: 1rem;
-  font-weight: bold;
-  font-size: 1rem;
-  text-align: center;
+.first-million-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  gap: 5px;
+  margin-top: 10px;
 }

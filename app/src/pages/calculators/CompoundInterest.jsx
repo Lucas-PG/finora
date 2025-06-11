@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
-import Arrow from "../../components/Arrow";
 import { FaCalculator } from "react-icons/fa";
 import { HiArrowTrendingUp } from "react-icons/hi2";
 import HeroSection from "../../components/HeroSection.jsx";
@@ -283,8 +282,6 @@ function CompoundInterest() {
             <p className="compound-error-message">{errorMessage}</p>
           )}
         </div>
-
-        <Arrow />
 
         <div className="compound-box-graph">
           <h3 className="compound-result-title">Resultados</h3>

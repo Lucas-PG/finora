@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
-import Arrow from "../../components/Arrow";
 import HeroSection from "../../components/HeroSection";
 import { FaCalculator } from "react-icons/fa";
 import {
@@ -61,7 +60,7 @@ function FirstMillion() {
 
   const calculateFirstMillion = () => {
     const P = parseFloat(initialValue);
-    const r = parseFloat(interestRate) / 100 / 12;
+    const r = parseFloat(interestRate) / 100 / 12; // taxa de juros anual convertida para mensal
     const PMT = parseFloat(monthlyInvestment);
     const target = 1000000;
 
@@ -136,7 +135,6 @@ function FirstMillion() {
       setErrorMessage("");
     }
   };
-
   const customTooltip = {
     contentStyle: {
       backgroundColor: "#181e2b",
@@ -359,7 +357,6 @@ function FirstMillion() {
         return null;
     }
   };
-
   return (
     <>
       <Navbar />
@@ -395,7 +392,7 @@ function FirstMillion() {
           </div>
 
           {mode === "tempo" && (
-            <>
+            <div className="first-million-form">
               <input
                 className="million-input-initial"
                 placeholder="Quanto você já tem guardado e investido?"
@@ -408,7 +405,7 @@ function FirstMillion() {
               />
               <input
                 className="million-input-rate"
-                placeholder="Taxa de Juros (%)"
+                placeholder="Taxa de Juros Anual (%)"
                 value={interestRate}
                 onChange={(e) => {
                   setInterestRate(e.target.value);
@@ -426,11 +423,11 @@ function FirstMillion() {
                 }}
                 type="number"
               />
-            </>
+            </div>
           )}
 
           {mode === "valor" && (
-            <>
+            <div className="first-million-form">
               <input
                 className="million-input-initial"
                 placeholder="Quanto você já tem guardado e investido?"
@@ -443,7 +440,7 @@ function FirstMillion() {
               />
               <input
                 className="million-input-rate"
-                placeholder="Taxa de Juros (%)"
+                placeholder="Taxa de Juros Anual (%)"
                 value={interestRate}
                 onChange={(e) => {
                   setInterestRate(e.target.value);
@@ -461,7 +458,7 @@ function FirstMillion() {
                 }}
                 type="number"
               />
-            </>
+            </div>
           )}
 
           <button className="million-button" onClick={calculateFirstMillion}>
@@ -473,27 +470,27 @@ function FirstMillion() {
           )}
         </div>
 
-        <Arrow />
-
         <div className="million-box-graph">
           <h3 className="million-result-title">Resultados</h3>
 
-          <div className="graph-mode-toggle">
-            {["resumo", "pizza", "barra", "area"].map((mode) => (
-              <label key={mode} className="graph-radio">
-                <input
-                  type="radio"
-                  name="graphMode"
-                  value={mode}
-                  checked={graphMode === mode}
-                  onChange={() => setGraphMode(mode)}
-                />
-                <span className="graph-label">
-                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
-                </span>
-              </label>
-            ))}
-          </div>
+          {finalAmount !== null && (
+            <div className="graph-mode-toggle">
+              {["resumo", "pizza", "barra", "area"].map((mode) => (
+                <label key={mode} className="graph-radio">
+                  <input
+                    type="radio"
+                    name="graphMode"
+                    value={mode}
+                    checked={graphMode === mode}
+                    onChange={() => setGraphMode(mode)}
+                  />
+                  <span className="graph-label">
+                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
 
           <div className="million-chart-area">{renderChart()}</div>
         </div>

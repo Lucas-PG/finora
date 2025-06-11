@@ -135,12 +135,12 @@ function AssetPercentage() {
             readOnly
           />
 
-          <button className="percentage-button" onClick={calculate}>
-            <span className="percentage-button-content">CALCULAR</span>
+          <button className="percentage-button primary-btn" onClick={calculate}>
+            CALCULAR
           </button>
 
-          <button className="percentage-button asset-clear" onClick={clear}>
-            <span className="percentage-button-content">LIMPAR</span>
+          <button className="percentage-button secondary-btn" onClick={clear}>
+            LIMPAR
           </button>
         </div>
       </div>

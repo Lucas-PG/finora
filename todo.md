@@ -1,7 +1,7 @@
 - [x] Search engine
 - [x] Adicionar year-to-date no gráfico de ticker
 - [] Alterações de usuário
-- [] Alterar cards de notícias para em destaque
+- [x] Alterar cards de notícias para em destaque
 - [] Concertar dados ETFs
 - [] Responsividade
 - [] Adicionar botões de ordenação em market
