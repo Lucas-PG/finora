@@ -17,9 +17,8 @@
   --green-opacity: #122d1f;
   --red: #ee4443;
   --red-opacity: #2a1212;
-  --glass-card: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
   --custom-border-radius: 12px;
+  --primary: #000000;
 }
 
 [data-theme="light"] {
@@ -39,6 +38,7 @@
   --red: #d12b39;
   --green-opacity: #e6ffed;
   --red-opacity: #ffe5e5;
+  --primary: #ffffff;
 }
 
 * {

@@ -329,3 +329,21 @@
 .navbar-autocomplete {
   width: 300px;
 }
+
+.navbar-autocomplete-paper .MuiAutocomplete-option:hover {
+  background-color: var(--primary-blue);
+  color: var(--foreground);
+}
+
+.navbar-autocomplete-paper .MuiAutocomplete-option {
+  background-color: var(--primary) !important;
+  color: var(--foreground) !important;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar-autocomplete-paper .MuiAutocomplete-option:hover {
+  background-color: var(--primary-blue) !important;
+  color: var(--foreground) !important;
+}

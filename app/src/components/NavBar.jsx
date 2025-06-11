@@ -147,6 +147,15 @@ function Navbar() {
                   getOptionLabel={(option) =>
                     typeof option === "string" ? option : option.title
                   }
+                  slotProps={{
+                    paper: {
+                      sx: {
+                        backgroundColor: "var(--primary)",
+                        color: "var(--foreground)",
+                      },
+                      className: "navbar-autocomplete-paper",
+                    },
+                  }}
                   isOptionEqualToValue={(option, value) =>
                     typeof option === "string" || typeof value === "string"
                       ? option === value
