@@ -1,10 +1,8 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
-import Arrow from "../../components/Arrow";
 import HeroSection from "../../components/HeroSection";
-import "../../css/calculators/SimpleInterest.css";
 import { FaCalculator } from "react-icons/fa";
-
+import { HiArrowTrendingUp } from "react-icons/hi2";
 import {
   PieChart,
   Pie,
@@ -19,6 +17,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import "../../css/calculators/SimpleInterest.css";
 
 function SimpleInterest() {
   const [initialValue, setInitialValue] = useState("");
@@ -62,64 +61,79 @@ function SimpleInterest() {
     if (graphMode === "resumo") {
       return finalAmount !== null ? (
         <div className="million-resume">
-          <div className="million-resume-flex-box">
-            <div className="million-resume-card">
-              <div className="million-result-item">
-                <span className="million-result-label">Valor Total Final</span>
-                <span className="million-result-value">R$ {finalAmount}</span>
-              </div>
-            </div>
-            <div className="million-resume-card">
-              <div className="million-result-item">
-                <span className="million-result-label">
-                  Valor Total Investido
-                </span>
-                <span className="million-result-value">
-                  R$ {invested.toFixed(2)}
+          {" "}
+          {/* Changed from simple-resume */}
+          <div className="resume-flex-box">
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Final</span>
+                <span className="result-value">
+                  <HiArrowTrendingUp className="growth-icon" />
+                  {parseFloat(finalAmount).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
                 </span>
               </div>
             </div>
-            <div className="million-resume-card">
-              <div className="million-result-item">
-                <span className="million-result-label">Total em Juros</span>
-                <span className="million-result-value">
-                  R$ {interest.toFixed(2)}
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Investido</span>
+                <span className="result-value">
+                  {invested.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </div>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Total em Juros</span>
+                <span className="result-value">
+                  {interest.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
                 </span>
               </div>
             </div>
           </div>
-
           <ul className="million-resume-list">
+            {" "}
+            {/* Changed from simple-resume-list */}
             <li>
-              Capital Inicial: <strong>R$ {invested.toFixed(2)}</strong>
+              Capital Inicial:{" "}
+              <strong>
+                {invested.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </strong>
             </li>
             <li>
-              Taxa de Juros Mensal:{" "}
-              <strong>{(parseFloat(interestRate) / 12).toFixed(2)}%</strong>
+              Taxa de Juros Anual:{" "}
+              <strong>{parseFloat(interestRate).toFixed(2)}%</strong>
             </li>
             <li>
               Duração: <strong>{period} anos</strong>
             </li>
             <li className="million-tip">
-              Esse cálculo assume juros compostos mensais com aportes mensais
-              constantes.
+              {" "}
+              {/* Changed from simple-tip */}
+              Juros simples são calculados apenas sobre o capital inicial, sem
+              considerar a acumulação de juros ao longo do tempo.
             </li>
           </ul>
         </div>
       ) : (
-        <p className="million-result-description">
+        <p className="simple-result-description">
           Preencha os campos e clique em Calcular.
         </p>
       );
     }
 
     if (chartData.length === 0) return null;
-
-    const chartProps = {
-      data: chartData,
-      width: "100%",
-      height: 300,
-    };
 
     switch (graphMode) {
       case "pizza":
@@ -153,7 +167,7 @@ function SimpleInterest() {
         );
       case "barra":
         return (
-          <ResponsiveContainer {...chartProps}>
+          <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="ano" />
@@ -165,7 +179,7 @@ function SimpleInterest() {
         );
       case "area":
         return (
-          <ResponsiveContainer {...chartProps}>
+          <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="ano" />
@@ -190,14 +204,14 @@ function SimpleInterest() {
       <Navbar />
       <HeroSection title={title} subtitle={subtitle} />
 
-      <div className="million-bottom-section">
-        <div className="million-box-calculator">
-          <h3 className="million-calculator-title">
+      <div className="simple-bottom-section">
+        <div className="simple-box-calculator">
+          <h3 className="simple-calculator-title">
             <FaCalculator className="calculator-icon-inline" />
             Calculadora de Juros Simples
           </h3>
           <input
-            className="million-input-initial"
+            className="simple-input-initial"
             placeholder="Valor Inicial"
             value={initialValue}
             onChange={(e) => {
@@ -209,7 +223,7 @@ function SimpleInterest() {
             type="number"
           />
           <input
-            className="million-input-rate"
+            className="simple-input-rate"
             placeholder="Taxa de Juros (%)"
             value={interestRate}
             onChange={(e) => {
@@ -221,7 +235,7 @@ function SimpleInterest() {
             type="number"
           />
           <input
-            className="million-input-period"
+            className="simple-input-period"
             placeholder="Período (anos)"
             value={period}
             onChange={(e) => {
@@ -233,7 +247,7 @@ function SimpleInterest() {
             type="number"
           />
           <button
-            className="million-button"
+            className="simple-button"
             onClick={() => {
               if (!initialValue || !interestRate || !period) {
                 setErrorMessage("Preencha todos os campos para calcular.");
@@ -259,16 +273,16 @@ function SimpleInterest() {
               );
             }}
           >
-            <span className="million-button-content">Calcular</span>
+            <span className="simple-button-content">Calcular</span>
           </button>
 
           {errorMessage && (
-            <p className="million-error-message">{errorMessage}</p>
+            <p className="simple-error-message">{errorMessage}</p>
           )}
         </div>
 
-        <div className="million-box-graph">
-          <h3 className="million-result-title">Resultados</h3>
+        <div className="simple-box-graph">
+          <h3 className="simple-result-title">Resultados</h3>
 
           {finalAmount !== null && (
             <div className="graph-mode-toggle">
@@ -289,7 +303,7 @@ function SimpleInterest() {
             </div>
           )}
 
-          <div className="million-chart-area">{renderChart()}</div>
+          <div className="simple-chart-area">{renderChart()}</div>
         </div>
       </div>
     </>

@@ -106,7 +106,6 @@
   border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 0.6rem 1rem;
-  /* box-shadow: 0 0 12px var(--primary-blue); */
   transition: box-shadow 0.3s ease;
   width: 100%;
   max-width: 380px;
@@ -200,4 +199,182 @@
   padding: 1rem 2rem;
   border-radius: var(--custom-border-radius);
   font-size: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .market-highlight-animated-section {
+    gap: 3vh;
+  }
+
+  .market-highlight-cards-container {
+    flex-wrap: wrap;
+    gap: 1rem;
+    height: auto;
+  }
+
+  .market-highlight-card {
+    flex: 1 1 45%;
+    min-width: 200px;
+    padding: 0.75rem;
+  }
+
+  .market-icon-around {
+    width: 35px;
+    height: 35px;
+  }
+
+  .market-highlight-card-right > div {
+    margin-left: 0.5rem;
+  }
+
+  .market-card-name,
+  .market-card-price {
+    font-size: 0.95rem;
+  }
+
+  .market-card-variation {
+    font-size: 0.85rem;
+  }
+
+  .market-assets-animated-section {
+    margin-top: 5vh;
+  }
+
+  .market-assets-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .market-assets-header-right {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .market-assets-input-container {
+    max-width: 100%;
+  }
+
+  .market-filter {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.95rem;
+    margin-top: 2vh;
+    flex: 1;
+  }
+
+  .market-list-container {
+    overflow-x: scroll;
+    justify-content: start;
+    align-items: start;
+    padding: 3vh 20px;
+    width: calc(100% - 40px);
+  }
+
+  .market-list-header,
+  .market-list-body {
+    width: 100%;
+    min-width: 1200px;
+  }
+
+  .market-list-header {
+    padding: 30px 0px;
+  }
+
+  .market-list-header > div,
+  .market-list-asset-card > div {
+    font-size: 0.95rem;
+  }
+
+  .market-list-asset-card {
+    padding: 20px 0px;
+  }
+
+  .market-list-asset-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .market-list-body {
+    justify-content: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .market-highlight-animated-section {
+    gap: 2vh;
+  }
+
+  .market-highlight-cards-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .market-highlight-card {
+    flex: 1 1 100%;
+    min-width: unset;
+  }
+
+  .market-icon-around {
+    width: 30px;
+    height: 30px;
+  }
+
+  .market-highlight-card-right > div {
+    margin-left: 0.3rem;
+  }
+
+  .market-card-name,
+  .market-card-price {
+    font-size: 0.9rem;
+  }
+
+  .market-card-variation {
+    font-size: 0.8rem;
+  }
+
+  .market-assets-animated-section {
+    margin-top: 3vh;
+  }
+
+  .market-assets-header {
+    gap: 0.75rem;
+  }
+
+  .market-assets-input-container {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .market-assets-search-icon {
+    margin-right: 0.4rem;
+  }
+
+  .market-assets-input {
+    font-size: 0.9rem;
+  }
+
+  .market-filter {
+    font-size: 0.85rem;
+  }
+
+  .market-list-container {
+    overflow-x: auto;
+    width: calc(100% - 40px);
+  }
+
+  .market-list-header,
+  .market-list-body {
+    min-width: 1200px;
+  }
+
+  .market-list-header > div,
+  .market-list-asset-card > div {
+    font-size: 0.85rem;
+  }
+
+  .market-list-asset-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import HeroSection from "../../components/HeroSection";
 import { FaCalculator } from "react-icons/fa";
+import { HiArrowTrendingUp } from "react-icons/hi2";
 import {
   PieChart,
   Pie,
@@ -60,7 +61,7 @@ function FirstMillion() {
 
   const calculateFirstMillion = () => {
     const P = parseFloat(initialValue);
-    const r = parseFloat(interestRate) / 100 / 12; // taxa de juros anual convertida para mensal
+    const r = parseFloat(interestRate) / 100 / 12;
     const PMT = parseFloat(monthlyInvestment);
     const target = 1000000;
 
@@ -135,6 +136,7 @@ function FirstMillion() {
       setErrorMessage("");
     }
   };
+
   const customTooltip = {
     contentStyle: {
       backgroundColor: "#181e2b",
@@ -152,127 +154,103 @@ function FirstMillion() {
   };
 
   const renderChart = () => {
+    const invested = Number(investedTotal);
+    const interest = Number(interestTotal);
+
     if (graphMode === "resumo") {
       return finalAmount !== null ? (
         <div className="million-resume">
-          {mode === "tempo" ? (
-            <>
-              <p className="million-result-description">
-                Você vai atingir seu primeiro milhão em{" "}
-                <strong>
-                  {Math.floor(yearsToMillion / 12)} anos e {yearsToMillion % 12}{" "}
-                  meses
-                </strong>
-                .
-                <br />
-                Após esse prazo, o valor total será de{" "}
-                <strong>
+          <div className="resume-flex-box">
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Final</span>
+                <span className="result-value">
+                  <HiArrowTrendingUp className="growth-icon" />
                   {parseFloat(finalAmount).toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}
-                </strong>
-                ,<br />
-                sendo{" "}
-                <strong>
-                  {parseFloat(investedTotal).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </strong>{" "}
-                de valor investido e{" "}
-                <strong>
-                  {parseFloat(interestTotal).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </strong>{" "}
-                de rendimentos.
-              </p>
-              <div className="million-result-summary">
-                <p>
-                  <strong>Valor Total Final:</strong>{" "}
-                  {parseFloat(finalAmount).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </p>
-                <p>
-                  <strong>Valor Total Investido:</strong>{" "}
-                  {parseFloat(investedTotal).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </p>
-                <p>
-                  <strong>Total em Juros:</strong>{" "}
-                  {parseFloat(interestTotal).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </p>
+                </span>
               </div>
-            </>
-          ) : (
-            <>
-              <p className="million-result-description">
-                Considerando os{" "}
-                <strong>
-                  {parseFloat(initialValue).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </strong>{" "}
-                guardados e investidos inicialmente, você precisa investir{" "}
-                <strong>
-                  {parseFloat(monthlyInvestment).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </strong>{" "}
-                mensalmente para atingir seu primeiro milhão em{" "}
-                <strong>{period} anos</strong>!
-                <br />
-                Desta forma, você irá alcançar <strong>
-                  R$ 1.000.000,00
-                </strong>{" "}
-                neste período, sendo{" "}
-                <strong>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Investido</span>
+                <span className="result-value">
                   {parseFloat(investedTotal).toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}
-                </strong>{" "}
-                de valor investido e de rendimento.
-              </p>
-              <div className="million-result-summary">
-                <p>
-                  <strong>Valor Total Final:</strong> R$ 1.000.000,00
-                </p>
-                <p>
-                  <strong>Valor Total Investido:</strong>{" "}
-                  {parseFloat(investedTotal).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </p>
-                <p>
-                  <strong>Total em Juros:</strong>{" "}
+                </span>
+              </div>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Total em Juros</span>
+                <span className="result-value">
                   {parseFloat(interestTotal).toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}
-                </p>
-                <p>
-                  <strong>Valor Investimento Mensal:</strong>{" "}
-                  {parseFloat(monthlyInvestment).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </p>
+                </span>
               </div>
-            </>
-          )}
+            </div>
+          </div>
+
+          <ul className="million-resume-list">
+            <li>
+              Valor inicial:{" "}
+              <strong>
+                {parseFloat(initialValue).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </strong>
+            </li>
+            <li>
+              Taxa de juros anual:{" "}
+              <strong>{parseFloat(interestRate).toFixed(2)}%</strong>
+            </li>
+            {mode === "tempo" ? (
+              <>
+                <li>
+                  Investimento mensal:{" "}
+                  <strong>
+                    {parseFloat(monthlyInvestment).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </strong>
+                </li>
+                <li>
+                  Tempo para o milhão:{" "}
+                  <strong>
+                    {Math.floor(yearsToMillion / 12)} anos e{" "}
+                    {yearsToMillion % 12} meses
+                  </strong>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  Período: <strong>{period} anos</strong>
+                </li>
+                <li>
+                  Investimento mensal:{" "}
+                  <strong>
+                    {parseFloat(monthlyInvestment).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </strong>
+                </li>
+              </>
+            )}
+            <li className="million-tip">
+              Juros compostos crescem de forma exponencial com o tempo. Quanto
+              mais longo o período, maior o impacto dos juros.
+            </li>
+          </ul>
         </div>
       ) : (
         <p className="million-result-description">
@@ -285,8 +263,6 @@ function FirstMillion() {
 
     switch (graphMode) {
       case "pizza":
-        const invested = Number(investedTotal);
-        const interest = Number(interestTotal);
         const pieData = [
           { name: "Investido", value: invested },
           { name: "Juros", value: interest },
@@ -297,13 +273,6 @@ function FirstMillion() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Tooltip {...customTooltip} />
-              formatter=
-              {(value) =>
-                Number(value).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })
-              }
               <Pie
                 data={pieData}
                 cx="50%"
@@ -357,13 +326,14 @@ function FirstMillion() {
         return null;
     }
   };
+
   return (
     <>
       <Navbar />
       <HeroSection title={title} subtitle={subtitle} />
       <div className="million-bottom-section">
         <div className="million-box-calculator">
-          <h3 className="compound-calculator-title">
+          <h3 className="million-calculator-title">
             <FaCalculator className="calculator-icon-inline" />
             Calculadora do Primeiro Milhão
           </h3>

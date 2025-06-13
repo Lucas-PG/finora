@@ -26,29 +26,26 @@
 
 .simple-box-calculator {
   flex: 1;
-  background-color: var(--card-header);
+  background-color: var(--card-bg);
   padding: 2rem 2rem 3rem 2rem;
   border: 1px solid var(--card-border);
-  border-radius: 30px;
-  box-shadow: 0 0 10px var(--secondary-shadow-bottom);
+  box-shadow: 0 0 10px var(--background);
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 300px;
-  max-width: 500px;
-  max-height: 400px;
+  border-radius: var(--custom-border-radius);
 }
 
 .simple-box-graph {
   flex: 1;
-  background-color: var(--card-header);
+  background-color: var(--card-bg);
   padding: 2rem 4rem 2rem 4rem;
-  border-radius: 30px;
+  border-radius: var(--custom-border-radius);
   border: 1px solid var(--card-border);
-  box-shadow: 0 0 10px var(--secondary-shadow-bottom);
+  box-shadow: 0 0 10px var(--background);
   min-width: 300px;
   max-width: 800px;
-  max-height: 600px;
   flex-wrap: wrap;
 }
 
@@ -66,22 +63,6 @@
   font-family: "Montserrat", sans-serif;
 }
 
-.simple-title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  display: inline-block;
-  padding-bottom: 0.25rem;
-  font-family: "Montserrat", sans-serif;
-}
-
-.simple-description {
-  font-size: 1rem;
-  color: var(--secondary-text);
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  font-family: "Montserrat", sans-serif;
-}
-
 .calculator-icon-inline {
   margin-right: 10px;
   color: var(--primary-blue);
@@ -92,21 +73,21 @@
 .simple-input-rate,
 .simple-input-period,
 .simple-input-monthly {
-  width: 80%;
+  width: 95%;
   background: none;
   border: 2px solid var(--card-border);
   outline: none;
   padding: 15px 10px;
   font-size: 16px;
   border-radius: 10px;
-  background-color: var(--card-header);
+  background-color: var(--card-bg);
   margin: 10px;
   box-sizing: border-box;
   color: var(--foreground);
 }
 
 .simple-button {
-  width: 80%;
+  width: 95%;
   margin-top: 20px;
   padding: 0.75rem 0.5rem;
   display: flex;
@@ -162,7 +143,7 @@
 .graph-label {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  color: var(--secondary-text);
+  color: var(--faded);
   font-weight: 500;
   transition: all 0.3s ease;
   width: 100%;
@@ -182,79 +163,89 @@
   border-radius: var(--custom-border-radius);
 }
 
-.simple-resume {
+.million-resume {
   color: var(--foreground);
 }
 
-.simple-resume-flex-box {
+.resume-flex-box {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
   padding: 2rem 0rem 1rem 0rem;
   margin-bottom: 1.5rem;
+  width: 100%; /* Constrain within parent */
 }
 
-.simple-resume-card {
+.resume-card {
   flex-grow: 1;
-  min-width: 200px;
-  max-width: 100%;
-  background-color: var(--card-header);
+  min-width: 150px; /* Allow growth for content */
+  background-color: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 15px;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem;
   text-align: center;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  box-sizing: border-box;
   transition: transform 0.2s ease;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
-.simple-resume-card:hover {
+.resume-card:hover {
   transform: scale(1.03);
 }
 
-.simple-result-item {
+.result-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  width: 100%;
 }
 
-.simple-result-label {
-  font-size: 0.9rem;
+.result-label {
+  font-size: 0.8rem;
   color: var(--foreground);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   font-weight: bold;
+  white-space: nowrap; /* Already in FirstMillion */
 }
 
-.simple-result-value {
-  font-size: 1.8rem;
+.result-value {
+  font-size: 1.4rem;
   font-weight: bold;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  max-width: 100%;
+  line-height: 1.2;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap; /* Reinforce nowrap */
 }
 
-.simple-resume-list {
+.growth-icon {
+  color: var(--primary-blue);
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.million-resume-list {
   list-style: none;
   margin-top: 1rem;
   color: var(--foreground);
+  white-space: normal; /* Allow wrapping for list items */
 }
 
-.simple-resume-list li {
+.million-resume-list li {
   margin-bottom: 0.75rem;
 }
 
-.simple-resume-list strong {
+.million-resume-list strong {
   color: var(--foreground);
 }
 
-.simple-tip {
+.million-tip {
   color: var(--primary-blue);
   font-size: 1rem;
   text-shadow: 0 0 2px var(--primary-blue);
@@ -269,7 +260,7 @@
 }
 
 .recharts-cartesian-axis-tick-value {
-  fill: var(--secondary-text);
+  fill: var(--faded);
   font-size: 0.9rem;
 }
 
@@ -291,5 +282,23 @@ input[type="number"]::-webkit-outer-spin-button {
 @media (max-width: 768px) {
   .simple-bottom-section {
     flex-direction: column;
+  }
+
+  .resume-card {
+    min-width: 120px;
+    white-space: nowrap; /* Maintain nowrap on mobile */
+  }
+
+  .result-value {
+    font-size: 1.2rem;
+    white-space: nowrap; /* Maintain nowrap on mobile */
+  }
+
+  .growth-icon {
+    font-size: 1.5rem;
+  }
+
+  .million-resume-list {
+    white-space: normal; /* Ensure list items wrap on mobile */
   }
 }

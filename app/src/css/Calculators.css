@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: 1vw;
+  padding: 0 1rem;
 }
 
 .calculators-animated-section {
@@ -14,20 +15,18 @@
 .calculators-card {
   display: flex;
   flex: 1;
-  height: 30vh;
+  height: 25vh;
   background-color: var(--card-bg);
   border: solid 1px var(--card-border);
   color: var(--foreground);
   border-radius: var(--custom-border-radius);
   text-decoration: none;
-}
-
-.calculators-card {
-  display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   transition: 0.3s;
+  padding: 1rem;
+  padding-bottom: 2.5rem;
 }
 
 .calculators-card:hover {
@@ -70,12 +69,23 @@
   margin-right: 2vw;
 }
 
+.calculator-text-section h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.calculator-text-section span {
+  font-size: 0.95rem;
+  color: var(--faded);
+}
+
 .suggest-tool-section {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 3vh;
+  padding: 0 1rem;
 }
 
 .suggest-tool-card {
@@ -88,6 +98,7 @@
   flex-direction: column;
   justify-items: start;
   align-items: center;
+  padding: 1rem;
 }
 
 .suggest-title-section {
@@ -116,4 +127,136 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--primary-blue);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.suggest-btn:hover {
+  background-color: var(--primary-blue-hover);
+}
+
+@media (max-width: 1024px) {
+  .calculators-card-section {
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .calculators-animated-section {
+    flex: 1 1 45%;
+    max-width: 500px;
+  }
+
+  .calculators-card {
+    height: auto;
+    min-height: 200px;
+    padding: 1rem;
+  }
+
+  .calculators-card > div {
+    margin-left: 1rem;
+  }
+
+  .calculator-text-section {
+    margin-right: 1rem;
+  }
+
+  .calculator-text-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .calculator-text-section span {
+    font-size: 0.9rem;
+  }
+
+  .suggest-tool-card {
+    height: auto;
+    min-height: 200px;
+    padding: 1.5rem;
+    gap: 20px;
+  }
+
+  .suggest-title-section {
+    width: 80%;
+    gap: 20px;
+  }
+
+  .suggest-title-section h2 {
+    font-size: 1.2rem;
+  }
+
+  .suggest-title-section span {
+    font-size: 0.95rem;
+  }
+
+  .suggest-btn {
+    padding: 15px 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculators-card-section {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .calculators-animated-section {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .calculators-card {
+    height: auto;
+    min-height: 150px;
+    padding: 0.75rem;
+  }
+
+  .calculators-card > div {
+    margin-left: 0.5rem;
+  }
+
+  .calculator-text-section {
+    margin-right: 0.5rem;
+  }
+
+  .calculator-text-section h3 {
+    font-size: 1rem;
+  }
+
+  .calculator-text-section span {
+    font-size: 0.85rem;
+  }
+
+  .suggest-tool-section {
+    margin-top: 2rem;
+    padding: 0 0.5rem;
+  }
+
+  .suggest-tool-card {
+    height: auto;
+    min-height: 150px;
+  }
+
+  .suggest-title-section {
+    width: 90%;
+  }
+
+  .suggest-title-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .suggest-title-section span {
+    font-size: 0.85rem;
+  }
+
+  .suggest-btn {
+    height: 40px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
 }

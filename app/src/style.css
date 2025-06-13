@@ -22,17 +22,19 @@
 }
 
 [data-theme="light"] {
-  --background: #f8fbfb;
-  --background-blur: #f8fbfbb3;
+  --background: #f6f8fa; /* neutro claro */
+  --background-blur: #f4f4f5b3;
   --foreground: #060a16;
-  --card-bg: #e0e7ff;
+  --card-bg: #fff;
+  --card-header: #c9c9d2; /* equivalente ao #181e2b do escuro */
   --faded: rgba(0, 0, 0, 0.7);
-  --primary-blue: #00ccff;
+  --primary-blue: #1077ff; /* pode manter */
+  --primary-blue-glow: rgba(180, 180, 180, 0.8);
   --custom-faded: #777777;
-  --custom-hover: #0097a7;
+  --custom-hover: #a6b1c2;
   --custom-highlight: #1f2937;
   --secondary-shadow-bottom: rgba(0, 0, 0, 0.15);
-  --secondary-glow-top: #d0d8e8;
+  --secondary-glow-top: #e1e1e1;
   --secondary-btn: #d9e3f3;
   --green: #009f4d;
   --red: #d12b39;
@@ -48,9 +50,10 @@
 }
 
 #root {
-  width: 100vw;
-  max-width: 100%;
+  width: 100%;
+  max-width: 100vw;
   min-height: 100vh;
+  min-width: 300px;
 }
 
 body {
@@ -60,6 +63,7 @@ body {
   width: 100%;
   max-width: 100%;
   color: var(--foreground);
+  min-width: 300px;
 }
 
 body.modal-open {

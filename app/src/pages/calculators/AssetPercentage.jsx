@@ -88,28 +88,19 @@ function AssetPercentage() {
             <span>Calculadora de Porcentagem</span>
           </h3>
 
-          <div className="graph-mode-toggle">
-            {[
-              ["percentual", "Cálculo de Porcentagem"],
-              ["proporcao", "Proporção"],
-              ["aumento", "Aumento Percentual"],
-              ["reducao", "Redução Percentual"],
-            ].map(([value, label]) => (
-              <label key={value} className="graph-radio">
-                <input
-                  type="radio"
-                  name="mode"
-                  value={value}
-                  checked={mode === value}
-                  onChange={() => {
-                    setMode(value);
-                    clear();
-                  }}
-                />
-                <span className="graph-label">{label}</span>
-              </label>
-            ))}
-          </div>
+          <select
+            className="percentage-select"
+            value={mode}
+            onChange={(e) => {
+              setMode(e.target.value);
+              clear();
+            }}
+          >
+            <option value="percentual">Cálculo de Porcentagem</option>
+            <option value="proporcao">Proporção</option>
+            <option value="aumento">Aumento Percentual</option>
+            <option value="reducao">Redução Percentual</option>
+          </select>
 
           <input
             className="percentage-input"
@@ -127,13 +118,14 @@ function AssetPercentage() {
             onChange={(e) => setValue2(e.target.value)}
           />
 
-          <input
-            className="percentage-input"
-            placeholder={placeholders[2]}
-            type="number"
-            value={result}
-            readOnly
-          />
+          <div className="percentage-result">
+            {result && (
+              <>
+                <span>{placeholders[2]}: </span>
+                <strong>{result}</strong>
+              </>
+            )}
+          </div>
 
           <button className="percentage-button primary-btn" onClick={calculate}>
             CALCULAR

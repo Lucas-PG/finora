@@ -13,27 +13,6 @@ import { MdShowChart } from "react-icons/md";
 import { RiCoinsLine } from "react-icons/ri";
 
 function Home() {
-  // TODO: Pegar isso de uma API
-  // https://www.marketaux.com/
-  const news = [
-    {
-      title: "Ibovespa fecha em alta com impulso de commodities",
-      source: "infomoney.com.br",
-    },
-    {
-      title: "Selic deve cair novamente em decisão do Copom, dizem analistas",
-      source: "valorinveste.globo.com",
-    },
-    {
-      title: "Petrobras anuncia novo plano estratégico até 2028",
-      source: "exame.com",
-    },
-    {
-      title: "Dólar recua e fecha abaixo de R$ 5,00 após dados dos EUA",
-      source: "cnnbrasil.com.br",
-    },
-  ];
-
   const { highlightAssets } = useAssetsData();
 
   const getAssetIcon = (type) => {
@@ -59,8 +38,10 @@ function Home() {
       <div>
         <section className="home-hero-section">
           <h1>
-            Construa Seu
-            <span className="home-hero-h1-highlight"> Futuro Financeiro</span>
+            Construa Seu{" "}
+            <span className="home-hero-h1-highlight no-break">
+              Futuro Financeiro
+            </span>
             <br />
             de Maneira Simples
           </h1>
