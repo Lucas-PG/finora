@@ -282,7 +282,7 @@ for i, ticker in enumerate(tickers, 1):
     try:
         print(f"Processando {ticker} ({i}/{len(tickers)})")
         stock = yf.Ticker(ticker)
-        data = stock.history(period="1y")
+        data = stock.history(period="2y")
 
         if data.empty:
             print(f"Sem dados para {ticker}")
