@@ -23,3 +23,27 @@
 .about-section strong {
   color: var(--custom-opposite);
 }
+
+@media (max-width: 900px) {
+  .about-section h2 {
+    font-size: 1rem;
+  }
+
+  .about-section p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    padding: 60px 40px;
+  }
+
+  .about-section h2 {
+    font-size: 0.8rem;
+  }
+
+  .about-section p {
+    font-size: 0.6rem;
+  }
+}

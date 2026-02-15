@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 import Login from "./pages/Login";
@@ -14,6 +14,7 @@ import FirstMillion from "./pages/calculators/FirstMillion";
 import AssetPercentage from "./pages/calculators/AssetPercentage";
 import ChatBot from "./components/ChatBot";
 import Update from "./components/Update";
+import TickerDetails from "./pages/TickerDetails";
 import "./style.css";
 import Email from "./components/Email";
 
@@ -21,6 +22,16 @@ function App() {
   const { isAuthenticated, setToken, token, logout } = useContext(AuthContext);
 
   if (isAuthenticated === null) return <div>Verificando login...</div>;
+
+  function LogoutHandler() {
+    const { logout } = useContext(AuthContext);
+
+    useEffect(() => {
+      logout();
+    }, []);
+
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <BrowserRouter>
@@ -40,6 +51,7 @@ function App() {
             <Route path="/simple-interest" element={<SimpleInterest />} />
             <Route path="/first-million" element={<FirstMillion />} />
             <Route path="/asset-percentage" element={<AssetPercentage />} />
+            <Route path="/ticker" element={<TickerDetails />} />
           </>
         ) : (
           <>
@@ -59,18 +71,20 @@ function App() {
             <Route path="/simple-interest" element={<SimpleInterest />} />
             <Route path="/first-million" element={<FirstMillion />} />
             <Route path="/asset-percentage" element={<AssetPercentage />} />
+            <Route path="/logout" element={<LogoutHandler />} />
+            <Route path="/ticker" element={<TickerDetails />} />
+            />
           </>
         )}
       </Routes>
       {isAuthenticated ? (
         <div>
-          <ChatBot token={token} onLogout={logout} ></ChatBot>
-          <Email token={token}></Email>
+          <ChatBot token={token} onLogout={logout}></ChatBot>
+          {/* <Email token={token}></Email> */}
         </div>
-      ) : 
-        <div>
-          <Email token={token}></Email>
-        </div>}
+      ) : (
+        <div>{/* <Email token={token}></Email> */}</div>
+      )}
     </BrowserRouter>
   );
 }

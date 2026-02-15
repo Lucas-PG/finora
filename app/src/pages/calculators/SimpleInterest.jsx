@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
-import Arrow from "../../components/Arrow";
 import HeroSection from "../../components/HeroSection";
+import { FaCalculator } from "react-icons/fa";
+import { HiArrowTrendingUp } from "react-icons/hi2";
 import {
-  LineChart,
-  Line,
+  PieChart,
+  Pie,
+  Cell,
   BarChart,
   Bar,
   AreaChart,
@@ -15,68 +17,112 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import "../../css/SimpleInterest.css";
+import "../../css/calculators/SimpleInterest.css";
 
 function SimpleInterest() {
   const [initialValue, setInitialValue] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [period, setPeriod] = useState("");
-  const [monthlyInvestment, setMonthlyInvestment] = useState("");
   const [finalAmount, setFinalAmount] = useState(null);
-  const [graphMode, setGraphMode] = useState("linha");
+  const [graphMode, setGraphMode] = useState("resumo");
   const [chartData, setChartData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const calculateSimpleInterest = () => {
-    const P = parseFloat(initialValue);
-    const r = parseFloat(interestRate) / 100;
-    const t = parseInt(period);
-    const PMT = parseFloat(monthlyInvestment);
+  const title = "Juros Simples";
+  const subtitle =
+    "Calcule o resultado final dos seus investimentos dessa modalidade";
 
-    if (isNaN(P) || isNaN(r) || isNaN(t) || isNaN(PMT)) {
-      alert("Preencha todos os campos corretamente.");
-      return;
-    }
+  const calculateSimpleInterest = (initialValue, interestRate, years) => {
+    const rateDecimal = interestRate / 100;
+    const amount = initialValue * (1 + rateDecimal * years);
+    return amount;
+  };
 
-    let total = P;
-    const data = [];
+  const invested = Number(initialValue);
+  const interest = Number(finalAmount) - invested;
 
-    for (let i = 1; i <= t; i++) {
-      const interest = P * r * i;
-      const monthlyTotal = PMT * 12 * i;
-      total = P + interest + monthlyTotal;
-      data.push({ ano: `${i}º`, montante: parseFloat(total.toFixed(2)) });
-    }
-
-    setChartData(data);
-    setFinalAmount(total.toFixed(2));
+  const customTooltip = {
+    contentStyle: {
+      backgroundColor: "#181e2b",
+      border: "1px solid #41434a",
+      borderRadius: "8px",
+      color: "#fff",
+    },
+    labelStyle: { color: "#ccc" },
+    itemStyle: { color: "#fff" },
+    formatter: (value) =>
+      Number(value).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }),
   };
 
   const renderChart = () => {
     if (graphMode === "resumo") {
       return finalAmount !== null ? (
-        <div className="simple-resume">
-          <p className="simple-result-description">
-            Montante acumulado ao final de {period} anos:{" "}
-            <strong>R$ {finalAmount}</strong>
-          </p>
-          <ul className="simple-resume-list">
+        <div className="million-resume">
+          {" "}
+          {/* Changed from simple-resume */}
+          <div className="resume-flex-box">
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Final</span>
+                <span className="result-value">
+                  <HiArrowTrendingUp className="growth-icon" />
+                  {parseFloat(finalAmount).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </div>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Valor Total Investido</span>
+                <span className="result-value">
+                  {invested.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </div>
+            </div>
+            <div className="resume-card">
+              <div className="result-item">
+                <span className="result-label">Total em Juros</span>
+                <span className="result-value">
+                  {interest.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </div>
+            </div>
+          </div>
+          <ul className="million-resume-list">
+            {" "}
+            {/* Changed from simple-resume-list */}
             <li>
-              Valor inicial:{" "}
-              <strong>R$ {parseFloat(initialValue).toFixed(2)}</strong>
+              Capital Inicial:{" "}
+              <strong>
+                {invested.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </strong>
             </li>
             <li>
-              Taxa de juros anual:{" "}
+              Taxa de Juros Anual:{" "}
               <strong>{parseFloat(interestRate).toFixed(2)}%</strong>
             </li>
             <li>
               Duração: <strong>{period} anos</strong>
             </li>
-            <li>
-              Investimento mensal:{" "}
-              <strong>R$ {parseFloat(monthlyInvestment).toFixed(2)}</strong>
-            </li>
-            <li>
-              No juro simples, o crescimento é linear. Ideal para prazos curtos.
+            <li className="million-tip">
+              {" "}
+              {/* Changed from simple-tip */}
+              Juros simples são calculados apenas sobre o capital inicial, sem
+              considerar a acumulação de juros ao longo do tempo.
             </li>
           </ul>
         </div>
@@ -90,21 +136,33 @@ function SimpleInterest() {
     if (chartData.length === 0) return null;
 
     switch (graphMode) {
-      case "linha":
+      case "pizza":
+        const pieData = [
+          { name: "Investido", value: invested },
+          { name: "Juros", value: interest },
+        ];
+        const COLORS = ["#0066ff", "#ffff"];
         return (
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="ano" />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="montante"
-                stroke="#0066FF"
-                strokeWidth={2}
-              />
-            </LineChart>
+            <PieChart>
+              <Tooltip {...customTooltip} />
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+                minAngle={3}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(1)}%`
+                }
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Pie>
+            </PieChart>
           </ResponsiveContainer>
         );
       case "barra":
@@ -114,7 +172,7 @@ function SimpleInterest() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="ano" />
               <YAxis />
-              <Tooltip />
+              <Tooltip {...customTooltip} />
               <Bar dataKey="montante" fill="#0066FF" />
             </BarChart>
           </ResponsiveContainer>
@@ -126,7 +184,7 @@ function SimpleInterest() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="ano" />
               <YAxis />
-              <Tooltip />
+              <Tooltip {...customTooltip} />
               <Area
                 type="monotone"
                 dataKey="montante"
@@ -141,104 +199,111 @@ function SimpleInterest() {
     }
   };
 
-  const title = "Juros Simples";
-  const subtitle =
-    "Uma forma de rendimento linear e previsível. Veja como ele evolui ao longo do tempo.";
-
   return (
     <>
       <Navbar />
       <HeroSection title={title} subtitle={subtitle} />
+
       <div className="simple-bottom-section">
         <div className="simple-box-calculator">
           <h3 className="simple-calculator-title">
+            <FaCalculator className="calculator-icon-inline" />
             Calculadora de Juros Simples
           </h3>
           <input
             className="simple-input-initial"
             placeholder="Valor Inicial"
             value={initialValue}
-            onChange={(e) => setInitialValue(e.target.value)}
+            onChange={(e) => {
+              setInitialValue(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
           <input
             className="simple-input-rate"
             placeholder="Taxa de Juros (%)"
             value={interestRate}
-            onChange={(e) => setInterestRate(e.target.value)}
+            onChange={(e) => {
+              setInterestRate(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
           <input
             className="simple-input-period"
             placeholder="Período (anos)"
             value={period}
-            onChange={(e) => setPeriod(e.target.value)}
+            onChange={(e) => {
+              setPeriod(e.target.value);
+              setFinalAmount(null);
+              setChartData([]);
+              setErrorMessage("");
+            }}
             type="number"
           />
-          <input
-            className="simple-input-monthly"
-            placeholder="Investimento Mensal"
-            value={monthlyInvestment}
-            onChange={(e) => setMonthlyInvestment(e.target.value)}
-            type="number"
-          />
-          <button className="simple-button" onClick={calculateSimpleInterest}>
+          <button
+            className="simple-button"
+            onClick={() => {
+              if (!initialValue || !interestRate || !period) {
+                setErrorMessage("Preencha todos os campos para calcular.");
+                return;
+              }
+
+              const initial = parseFloat(initialValue);
+              const rate = parseFloat(interestRate);
+              const years = parseFloat(period);
+
+              if (isNaN(initial) || isNaN(rate) || isNaN(years)) {
+                setErrorMessage("Valores inválidos.");
+                return;
+              }
+
+              const final = calculateSimpleInterest(initial, rate, years);
+              setFinalAmount(final.toFixed(2));
+              setChartData(
+                Array.from({ length: years + 1 }, (_, i) => ({
+                  ano: i,
+                  montante: initial * (1 + (rate / 100) * i),
+                })),
+              );
+            }}
+          >
             <span className="simple-button-content">Calcular</span>
           </button>
-        </div>
 
-        <Arrow />
+          {errorMessage && (
+            <p className="simple-error-message">{errorMessage}</p>
+          )}
+        </div>
 
         <div className="simple-box-graph">
           <h3 className="simple-result-title">Resultados</h3>
 
-          <div className="graph-mode-toggle">
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="linha"
-                checked={graphMode === "linha"}
-                onChange={() => setGraphMode("linha")}
-              />
-              <span className="graph-label">Linha</span>
-            </label>
+          {finalAmount !== null && (
+            <div className="graph-mode-toggle">
+              {["resumo", "pizza", "barra", "area"].map((mode) => (
+                <label key={mode} className="graph-radio">
+                  <input
+                    type="radio"
+                    name="graphMode"
+                    value={mode}
+                    checked={graphMode === mode}
+                    onChange={() => setGraphMode(mode)}
+                  />
+                  <span className="graph-label">
+                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
 
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="barra"
-                checked={graphMode === "barra"}
-                onChange={() => setGraphMode("barra")}
-              />
-              <span className="graph-label">Barra</span>
-            </label>
-
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="area"
-                checked={graphMode === "area"}
-                onChange={() => setGraphMode("area")}
-              />
-              <span className="graph-label">Área</span>
-            </label>
-
-            <label className="graph-radio">
-              <input
-                type="radio"
-                name="graphMode"
-                value="resumo"
-                checked={graphMode === "resumo"}
-                onChange={() => setGraphMode("resumo")}
-              />
-              <span className="graph-label">Resumo</span>
-            </label>
-          </div>
-
-          <div>{renderChart()}</div>
+          <div className="simple-chart-area">{renderChart()}</div>
         </div>
       </div>
     </>

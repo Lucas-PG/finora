@@ -1,0 +1,214 @@
+.percentage-bottom-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0rem 6rem 2rem 6rem;
+  background-color: var(--background);
+  flex-wrap: wrap;
+  gap: 2rem;
+  min-height: 60vh;
+  margin-top: 10vh;
+}
+
+.percentage-box-calculator {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border: 1px solid var(--card-border);
+  border-radius: 30px;
+  box-shadow: 0 0 10px var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  max-width: 500px;
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.percentage-calculator-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--foreground);
+  font-size: 1.4rem;
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 1.5rem;
+}
+
+.calculator-icon-around {
+  background-color: var(--primary-blue-opacity);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px var(--primary-blue-glow);
+  border-radius: 50%;
+}
+
+.calculator-icon {
+  color: var(--primary-blue);
+}
+
+.percentage-input {
+  width: 80%;
+  background: none;
+  border: 2px solid var(--card-border);
+  outline: none;
+  padding: 15px 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: var(--card-bg);
+  margin: 10px 0;
+  box-sizing: border-box;
+  color: var(--foreground);
+}
+
+.percentage-select {
+  width: 80%;
+  background: none;
+  border: 2px solid var(--card-border);
+  outline: none;
+  padding: 15px 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: var(--secondary-btn);
+  margin: 10px 0;
+  box-sizing: border-box;
+  color: var(--foreground);
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+}
+
+.percentage-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 5px var(--primary-blue-glow);
+}
+
+.percentage-result {
+  width: 80%;
+  margin: 10px 0;
+  padding: 15px 10px;
+  font-size: 1.5rem;
+  color: var(--foreground);
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
+}
+
+.percentage-result strong {
+  color: var(--primary-blue);
+}
+
+.percentage-button {
+  width: 80%;
+  margin-top: 10px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 1rem;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--foreground);
+  border: none;
+}
+
+.percentage-button:hover {
+  box-shadow: 0 10px 15px var(--primary-blue-glow);
+  transform: scale(1.02);
+}
+
+.asset-clear {
+  background-color: var(--card-border) !important;
+  color: var(--foreground);
+}
+
+.asset-clear:hover {
+  background-color: var(--faded) !important;
+}
+
+@media (max-width: 768px) {
+  .percentage-bottom-section {
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .percentage-box-calculator {
+    width: 100%;
+  }
+}
+
+.other-calculators-section {
+  padding: 4rem 6rem 3rem;
+  background-color: var(--background);
+}
+
+.other-calculators-title {
+  font-size: 1.5rem;
+  color: var(--foreground);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.other-calculators-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.calculator-card-link {
+  text-decoration: none;
+  flex: 1 1 230px;
+  max-width: 300px;
+}
+
+.calculator-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: 0 5px 15px var(--primary-blue-opacity);
+  transition: all 0.3s ease;
+}
+
+.calculator-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px var(--primary-blue-glow);
+}
+
+.calculator-icon-glow {
+  background-color: var(--primary-blue-opacity);
+  color: var(--primary-blue);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 15px var(--primary-blue-glow);
+}
+
+.calculator-card-text h4 {
+  color: var(--foreground);
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.calculator-card-text p {
+  color: var(--faded);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-family: "Montserrat", sans-serif;
+}
+
+.graph-label {
+  color: var(--foreground);
+}

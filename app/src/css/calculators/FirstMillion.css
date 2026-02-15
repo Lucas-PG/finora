@@ -1,0 +1,248 @@
+.million-bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0rem 6rem 2rem 6rem;
+  gap: 2rem;
+  background-color: var(--background);
+  flex-wrap: wrap;
+  position: relative;
+  margin-top: 10vh;
+}
+
+.million-box-calculator {
+  flex: 1;
+  background-color: var(--card-bg);
+  padding: 2rem 2rem 3rem 2rem;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 10px var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  border-radius: var(--custom-border-radius);
+}
+
+.million-box-graph {
+  flex: 1;
+  background-color: var(--card-bg);
+  padding: 2rem 4rem 2rem 4rem;
+  border-radius: var(--custom-border-radius);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 10px var(--background);
+  min-width: 300px;
+  max-width: 800px;
+  flex-wrap: wrap;
+}
+
+.million-calculator-title {
+  color: var(--foreground);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.million-result-title {
+  color: var(--foreground);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.calculator-icon-inline {
+  margin-right: 10px;
+  color: var(--primary-blue);
+  vertical-align: middle;
+}
+
+.million-input-initial,
+.million-input-rate,
+.million-input-period,
+.million-input-monthly {
+  width: 95%;
+  background: none;
+  border: 2px solid var(--card-border);
+  outline: none;
+  padding: 15px 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: var(--card-bg);
+  margin: 10px;
+  box-sizing: border-box;
+  color: var(--foreground);
+}
+
+.million-button {
+  width: 95%;
+  margin-top: 20px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 100%;
+  background-color: var(--primary-blue);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px var(--primary-blue-glow);
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--foreground);
+  border: none;
+  white-space: nowrap;
+}
+
+.million-button:hover {
+  box-shadow: 0 10px 15px var(--primary-blue-glow);
+  transform: scale(1.02);
+}
+
+.million-chart-area {
+  padding: 1rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.million-result-description {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--foreground);
+  text-align: left;
+  border-radius: var(--custom-border-radius);
+}
+
+.million-resume {
+  color: var(--foreground);
+}
+
+.million-resume-list {
+  list-style: none;
+  margin-top: 1rem;
+  color: var(--foreground);
+}
+
+.million-resume-list li {
+  margin-bottom: 0.75rem;
+}
+
+.million-resume-list strong {
+  color: var(--foreground);
+}
+
+.million-tip {
+  color: var(--primary-blue);
+  font-size: 1rem;
+  text-shadow: 0 0 2px var(--primary-blue);
+}
+
+.resume-flex-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 0rem 1rem 0rem;
+  margin-bottom: 1.5rem;
+}
+
+.resume-card {
+  flex-grow: 1;
+  min-width: 150px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.resume-card:hover {
+  transform: scale(1.03);
+}
+
+.million-error-message {
+  color: var(--foreground);
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: var(--faded);
+  font-size: 0.9rem;
+}
+
+.recharts-yAxis .recharts-cartesian-axis-tick-value {
+  fill: var(--faded);
+}
+
+.recharts-bar,
+.recharts-area {
+  transition: all 0.3s ease;
+}
+
+.graph-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  border: 2px solid var(--primary-blue);
+  border-radius: 1rem;
+  padding: 0.3rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.graph-radio {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.graph-radio input {
+  display: none;
+}
+
+.graph-label {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--faded);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.graph-radio input:checked + .graph-label {
+  background: var(--primary-blue);
+  color: var(--foreground);
+}
+
+@media (max-width: 768px) {
+  .million-bottom-section {
+    flex-direction: column;
+  }
+
+  .resume-card {
+    min-width: 120px;
+  }
+
+  .result-value {
+    font-size: 1.2rem;
+  }
+
+  .growth-icon {
+    font-size: 1.5rem;
+  }
+}
+
+.first-million-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  gap: 5px;
+  margin-top: 10px;
+}

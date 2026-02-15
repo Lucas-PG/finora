@@ -1,98 +1,50 @@
-.login-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 2rem;
-  max-width: 350px;
-  width: 300px;
-  color: var(--custom-opposite);
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
 }
 
-.login-wrapper h1 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  width: 249px;
-  height: 24px;
-  top: 361px;
-  left: 631px;
+.login-content {
+  width: 302px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-content > h1 {
+  margin-bottom: 1rem;
   font-size: 24px;
 }
 
-.icon-input-wrapper-login {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.icon-input-wrapper-login input {
-  padding: 0.75rem 8rem 0.75rem 1rem;
-  border: 2px solid #2c2c44;
-  border-radius: var(--custom-border-radius);
-  color: var(--custom-opposite);
-  font-size: 14px;
-  outline: none;
-  background-color: var(--background);
-}
-
-.icon-input-wrapper-login input::placeholder {
-  color: var(--custom-highlight);
-}
-
-.input-icon-login {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--custom-faded);
-  pointer-events: none;
-  font-size: 1.2rem;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .login-btn {
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: var(--custom-border-radius);
-  background-color: var(--custom-bluish-purple);
-  color: white;
+  padding: 0.75rem 0px;
   font-size: 1rem;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background-color 0.3s;
+  width: 100%;
 }
 
-.login-btn:hover {
-  background-color: var(--custom-purple);
+.captcha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.login-wrapper p {
-  margin-top: 1rem;
-  text-align: center;
+.login-register-p {
+  color: var(--foreground);
+  margin-top: 3vh;
 }
 
 .register-link {
-  color: var(--custom-bluish-purple);
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-.register-link:hover {
-  color: var(--custom-hover);
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  margin: 1.5rem 0;
-  color: var(--custom-faded);
-  font-size: 0.9rem;
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px solid var(--custom-faded);
-  margin: 0 0.5rem;
+  color: var(--primary-blue);
+  text-decoration: none;
 }
