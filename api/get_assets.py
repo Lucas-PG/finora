@@ -233,7 +233,7 @@ def classify_asset_type(ticker):
 
 
 conn = mysql.connector.connect(
-    host="localhost", user="root", password="1234", database="projeto_react"
+    host="localhost", user="root", password="password", database="projeto_react"
 )
 cursor = conn.cursor()
 
