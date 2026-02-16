@@ -2,7 +2,7 @@
 
 **Finora** é uma plataforma centralizada de gestão de investimentos onde os usuários podem gerenciar, simular e acompanhar seus investimentos através de uma interface unificada e intuitiva. A plataforma é voltada para o mercado financeiro brasileiro, com suporte a Ações, Fundos Imobiliários (FIIs), ETFs e Brazilian Depositary Receipts (BDRs).
 
-![Landing Page](assets/Image1.png)
+![Landing Page](assets/landing-page.png)
 
 ---
 
@@ -25,14 +25,19 @@
 ### Gestão de Carteiras
 Crie múltiplas carteiras de investimento, adicione ativos com rastreamento de preço e data de compra, registre operações de compra e venda, e acompanhe o desempenho ao longo do tempo. A plataforma calcula automaticamente o saldo de cada ativo, impede vendas que resultem em quantidade negativa e exibe a evolução do patrimônio com gráficos interativos.
 
-![Carteiras](assets/Image4.png)
-![Gráfico da Carteira](assets/Image7.png)
+![Carteiras](assets/carteiras.png)
+![Adicionar Ativo](assets/incluir-lancamento.png)
+![Gráfico da Carteira](assets/carteira-performance.png)
 
 ### Acompanhamento de Mercado
 Página dedicada para navegar por mais de 110 ativos do mercado brasileiro (B3) e mercados internacionais via BDRs. Os ativos podem ser filtrados por tipo (Ações, FIIs, ETFs, BDRs) e a página destaca os ativos com maior volatilidade em cada categoria. Visualize preços atuais, variação nas últimas 24h, capitalização de mercado, dividend yield e volume negociado.
 
+![Resumo do Mercado](assets/mercado.png)
+
 ### Análise Individual de Ativos
 Cada ativo possui uma página detalhada com gráfico de preço histórico dos últimos 2 anos, desempenho acumulado no ano (YTD) e indicadores fundamentalistas completos: P/L (trailing e forward), P/VP, valor patrimonial, LPA, ROE, ROA, Beta, PEG Ratio, margem EBITDA, margem bruta, margem operacional e margem líquida.
+
+![Detalhes do Ativo](assets/detalhes-ativo.png)
 
 ### Calculadoras Financeiras
 Conjunto de ferramentas para planejamento financeiro:
@@ -41,16 +46,20 @@ Conjunto de ferramentas para planejamento financeiro:
 - **Primeiro Milhão** — Projete em quanto tempo você atingirá R$ 1.000.000 com base em aportes e rentabilidade.
 - **Alocação de Ativos** — Calcule a distribuição percentual ideal entre diferentes ativos da carteira.
 
+![Calculadoras Financeiras](assets/calculadoras.png)
+
 ### Assistente Financeiro com IA
 Chatbot integrado com o modelo LLaMA 3 (via Ollama) para tirar dúvidas e receber orientações sobre investimentos. As conversas ficam salvas no banco de dados, permitindo que o usuário retome o histórico a qualquer momento. As respostas são renderizadas em Markdown para melhor legibilidade.
 
 ### Sistema de Autenticação
 Cadastro e login seguros com tokens JWT (expiração de 1 hora) e hash de senhas com bcrypt. O usuário pode atualizar sua senha e fazer upload de foto de perfil. Rotas protegidas garantem que apenas usuários autenticados acessem funcionalidades como carteiras e chatbot.
 
-![Login](assets/Image2.png)
+![Login](assets/login.png)
 
 ### Tema Claro e Escuro
 Alterne entre modo claro e escuro com um clique na barra de navegação. A preferência do usuário é salva e aplicada automaticamente nas próximas visitas.
+
+![Tema Claro](assets/tema-claro.png)
 
 ### Busca Global de Ativos
 A barra de navegação inclui um campo de busca com autocomplete que permite encontrar rapidamente qualquer ativo pelo ticker ou nome completo. Os resultados são agrupados por tipo (Ação, FII, ETF, BDR) e direcionam o usuário diretamente para a página de análise do ativo.
@@ -301,16 +310,3 @@ A aplicação utiliza 6 tabelas no banco de dados MySQL `projeto_react`:
 
 ---
 
-## Capturas de Tela
-
-**Página inicial (logado):**
-
-![Página Inicial Logado](assets/Image3.png)
-
-**Adicionando ativos a uma carteira:**
-
-![Adicionar Ativo](assets/Image6.png)
-
-**Carteira com acompanhamento de ativos:**
-
-![Carteiras](assets/Image5.png)
